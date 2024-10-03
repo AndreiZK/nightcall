@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SectionTitle from "../UI/SectionTitle";
-import { rm } from "@/styles";
+import { media, rm } from "@/styles";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -28,6 +28,31 @@ const StyledContainer = styled.div`
             }
         }
     }
+
+    ${media.md`
+        gap: ${rm(24)};
+        align-items: center;
+        p {
+        font-size: ${rm(16)};
+        max-width: unset;
+        width: 88%;
+    }
+    .cards {
+        display: flex;
+        flex-direction: column;
+        gap: ${rm(16)};
+        a {
+            height: ${rm(200)};
+            width: ${rm(360)};
+            img {
+                border-radius: ${rm(24)};
+                height: 100%;
+                width: 100%;
+                cursor: pointer;
+            }
+        }
+    }
+    `}
 `;
 
 const Collaboration = () => {

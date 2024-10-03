@@ -60,4 +60,41 @@ export const Icons = {
             />
         </svg>
     ),
+    search: (props: IconProps) => (
+        <svg
+            {...props}
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M22.569 22.72L27.1998 27.2M25.7065 15.2533C25.7065 21.0265 21.0264 25.7067 15.2531 25.7067C9.47992 25.7067 4.7998 21.0265 4.7998 15.2533C4.7998 9.48012 9.47992 4.8 15.2531 4.8C21.0264 4.8 25.7065 9.48012 25.7065 15.2533Z"
+                stroke="#E1F7FF"
+                stroke-opacity="0.5"
+                stroke-width="2"
+                stroke-linecap="round"
+            />
+        </svg>
+    ),
+    cartDesktop: (props: IconProps) => (
+        <svg
+            {...props}
+            width="90"
+            height="90"
+            viewBox="0 0 90 90"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M58.5 31.5V20.25C58.5 12.7942 52.4558 6.75 45 6.75C37.5442 6.75 31.5 12.7942 31.5 20.25V31.5M17.7273 83.25H72.2727C77.0927 83.25 81 79.4153 81 74.6849L75.4091 29.2499C75.4091 24.5195 71.5017 20.6848 66.6818 20.6848H22.2273C17.4073 20.6848 13.5 24.5195 13.5 29.2499L9 74.6849C9 79.4153 12.9073 83.25 17.7273 83.25Z"
+                stroke="#E1F7FF"
+                stroke-opacity="0.5"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+        </svg>
+    ),
 };

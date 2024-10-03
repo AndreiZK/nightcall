@@ -1,5 +1,6 @@
-import { colors, rm } from "@/styles";
+import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
+import { Icons } from "../Icons";
 
 const StyledInput = styled.div`
     position: relative;
@@ -11,7 +12,7 @@ const StyledInput = styled.div`
     &:focus-within {
         opacity: 100%;
 
-        span {
+        .label {
             top: 0;
             transform: translateY(-50%);
             font-size: ${rm(12)};
@@ -24,10 +25,13 @@ const StyledInput = styled.div`
                 top: 0;
                 left: -10%;
                 width: 120%;
-                height: 10px;
+                height: 20px;
                 background-color: ${colors.black200};
                 transition: all 0.3s;
             }
+        }
+        .search-icon {
+            opacity: 1;
         }
     }
 
@@ -39,33 +43,53 @@ const StyledInput = styled.div`
         font-size: ${rm(24)};
         width: 100%;
         box-sizing: border-box;
+
+        ${media.md`
+            padding: ${rm(10)} ${rm(18)};
+            font-size: ${rm(16)};
+            `}
     }
 
-    span {
+    .label {
         position: absolute;
         top: ${rm(14)};
         left: ${rm(28)};
         font-size: ${rm(24)};
         color: ${colors.white100};
         transition: all 0.3s;
+
+        ${media.md`
+            top: ${rm(10)};
+        left: ${rm(18)};
+        font-size: ${rm(16)};
+            `}
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 `;
 
 interface TextfieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
     required?: boolean;
     label?: string;
+    search?: boolean;
 }
 
-const Textfield = ({ label, required, ...props }: TextfieldProps) => {
+const Textfield = ({ label, required, search, ...props }: TextfieldProps) => {
     return (
         <StyledInput>
             <input {...props} />
             {label && (
-                <span>
+                <span className="label">
                     {label}
                     {required && "*"}
                 </span>
             )}
+            {search && <Icons.search className="search-icon" />}
         </StyledInput>
     );
 };

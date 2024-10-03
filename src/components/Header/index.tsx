@@ -1,4 +1,4 @@
-import { rm } from "@/styles";
+import { media, rm } from "@/styles";
 import styled from "styled-components";
 import Button from "../UI/Button";
 import LoginModal from "../UI/Modal/LoginModal";
@@ -28,10 +28,30 @@ const HeaderContainer = styled.div`
     .button-container {
         font-size: 20px;
     }
+
+    ${media.md`
+        max-width: unset;
+        top: ${rm(16)};
+        left: ${rm(16)};
+        background: transparent;
+        backdrop-filter: none;
+        transform: unset;
+        width: calc(100% - 32px);
+        .header-content {
+        padding: 0;
+    }
+
+    .button-container {
+        font-size: 20px;
+    }
+    `}
 `;
 
 const Logo = styled.img`
     height: ${rm(40)};
+    ${media.md`
+        height: ${rm(24)};
+     `}
 `;
 
 const Header = () => {

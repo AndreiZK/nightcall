@@ -6,7 +6,7 @@ import Hero from "@/components/Hero";
 import Modal from "@/components/UI/Modal";
 import PopularRestaurants from "@/components/PopularRestaurants";
 import styled from "styled-components";
-import { rm } from "@/styles";
+import { media, rm } from "@/styles";
 import Collaboration from "@/components/Collaboration";
 
 const ContentContainer = styled.div`
@@ -15,6 +15,11 @@ const ContentContainer = styled.div`
     flex-direction: column;
     gap: ${rm(160)};
     margin-bottom: ${rm(200)};
+
+    ${media.md`
+        gap: ${rm(64)};
+        margin-bottom: ${rm(44)};
+    `}
 `;
 
 export default function Home() {

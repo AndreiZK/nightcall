@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Button from "../UI/Button";
-import { rm } from "@/styles";
+import { media, rm } from "@/styles";
 
 const HeroContainer = styled.div`
     width: 100%;
@@ -30,9 +30,44 @@ const HeroContainer = styled.div`
         }
     }
 
-    img {
+    .hero-img-desktop {
         width: ${rm(480)};
     }
+
+    .hero-img-mobile {
+        display: none;
+    }
+
+    ${media.md`
+            .hero-img-mobile {
+            display: block;
+            width: ${rm(300)};
+        }
+        .hero-img-desktop {
+            display: none;
+        }
+        .left {
+            max-width: unset;
+            margin-inline: auto;
+            width: ${rm(300)};
+            justify-content: start;
+            h1 {
+            
+            font-size: ${rm(52)};
+            font-weight: 600;
+        }
+        h3 {
+            font-size: ${rm(22)};
+            font-weight: 400;
+            margin-bottom: ${rm(28)};
+        }
+        button {
+            font-size: ${rm(30)};
+            width: 100%;
+            margin-top: ${rm(80)};
+        }
+        }
+    `}
 `;
 
 const Hero = () => {
@@ -41,11 +76,16 @@ const Hero = () => {
             <div className="left">
                 <h1>NIGHTCALL</h1>
                 <h3>Первая ночная доставка еды в Гродно!</h3>
+                <img
+                    className="hero-img-mobile"
+                    src="/images/ryan.png"
+                    alt=""
+                />
                 <div className="button-container">
                     <Button>Заказать</Button>
                 </div>
             </div>
-            <img src="/images/ryan.png" alt="" />
+            <img className="hero-img-desktop" src="/images/ryan.png" alt="" />
         </HeroContainer>
     );
 };

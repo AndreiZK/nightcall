@@ -1,4 +1,4 @@
-import { colors, rm } from "@/styles";
+import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 
 const StyledFooter = styled.footer`
@@ -25,6 +25,27 @@ const StyledFooter = styled.footer`
     img {
         max-width: ${rm(1320)};
     }
+
+    ${media.md`
+
+        padding-block: ${rm(16)};
+        
+        img {
+            max-width: 100%;
+        }
+
+        .links {
+            width: 90%;
+            display: flex;
+            gap: ${rm(16)};
+            justify-content: space-between;
+            a {
+                font-size: ${rm(12)};
+                color: ${colors.white100};
+                text-decoration: none;
+            }
+        }
+    `}
 `;
 
 const Footer = () => {

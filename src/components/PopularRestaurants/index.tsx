@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SectionTitle from "../UI/SectionTitle";
-import { rm } from "@/styles";
+import { media, rm } from "@/styles";
 import RestaurantCard from "../RestaurantCard";
 import { Icons } from "../UI/Icons";
 
@@ -15,6 +15,14 @@ const StyledContainer = styled.div`
 
         margin-top: ${rm(70)};
         margin-bottom: ${rm(28)};
+
+        ${media.md`
+            flex-direction: column;
+            gap: ${rm(16)};
+            height: calc(${rm(212)} * 3 + ${rm(48)});
+            margin-top: ${rm(16)};
+        margin-bottom: ${rm(18)};
+            `}
     }
 `;
 
@@ -28,6 +36,13 @@ const StyledLink = styled.a`
     border: 1px solid white;
     border-radius: ${rm(16)};
     cursor: pointer;
+
+    ${media.md`
+        font-size: ${rm(20)};
+        width: 88%;
+        justify-content: center;
+        align-items: center;
+    `}
 `;
 
 const PopularRestaurants = () => {

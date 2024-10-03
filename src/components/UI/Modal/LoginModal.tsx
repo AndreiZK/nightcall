@@ -3,22 +3,29 @@ import Modal, { ModalProps } from ".";
 import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
-import { rm } from "@/styles";
+import { media, rm } from "@/styles";
 
 const StyledContainer = styled.div`
-    padding-block: ${rm(80)} ${rm(55)};
-    width: ${rm(700)};
+    padding-block: ${rm(55)};
 
     .textfields {
         display: flex;
         flex-direction: column;
         gap: ${rm(30)};
-        margin-block: ${rm(60)} ${rm(80)};
+        margin-block: ${rm(60)};
     }
 
     button {
         font-size: ${rm(20)};
     }
+
+    ${media.md`
+        padding-block: ${rm(14)};
+
+        .textfields {
+            gap: ${rm(16)};
+        }
+    `}
 `;
 
 const LoginModal = (props: Omit<ModalProps, "children">) => {

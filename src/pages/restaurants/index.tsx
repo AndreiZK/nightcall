@@ -6,7 +6,7 @@ import RestaurantCard from "@/components/RestaurantCard";
 import Breadcrumb from "@/components/UI/Breadcrumb";
 import SectionTitle from "@/components/UI/SectionTitle";
 import Textfield from "@/components/UI/Textfield";
-import { colors, rm } from "@/styles";
+import { colors, media, rm } from "@/styles";
 import { Head } from "next/document";
 import { useState } from "react";
 import styled from "styled-components";
@@ -16,6 +16,14 @@ const TopContainer = styled.div`
     width: 100%;
     gap: ${rm(40)};
     align-items: center;
+    text-wrap: nowrap;
+
+    ${media.md`
+        flex-direction: column;
+        gap: ${rm(12)};
+        align-items: start;
+        margin-top: ${rm(14)};
+    `}
 `;
 
 const Filters = styled.div`
@@ -31,24 +39,34 @@ const Filters = styled.div`
 
     span {
         cursor: pointer;
-        font-weight: 300;
+        font-weight: 400;
     }
 
     .selected {
         color: ${colors.purple};
-        font-weight: 600;
     }
+
+    ${media.md`
+        display: none;
+    `}
 `;
 
 const RestaurantsGrid = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: ${rm(340)} ${rm(340)} ${rm(340)};
+    grid-auto-rows: ${rm(340)};
     gap: ${rm(46)};
     margin-block: ${rm(46)};
+
+    ${media.md`
+        grid-template-columns: 1fr;
+        grid-auto-rows: ${rm(214)};
+        gap: ${rm(20)};
+    margin-block: ${rm(34)};
+    `}
 `;
 
-const categories = ["Все", "Бургеры", "Пицца", "Суши", "Паста"];
+export const categories = ["Все", "Бургеры", "Пицца", "Суши", "Паста"];
 
 export default function Restaurants() {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
@@ -58,8 +76,8 @@ export default function Restaurants() {
             <Layout>
                 <Breadcrumb />
                 <TopContainer>
-                    <SectionTitle>Рестораны</SectionTitle>
-                    <Textfield placeholder="поиск ресторана" />
+                    <SectionTitle>Все рестораны</SectionTitle>
+                    <Textfield search placeholder="поиск ресторана" />
                 </TopContainer>
                 <Filters>
                     {categories.map((category) => (

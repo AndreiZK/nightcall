@@ -1,4 +1,4 @@
-import { colors, rm } from "@/styles";
+import { colors, media, rm } from "@/styles";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Icons } from "../Icons";
@@ -44,6 +44,21 @@ const StyledModal = styled.div`
         height: 20px;
         width: 20px;
     }
+
+    ${media.md`
+        max-width: unset;
+        min-width: unset;
+        width: 86%;
+        border-radius: ${rm(16)};
+        padding-inline: ${rm(14)};
+
+        .cross {
+            
+            top: ${rm(14)};
+            right: ${rm(14)};
+            
+        }
+    `}
 `;
 
 export interface ModalProps {
