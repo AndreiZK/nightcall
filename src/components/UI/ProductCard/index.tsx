@@ -1,11 +1,16 @@
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 import Button from "../Button";
+import { IProduct } from "../../../../types";
+import { BASE_IMAGE_URL } from "../../../../constants";
+import ProductModal from "../Modal/ProductModal";
+import { useState } from "react";
 
 const StyledContainer = styled.div`
     background: ${colors.black200};
     border-radius: ${rm(24)};
     overflow: hidden;
+    cursor: pointer;
 
     ${media.md`
         border-radius: ${rm(16)};
@@ -16,6 +21,11 @@ const StyledContainer = styled.div`
         height: ${rm(180)};
         margin-bottom: ${rm(30)};
         overflow: hidden;
+        display: flex;
+        justify-content: center;
+        img {
+            max-height: ${rm(180)};
+        }
         ${media.md`
             margin-bottom: ${rm(6)};
             height: ${rm(129)};
@@ -35,7 +45,7 @@ const StyledContainer = styled.div`
             align-items: center;
 
             .title {
-                font-size: ${rm(24)};
+                font-size: ${rm(15)};
             }
 
             .weight {
@@ -73,22 +83,44 @@ const StyledContainer = styled.div`
     }
 `;
 
-const ProductCard = () => {
-    return (
-        <StyledContainer>
-            <div className="image-container">
-                <img src="/images/product-placeholder.png" alt="" />
-            </div>
+interface ProductCardProps extends IProduct {}
 
-            <div className="info">
-                <div className="top">
-                    <span className="title">Название</span>
-                    <span className="weight">250г</span>
+const ProductCard = (props: ProductCardProps) => {
+    const [modalOpen, setModalOpen] = useState(false);
+
+    return (
+        <>
+            <StyledContainer onClick={() => setModalOpen(true)}>
+                <div className="image-container">
+                    <img src={BASE_IMAGE_URL + props.image[0].url} alt="" />
                 </div>
-                <span className="price">XX BYN</span>
-                <Button>+ Добавить</Button>
-            </div>
-        </StyledContainer>
+
+                <div className="info">
+                    <div className="top">
+                        <span className="title">
+                            {props.title.split("").length > 18
+                                ? props.title.slice(0, 16) + "..."
+                                : props.title}
+                        </span>
+                        <span className="weight">
+                            {props.weight ? props.weight + " г" : ""}
+                        </span>
+                    </div>
+                    <span className="price">
+                        {props.price
+                            ? props.price
+                            : "от " + props.product_types[0].newPrice}{" "}
+                        BYN
+                    </span>
+                    <Button>+ Добавить</Button>
+                </div>
+            </StyledContainer>
+            <ProductModal
+                productData={props}
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+            />
+        </>
     );
 };
 

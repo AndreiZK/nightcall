@@ -21,6 +21,7 @@ const ModalOverlay = styled.div`
 `;
 
 const StyledModal = styled.div`
+    z-index: 1000;
     display: none;
     position: fixed;
     top: 50%;

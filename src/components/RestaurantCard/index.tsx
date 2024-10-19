@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { Icons } from "../UI/Icons";
 import { colors, rm } from "@/styles";
+import { IRestaurant } from "../../../types";
+import { BASE_IMAGE_URL } from "../../../constants";
 
 const StyledCard = styled.a`
     height: 100%;
@@ -42,11 +44,18 @@ const StyledCard = styled.a`
     }
 `;
 
-const RestaurantCard = () => {
+interface RestauratCardProps {
+    data: IRestaurant;
+}
+
+const RestaurantCard = (props: RestauratCardProps) => {
     return (
-        <StyledCard href="/restaurants/1">
+        <StyledCard href={`/restaurants/${props.data.id}`}>
             <img
-                src="https://loremflickr.com/cache/resized/65535_53837803942_3ca28590ae_n_200_200_nofilter.jpg"
+                src={
+                    BASE_IMAGE_URL +
+                    props.data.attributes.preview_image.data[0].attributes.url
+                }
                 alt=""
             />
             <div className="description">

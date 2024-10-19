@@ -8,6 +8,9 @@ import PopularRestaurants from "@/components/PopularRestaurants";
 import styled from "styled-components";
 import { media, rm } from "@/styles";
 import Collaboration from "@/components/Collaboration";
+import { useEffect, useState } from "react";
+import { getStrapiData } from "@/requests/getStrapiData";
+import { IRestaurant } from "../../types";
 
 const ContentContainer = styled.div`
     width: 100%;
@@ -23,6 +26,19 @@ const ContentContainer = styled.div`
 `;
 
 export default function Home() {
+    const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
+
+    useEffect(() => {
+        const getData = async () => {
+            const { data } = await getStrapiData("merchants");
+
+            console.log(data);
+            setRestaurantsData(data.slice(0, 3));
+        };
+
+        getData();
+    }, []);
+
     return (
         <>
             <Head>
@@ -31,7 +47,7 @@ export default function Home() {
             <Layout>
                 <ContentContainer>
                     <Hero />
-                    <PopularRestaurants />
+                    <PopularRestaurants data={restaurantsData} />
                     <Collaboration />
                 </ContentContainer>
             </Layout>

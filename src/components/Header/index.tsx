@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Button from "../UI/Button";
 import LoginModal from "../UI/Modal/LoginModal";
 import { useState } from "react";
+import { redirect } from "next/navigation";
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -49,6 +50,7 @@ const HeaderContainer = styled.div`
 
 const Logo = styled.img`
     height: ${rm(40)};
+    cursor: pointer;
     ${media.md`
         height: ${rm(24)};
      `}
@@ -57,11 +59,19 @@ const Logo = styled.img`
 const Header = () => {
     const [modalOpen, setModalOpen] = useState(false);
 
+    const handleLogoClick = () => {
+        redirect("/");
+    };
+
     return (
         <>
             <HeaderContainer>
                 <div className="header-content">
-                    <Logo src="/images/logo.png" alt="logo" />
+                    <Logo
+                        onClick={handleLogoClick}
+                        src="/images/logo.png"
+                        alt="logo"
+                    />
                     <div className="button-container">
                         <Button onClick={() => setModalOpen(true)}>
                             Войти

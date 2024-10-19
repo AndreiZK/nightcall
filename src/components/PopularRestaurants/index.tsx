@@ -3,6 +3,7 @@ import SectionTitle from "../UI/SectionTitle";
 import { media, rm } from "@/styles";
 import RestaurantCard from "../RestaurantCard";
 import { Icons } from "../UI/Icons";
+import { IRestaurant } from "../../../types";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -45,13 +46,19 @@ const StyledLink = styled.a`
     `}
 `;
 
-const PopularRestaurants = () => {
+interface PopularRestaurantsProps {
+    data: IRestaurant[];
+}
+
+const PopularRestaurants = ({ data }: PopularRestaurantsProps) => {
+    console.log(data);
+
     return (
         <StyledContainer>
             <SectionTitle>Популярные рестораны</SectionTitle>
             <div className="content">
-                {new Array(3).fill(0).map((i, index) => (
-                    <RestaurantCard key={index} />
+                {data.map((i, index) => (
+                    <RestaurantCard data={i} key={index} />
                 ))}
             </div>
             <StyledLink href="/restaurants">

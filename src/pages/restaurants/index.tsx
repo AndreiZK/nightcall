@@ -6,10 +6,12 @@ import RestaurantCard from "@/components/RestaurantCard";
 import Breadcrumb from "@/components/UI/Breadcrumb";
 import SectionTitle from "@/components/UI/SectionTitle";
 import Textfield from "@/components/UI/Textfield";
+import { getStrapiData } from "@/requests/getStrapiData";
 import { colors, media, rm } from "@/styles";
 import { Head } from "next/document";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { IRestaurant } from "../../../types";
 
 const TopContainer = styled.div`
     display: flex;
@@ -70,6 +72,18 @@ export const categories = ["Все", "Бургеры", "Пицца", "Суши",
 
 export default function Restaurants() {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+    const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
+
+    useEffect(() => {
+        const getData = async () => {
+            const { data } = await getStrapiData("merchants");
+
+            console.log(data);
+            setRestaurantsData(data);
+        };
+
+        getData();
+    }, []);
 
     return (
         <>
@@ -93,8 +107,8 @@ export default function Restaurants() {
                     ))}
                 </Filters>
                 <RestaurantsGrid>
-                    {new Array(6).fill(0).map((item) => (
-                        <RestaurantCard />
+                    {restaurantsData.map((item, index) => (
+                        <RestaurantCard key={index} data={item} />
                     ))}
                 </RestaurantsGrid>
             </Layout>
