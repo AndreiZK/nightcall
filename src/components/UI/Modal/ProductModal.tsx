@@ -4,10 +4,11 @@ import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
 import { colors, rm } from "@/styles";
-import { IProduct } from "../../../../types";
+import { IProduct, IProductExtra, IProductType } from "../../../../types";
 import { BASE_IMAGE_URL } from "../../../../constants";
 import { useState } from "react";
 import useStore from "@/store/store";
+import Select from "../Select";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(50)};
@@ -158,6 +159,25 @@ const ProductModal = (props: ProductModalProps) => {
         updateAmount(product, count);
     };
 
+    const handleExtraSelect = (val: string) => {
+        console.log(val);
+        setSelectedExtra(Number(val));
+    };
+
+    const handleTypeSelect = (val: string) => {
+        console.log(val);
+        setSelectedType(Number(val));
+    };
+
+    const extrasOptions = props.productData?.product_extras.map((i, index) => ({
+        value: String(index),
+        label: i.extraName,
+    }));
+    const typesOptions = props.productData?.product_types.map((i, index) => ({
+        value: String(index),
+        label: i.description,
+    }));
+
     return (
         <Modal isOpen={props.isOpen} onClose={props.onClose}>
             <StyledContainer>
@@ -176,18 +196,34 @@ const ProductModal = (props: ProductModalProps) => {
                         )}
                     </div>
                 </div>
+                {props.productData?.product_types?.length > 0 && (
+                    <Select
+                        placeholder="Размер"
+                        onChange={handleTypeSelect}
+                        options={typesOptions}
+                    />
+                )}
+                {props.productData?.product_extras?.length > 0 && (
+                    <Select
+                        placeholder="Соус на выбор"
+                        onChange={handleExtraSelect}
+                        options={extrasOptions}
+                    />
+                )}
+
                 <div className="bottom">
                     <Button>
                         Добавить {count} за{" "}
                         {(props.productData.product_types.length > 0
-                            ? props.productData?.product_types[selectedType]
-                                  ?.newPrice * count
+                            ? props.productData?.product_types[
+                                  Number(selectedType)
+                              ]?.newPrice * count
                             : Math.round(
                                   props.productData.price * count * 100
                               ) / 100) +
                             (props.productData.product_extras.length > 0
                                 ? props.productData?.product_extras[
-                                      selectedExtra
+                                      Number(selectedExtra)
                                   ]?.additionalPrice * count
                                 : 0)}{" "}
                         BYN

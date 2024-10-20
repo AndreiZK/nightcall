@@ -12,6 +12,7 @@ import { Head } from "next/document";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IRestaurant } from "../../../types";
+import { getSearchResult } from "@/requests/getSearchResult";
 
 const TopContainer = styled.div`
     display: flex;
@@ -73,6 +74,7 @@ export const categories = ["Все", "Бургеры", "Пицца", "Суши",
 export default function Restaurants() {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         const getData = async () => {
@@ -85,13 +87,28 @@ export default function Restaurants() {
         getData();
     }, []);
 
+    useEffect(() => {
+        const searchRests = async () => {
+            const result = await getSearchResult(search);
+
+            setRestaurantsData(result);
+        };
+
+        searchRests();
+    }, [search, selectedCategory]);
+
     return (
         <>
             <Layout>
                 <Breadcrumb />
                 <TopContainer>
                     <SectionTitle>Все рестораны</SectionTitle>
-                    <Textfield search placeholder="поиск ресторана" />
+                    <Textfield
+                        onChange={(e) => setSearch(e.target.value)}
+                        value={search}
+                        search
+                        placeholder="поиск ресторана"
+                    />
                 </TopContainer>
                 <Filters>
                     {categories.map((category) => (
