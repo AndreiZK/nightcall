@@ -15,6 +15,7 @@ import {
 } from "../../../types";
 import { BASE_IMAGE_URL } from "../../../constants";
 import { getStrapiData } from "@/requests/getStrapiData";
+import Cart from "@/components/Cart";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -67,39 +68,6 @@ const StyledContainer = styled.div`
                 font-size: ${rm(24)};
             }
             `}
-    }
-
-    .cart {
-        grid-column: 10 / 13;
-        grid-row: 1/ 3;
-        height: ${rm(450)};
-        border-top-right-radius: ${rm(24)};
-        position: sticky;
-        align-self: start;
-        top: ${rm(140)};
-        left: 0;
-        padding: ${rm(20)} ${rm(14)};
-
-        .cart-title {
-            font-size: ${rm(30)};
-            color: ${colors.purple};
-        }
-
-        .cart-empty {
-            margin-top: 300px;
-            font-size: ${rm(16)};
-        }
-
-        .bag {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        ${media.md`
-            display: none;
-        `}
     }
 
     .categories {
@@ -210,14 +178,7 @@ export default function RestaurantPage() {
                         />
                         <h2>{merchantData?.attributes.name}</h2>
                     </div>
-                    <div className="cart">
-                        <span className="cart-title">Ваш заказ</span>
-                        <Icons.cartDesktop className="bag" />
-                        <span className="cart-empty">
-                            Вы еще ничего не выбрали. Когда вы добавите товар,
-                            он появится здесь!
-                        </span>
-                    </div>
+                    <Cart />
                     <div className="categories">
                         {merchantData?.attributes.categories.categories.map(
                             (i, index) => (

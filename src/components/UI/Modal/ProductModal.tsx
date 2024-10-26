@@ -212,7 +212,7 @@ const ProductModal = (props: ProductModalProps) => {
                 )}
 
                 <div className="bottom">
-                    <Button>
+                    <Button onClick={handleAdd}>
                         Добавить {count} за{" "}
                         {(props.productData.product_types.length > 0
                             ? props.productData?.product_types[
