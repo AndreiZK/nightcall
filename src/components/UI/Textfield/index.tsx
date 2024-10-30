@@ -1,6 +1,7 @@
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 import { Icons } from "../Icons";
+import { useEffect } from "react";
 
 const StyledInput = styled.div`
     position: relative;
@@ -80,6 +81,7 @@ interface TextfieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Textfield = ({ label, required, search, ...props }: TextfieldProps) => {
+
     return (
         <StyledInput>
             <input {...props} />

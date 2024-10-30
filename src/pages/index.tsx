@@ -11,6 +11,7 @@ import Collaboration from "@/components/Collaboration";
 import { useEffect, useState } from "react";
 import { getStrapiData } from "@/requests/getStrapiData";
 import { IRestaurant } from "../../types";
+import { Modals } from "@/components/Modals/Modals";
 
 const ContentContainer = styled.div`
     width: 100%;
@@ -49,6 +50,7 @@ export default function Home() {
                     <Hero />
                     <PopularRestaurants data={restaurantsData} />
                     <Collaboration />
+                    <Modals/>
                 </ContentContainer>
             </Layout>
             {/* <Modal /> */}

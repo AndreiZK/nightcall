@@ -2,8 +2,9 @@ import { media, rm } from "@/styles";
 import styled from "styled-components";
 import Button from "../UI/Button";
 import LoginModal from "../UI/Modal/LoginModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
+import useStore from "@/store/store";
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -57,11 +58,17 @@ const Logo = styled.img`
 `;
 
 const Header = () => {
-    const [modalOpen, setModalOpen] = useState(false);
+    const setLoginModal = useStore((state: any) => (state.setLoginModal))
+
+    const isLoginModalOpen = useStore((state: any) => (state.isLoginModalOpen))
 
     const handleLogoClick = () => {
-        redirect("/");
+        redirect('');
     };
+
+    const handleLoginOpen = () => {
+        setLoginModal(true)
+    }
 
     return (
         <>
@@ -73,16 +80,12 @@ const Header = () => {
                         alt="logo"
                     />
                     <div className="button-container">
-                        <Button onClick={() => setModalOpen(true)}>
+                        <Button onClick={handleLoginOpen}>
                             Войти
                         </Button>
                     </div>
                 </div>
             </HeaderContainer>
-            <LoginModal
-                isOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
-            />
         </>
     );
 };

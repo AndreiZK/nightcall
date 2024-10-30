@@ -121,6 +121,13 @@ const useStore = create((set, get) => ({
     toastIndicator: 0,
     isCliced: false,
     isLocal: false,
+    isLoginModalOpen: false,
+    isRegistrationModalOpen: false,
+    isSecondStepModalOpen: false,
+
+    setLoginModal: (value: string) => set({isLoginModalOpen: value}),
+    setRegistrationModal: (value: string) => set({isRegistrationModalOpen: value}),
+    setSecondStepModal: (value: string) => set({isSecondStepModalOpen: value}),
 }));
 
 export default useStore;
