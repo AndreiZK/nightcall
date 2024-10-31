@@ -60,6 +60,9 @@ const Logo = styled.img`
 const Header = () => {
     const setLoginModal = useStore((state: any) => (state.setLoginModal))
 
+    const jwt = useStore((state: any) => state.jwtToken);
+
+    const setProfileModal = useStore((state: any) => (state.setProfileModal))
     const isLoginModalOpen = useStore((state: any) => (state.isLoginModalOpen))
 
     const handleLogoClick = () => {
@@ -80,9 +83,9 @@ const Header = () => {
                         alt="logo"
                     />
                     <div className="button-container">
-                        <Button onClick={handleLoginOpen}>
+                        {!jwt ? <Button onClick={handleLoginOpen}>
                             Войти
-                        </Button>
+                        </Button> : <p onClick={() => setProfileModal(true)}>ОТКРЫТЬ ПРОФИЛЬ</p>}
                     </div>
                 </div>
             </HeaderContainer>

@@ -87,7 +87,8 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
     
               useStore.setState({ jwtToken: token, isAuth: true });
             //   toast.success("Вход выполнен успешно");
-            props.onClose()
+            // props.onClose()
+            setLoginModal(false)
     
             } else {
             //   toast.error("Проверьте введённые данные");

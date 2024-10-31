@@ -124,10 +124,12 @@ const useStore = create((set, get) => ({
     isLoginModalOpen: false,
     isRegistrationModalOpen: false,
     isSecondStepModalOpen: false,
+    isProfileModalOpen: false,
 
     setLoginModal: (value: string) => set({isLoginModalOpen: value}),
     setRegistrationModal: (value: string) => set({isRegistrationModalOpen: value}),
     setSecondStepModal: (value: string) => set({isSecondStepModalOpen: value}),
+    setProfileModal: (value: string) => set({isProfileModalOpen: value}),
 }));
 
 export default useStore;
