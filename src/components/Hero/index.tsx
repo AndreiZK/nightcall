@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Button from "../UI/Button";
 import { media, rm } from "@/styles";
+import Link from "next/link";
 
 const HeroContainer = styled.div`
     width: 100%;
@@ -81,9 +82,9 @@ const Hero = () => {
                     src="/images/ryan.png"
                     alt=""
                 />
-                <div className="button-container">
+                <Link href='/restaurants' className="button-container">
                     <Button>Заказать</Button>
-                </div>
+                </Link>
             </div>
             <img className="hero-img-desktop" src="/images/ryan.png" alt="" />
         </HeroContainer>

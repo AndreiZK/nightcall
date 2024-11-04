@@ -5,7 +5,7 @@ export async function getSearchResult(
     keyword: string,
     category: string = "restaurants"
 ) {
-    const url = `${BASE_API_URL}api/merchants/search`;
+    const url = `${BASE_API_URL}api/search`;
 
     const raw = JSON.stringify({
         keyword,

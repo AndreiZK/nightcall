@@ -54,7 +54,7 @@ const RestaurantCard = (props: RestauratCardProps) => {
             <img
                 src={
                     BASE_IMAGE_URL +
-                    props.data.attributes.preview_image.data[0].attributes.url
+                    props.data?.attributes?.preview_image?.data[0]?.attributes.url
                 }
                 alt=""
             />

@@ -5,6 +5,7 @@ import LoginModal from "../UI/Modal/LoginModal";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import useStore from "@/store/store";
+import Link from "next/link";
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -29,6 +30,8 @@ const HeaderContainer = styled.div`
 
     .button-container {
         font-size: 20px;
+        display: flex;
+        gap: ${rm(20)};
     }
 
     ${media.md`
@@ -44,7 +47,7 @@ const HeaderContainer = styled.div`
     }
 
     .button-container {
-        font-size: 20px;
+
     }
     `}
 `;
@@ -65,27 +68,41 @@ const Header = () => {
     const setProfileModal = useStore((state: any) => (state.setProfileModal))
     const isLoginModalOpen = useStore((state: any) => (state.isLoginModalOpen))
 
-    const handleLogoClick = () => {
-        redirect('');
-    };
+    const [isAuth, setIsAuth] = useState<boolean>(false)
+
 
     const handleLoginOpen = () => {
         setLoginModal(true)
     }
 
+    const handleLogOut = () => {
+        useStore.setState({jwtToken: null})
+    }
+
+    useEffect(() => {
+        console.log(jwt?.length)
+        if(jwt?.length > 7) {
+            setIsAuth(true)
+        } else {
+            setIsAuth(false)
+        }
+    }, [jwt])
+
     return (
         <>
             <HeaderContainer>
                 <div className="header-content">
-                    <Logo
-                        onClick={handleLogoClick}
-                        src="/images/logo.png"
-                        alt="logo"
-                    />
+                    <Link href='/'>
+                        <Logo
+                            src="/images/logo.png"
+                            alt="logo"
+                        />
+                    </Link>
                     <div className="button-container">
-                        {!jwt ? <Button onClick={handleLoginOpen}>
+                        {!isAuth ? <Button onClick={handleLoginOpen}>
                             Войти
-                        </Button> : <p onClick={() => setProfileModal(true)}>ОТКРЫТЬ ПРОФИЛЬ</p>}
+                        </Button> : <Button onClick={() => setProfileModal(true)}>Открыть профиль</Button>}
+                        {!isAuth ? <></> : <Button onClick={handleLogOut}>Выйти</Button>}
                     </div>
                 </div>
             </HeaderContainer>

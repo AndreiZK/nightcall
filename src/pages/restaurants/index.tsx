@@ -87,12 +87,13 @@ export default function Restaurants() {
         getData();
     }, []);
 
-    useEffect(() => {
-        const searchRests = async () => {
-            const result = await getSearchResult(search);
+    const searchRests = async () => {
+        const result = await getSearchResult(search);
 
-            setRestaurantsData(result);
-        };
+        setRestaurantsData(result);
+    };
+
+    useEffect(() => {
 
         searchRests();
     }, [search, selectedCategory]);

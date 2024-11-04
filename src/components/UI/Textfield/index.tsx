@@ -1,22 +1,21 @@
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 import { Icons } from "../Icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const StyledInput = styled.div`
     position: relative;
-
     width: 100%;
     opacity: 50%;
     transition: opacity 0.3s;
 
-    &:focus-within {
+    ${({ isActive }: any) => isActive && `
         opacity: 100%;
-
+        
         .label {
             top: 0;
-            transform: translateY(-50%);
-            font-size: ${rm(12)};
+            transform: translateY(-120%);
+            font-size: ${rm(12)} !important;
             z-index: 100;
 
             &:before {
@@ -31,10 +30,7 @@ const StyledInput = styled.div`
                 transition: all 0.3s;
             }
         }
-        .search-icon {
-            opacity: 1;
-        }
-    }
+    `}
 
     input {
         padding: ${rm(14)} ${rm(28)};
@@ -48,7 +44,7 @@ const StyledInput = styled.div`
         ${media.md`
             padding: ${rm(10)} ${rm(18)};
             font-size: ${rm(16)};
-            `}
+        `}
     }
 
     .label {
@@ -61,9 +57,9 @@ const StyledInput = styled.div`
 
         ${media.md`
             top: ${rm(10)};
-        left: ${rm(18)};
-        font-size: ${rm(16)};
-            `}
+            left: ${rm(18)};
+            font-size: ${rm(16)};
+        `}
     }
 
     .search-icon {
@@ -80,11 +76,21 @@ interface TextfieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
     search?: boolean;
 }
 
-const Textfield = ({ label, required, search, ...props }: TextfieldProps) => {
+const Textfield = ({ label, required, search, value, ...props }: TextfieldProps) => {
+    const [isFocused, setIsFocused] = useState(false);
+
+    const isActive = isFocused || value;
 
     return (
-        <StyledInput>
-            <input {...props} />
+        <StyledInput 
+        //@ts-expect-error
+        isActive={isActive}>
+            <input
+                {...props}
+                value={value}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+            />
             {label && (
                 <span className="label">
                     {label}

@@ -19,10 +19,20 @@ import { getAdress } from "@/utils/getAdress";
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
 
+    .info{
+        margin-top: ${rm(10)};
+        display: flex;
+        gap: ${rm(12)};
+
+        >div{
+            width: 33%;
+        }
+    }
+
     .textfields {
         display: flex;
         flex-direction: column;
-        gap: ${rm(30)};
+        gap: ${rm(10)};
         margin-block: ${rm(60)};
 
         .extraText{

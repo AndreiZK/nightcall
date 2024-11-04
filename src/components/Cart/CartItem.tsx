@@ -8,13 +8,50 @@ const StyledCartItem = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${rm(10)};
+    margin-top: ${rm(20)};
+
     .top-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        .amount{
+            width: ${rm(30)};
+        }
+
+        .title{
+            width: 100%;
+            text-align: center;
+        }
+
+        .price{
+            width: ${rm(30)};
+            text-align: right;
+        }
     }
 
     .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+
+        .counter-button {
+            cursor: pointer;
+            height: ${rm(46)};
+            width: ${rm(46)};
+            border-radius: 50%;
+            line-height: 1;
+            text-align: center;
+            background-color: rgba(164, 63, 253, 0.3);
+            font-size: ${rm(46)};
+
+            color: rgba(130, 93, 217, 1);
+
+            &.disabled {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: rgba(255, 255, 255, 0.5);
+            }
     }
 `;
 
@@ -47,8 +84,6 @@ const CartItem = (props: CartItemProps) => {
             ([k, v]) => JSON.stringify(k) === JSON.stringify(product)
         );
         setAmount(productEntry ? productEntry[1] : 1);
-
-        console.log(123123);
     }, []);
 
     useEffect(() => {
@@ -96,9 +131,19 @@ const CartItem = (props: CartItemProps) => {
                 <span className="price">{props.calculatedPrice}</span>
             </div>
             <div className="bottom-row">
-                <span className="counter-button">-</span>
+                <span 
+                    onClick={
+                        handleRemove
+                    }
+                    className={`counter-button ${
+                        amount === 1 ? "disabled" : ""
+                    }`}
+                >-</span>
                 <span className="extras-string">{extrasString}</span>
-                <span className="counter-button">+</span>
+                <span 
+                        onClick={handleAdd}
+                        className="counter-button"
+                >+</span>
             </div>
         </StyledCartItem>
     );
