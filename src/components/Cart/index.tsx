@@ -80,6 +80,10 @@ const Cart = () => {
     const [deliveryPrice, setDeliveryPrice] = useState<number>(8);
     const [dataToRender, setDataToRender] = useState([]);
 
+    const setOrderModal = useStore((state: any) => (state.setOrderModal))
+
+    const token = useStore((state: any) => (state.jwtToken))
+
     const getProductsForCart = async () => {
         const products = await getProductsByIds(order);
 
@@ -95,8 +99,6 @@ const Cart = () => {
           }
         }
     
-        console.log('Bucket order', finalOrder)
-    
         const price = await getOrderPrice(finalOrder);
         const deliveryPrice = await getDeliveryPrice(finalOrder);
     
@@ -107,6 +109,14 @@ const Cart = () => {
         setDeliveryPrice(deliveryPrice);
       };
 
+      const handleOrder = () => {
+        if(token?.length > 7) {
+            setOrderModal(true)
+        } else {
+            // toast.error('Авторизуйтесь')
+        }
+      }
+
     useEffect(() => {
         getProductsForCart();
         getPrice()
@@ -116,7 +126,7 @@ const Cart = () => {
         <StyledCart className="">
             <div className="mainContainer">
                 <span className="cart-title">Ваш заказ</span>
-                <Icons.cartDesktop className="bag" />
+                {!order.length && <Icons.cartDesktop className="bag" />}
                 <div className="order">
                 {dataToRender.length > 0 &&
                     dataToRender.map((element: any, index: number) => (
@@ -137,7 +147,7 @@ const Cart = () => {
                         {deliveryPrice} BYN
                     </p>
                 </div>
-                <Button>Заказать за {price} BYN</Button>
+                <Button onClick={handleOrder}>Заказать за {price} BYN</Button>
             </div>
         </StyledCart>
     );

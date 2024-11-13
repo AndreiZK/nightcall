@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import useStore from "@/store/store";
 import Link from "next/link";
+import { Icons } from "../UI/Icons";
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -26,6 +27,12 @@ const HeaderContainer = styled.div`
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        
+        svg{
+            width: ${rm(150)};
+            height: 100%;
+        }
     }
 
     .button-container {
@@ -73,6 +80,7 @@ const Header = () => {
 
     const handleLoginOpen = () => {
         setLoginModal(true)
+        console.log('oppening loginModal')
     }
 
     const handleLogOut = () => {
@@ -93,10 +101,7 @@ const Header = () => {
             <HeaderContainer>
                 <div className="header-content">
                     <Link href='/'>
-                        <Logo
-                            src="/images/logo.png"
-                            alt="logo"
-                        />
+                        <Icons.logo/>
                     </Link>
                     <div className="button-container">
                         {!isAuth ? <Button onClick={handleLoginOpen}>

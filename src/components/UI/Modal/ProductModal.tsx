@@ -157,6 +157,8 @@ const ProductModal = (props: ProductModalProps) => {
             addToOrder(product);
         }
         updateAmount(product, count);
+
+        props.onClose()
     };
 
     const handleExtraSelect = (val: string) => {

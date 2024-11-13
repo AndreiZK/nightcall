@@ -6,6 +6,8 @@ import RegistrationModal from "../UI/Modal/RegistrationModal"
 import { useEffect } from "react"
 import SecondStepModal from "../UI/Modal/SecondStepModal"
 import ProfileModal from "../UI/Modal/ProfileModal"
+import OrderModal from "../UI/Modal/OrderModal"
+import MyOrdersModal from "../UI/Modal/MyOrdersModal"
 
 export const Modals = () => {
 
@@ -17,6 +19,8 @@ export const Modals = () => {
             <RegistrationModal />
             <SecondStepModal />
             <ProfileModal />
+            <OrderModal />
+            <MyOrdersModal />
         </>
     )
 }

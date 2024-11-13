@@ -26,16 +26,16 @@ const breadcrumbMap = {
 };
 
 const Breadcrumb = () => {
-    const pathname = usePathname();
-    const pathParts = pathname.split("/").filter(Boolean);
-    //@ts-ignore
-    const breadcrumbItems = pathParts.map((part, index) => breadcrumbMap[part]);
-    breadcrumbItems.unshift("Главная");
+    // const pathname = usePathname();
+    // const pathParts = pathname?.split("/").filter(Boolean);
+    // //@ts-ignore
+    // const breadcrumbItems = pathParts.map((part, index) => breadcrumbMap[part]);
+    // breadcrumbItems.unshift("Главная");
 
-    console.log(breadcrumbItems);
+    // console.log(breadcrumbItems);
     return (
         <StyledBreadcrumb>
-            {breadcrumbItems.map((item, index) =>
+            {/* {breadcrumbItems.map((item, index) =>
                 index === breadcrumbItems.length - 1 ? (
                     <span>{item}</span>
                 ) : (
@@ -44,7 +44,7 @@ const Breadcrumb = () => {
                         <Icons.chevroneRight />
                     </>
                 )
-            )}
+            )} */}
         </StyledBreadcrumb>
     );
 };

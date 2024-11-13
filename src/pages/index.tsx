@@ -50,7 +50,6 @@ export default function Home() {
                     <Hero />
                     <PopularRestaurants data={restaurantsData} />
                     <Collaboration />
-                    <Modals/>
                 </ContentContainer>
             </Layout>
             {/* <Modal /> */}

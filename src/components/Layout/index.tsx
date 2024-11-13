@@ -86,8 +86,8 @@ export default function Layout({ children }: { children: ReactNode }) {
 
         if (token && token.length > 10) {
             //get user data
-            useStore.setState({ jwtToken: token, isAuth: true });
-            console.log("token", token);
+            // useStore.setState({ jwtToken: token, isAuth: true });
+            // console.log("token", token);
         }
     }, []);
 

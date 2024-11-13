@@ -3,12 +3,14 @@ import { IProduct, IProductExtra, IProductType } from "../../../types";
 import { rm } from "@/styles";
 import { useEffect, useState } from "react";
 import useStore, { Product } from "@/store/store";
+import { Icons } from "../UI/Icons";
 
 const StyledCartItem = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${rm(10)};
     margin-top: ${rm(20)};
+    position: relative;
 
     .top-row {
         display: flex;
@@ -54,6 +56,27 @@ const StyledCartItem = styled.div`
             }
     }
 `;
+
+const StyledDeleteButton = styled.div`
+    position: absolute;
+    top: ${rm(-20)};
+    right: ${rm(-10)};
+    width: ${rm(20)};
+    height: ${rm(20)};
+    cursor: pointer;
+
+    transition: transform .5s ease-in-out;
+
+    &:hover{
+        transform: translateY(-3px);
+    }
+
+
+    svg{
+        width: 100%;
+        height: 100%;
+    }
+`
 
 interface CartItemProps {
     calculatedPrice: number;
@@ -125,6 +148,9 @@ const CartItem = (props: CartItemProps) => {
 
     return (
         <StyledCartItem>
+            <StyledDeleteButton onClick={handleDelete}>
+                <Icons.deleteButton/>
+            </StyledDeleteButton>
             <div className="top-row">
                 <span className="amount">{amount}x</span>
                 <span className="title">{props.product.title}</span>

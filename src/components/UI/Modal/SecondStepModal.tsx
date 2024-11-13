@@ -190,7 +190,7 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
                 </div>
 
                 <StyledBottomContainer>
-                    <Button onClick={registrationHandler}>Далее</Button>
+                    <Button onClick={registrationHandler}>Зарегистрироваться</Button>
                 </StyledBottomContainer>
             </StyledContainer>
         </Modal>

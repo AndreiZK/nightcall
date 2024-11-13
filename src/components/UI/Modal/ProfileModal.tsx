@@ -180,7 +180,7 @@ const ProfileModal = (props: Omit<ModalProps, "children">) => {
                 </div>
 
                 <StyledBottomContainer>
-                    <Button onClick={updateUserData}>Далее</Button>
+                    <Button onClick={updateUserData}>Сохранить</Button>
                 </StyledBottomContainer>
             </StyledContainer>
         </Modal>

@@ -14,6 +14,8 @@ import { AnimatedRouterLayout } from "@/layouts/AnimatedRouterLayout/AnimatedRou
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { Modals } from "@/components/Modals/Modals";
+import { initializeTelegramWebApp } from "@/utils/initializeTelegramWebApp";
 
 export const onest = Onest({
     weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -49,6 +51,19 @@ export default function App({ Component, pageProps }: AppProps) {
         html.style.setProperty("--font-onest", onest.style.fontFamily);
         html.style.setProperty("--font-noto", notoSans.style.fontFamily);
     });
+
+    // useEffect(() => {
+    // if (document.readyState === "complete") {
+    //     initializeTelegramWebApp();
+    //   } else {
+    //     window.addEventListener("load", initializeTelegramWebApp);
+    //   }
+  
+    //   return () => {
+    //     window.removeEventListener("load", initializeTelegramWebApp);
+    //   };
+    // }, []);
+
     return (
         <>
             <Head>
@@ -78,6 +93,7 @@ export default function App({ Component, pageProps }: AppProps) {
                         <Lvh />
 
                         <Component {...pageProps} />
+                        <Modals/>
                     </AnimatedRouterLayout>
                 </AssetsLoaderLayout>
             </ScrollLayout>

@@ -64,6 +64,8 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
     const isLoginModalOpen = useStore((state: any) => (state.isLoginModalOpen))
     const setLoginModal = useStore((state: any) => (state.setLoginModal))
 
+    const setTrackOpen = useStore((state: any) => (state.setTrackOpen))
+
     const setRegistrationModal = useStore((state: any) => (state.setRegistrationModal))
 
     const loginHandler = () => {
@@ -98,6 +100,8 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
             console.log(error);
             // toast.error("Проверьте введённые данные");
           });
+
+          setTrackOpen(true)
       };
 
       const handleRegisterChange = () => {
