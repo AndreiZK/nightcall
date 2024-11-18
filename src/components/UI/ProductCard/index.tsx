@@ -39,21 +39,6 @@ const StyledContainer = styled.div`
         flex-direction: column;
         gap: ${rm(14)};
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            .title {
-                font-size: ${rm(15)};
-            }
-
-            .weight {
-                font-size: ${rm(14)};
-                opacity: 50%;
-            }
-        }
-
         .price {
             font-size: ${rm(16)};
         }
@@ -66,13 +51,22 @@ const StyledContainer = styled.div`
         }
 
         .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             .title {
                 font-size: ${rm(18)};
+                ${media.md`
+                    font-size: ${rm(16)};
+                `}
             }
 
             .weight {
                 font-size: ${rm(12)};
-                
+                opacity: 50%;
+                ${media.md`
+                    display: none;
+                `}
             }
         }
             `}
@@ -98,8 +92,8 @@ const ProductCard = (props: ProductCardProps) => {
                 <div className="info">
                     <div className="top">
                         <span className="title">
-                            {props.title.split("").length > 18
-                                ? props.title.slice(0, 16) + "..."
+                            {props.title.split("").length >= 16
+                                ? props.title.slice(0, 14) + "..."
                                 : props.title}
                         </span>
                         <span className="weight">

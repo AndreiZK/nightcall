@@ -30,6 +30,11 @@ const StyledContainer = styled.div`
         flex-direction: column;
     `}
 
+    ${media.md`
+        display: flex;
+        flex-direction: column;            
+    `}
+
     .top-bar,
     .cart,
     .categories {
@@ -87,15 +92,19 @@ const StyledContainer = styled.div`
             &.selected {
                 color: ${colors.purple};
             }
+            ${media.md`
+            text-wrap: nowrap;
+            `}
         }
 
         ${media.md`
+                width: 100%;
                 flex-direction: row;
                 overflow: scroll;
-                gap: ${rm(10)};
-        padding: ${rm(4)} ${rm(8)};
-        font-size: ${rm(24)};
-        font-weight: 300;
+                gap: ${rm(14)};
+                padding: ${rm(4)} ${rm(8)};
+                font-size: ${rm(20)};
+                font-weight: 300;
             `}
     }
 

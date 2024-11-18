@@ -1,4 +1,4 @@
-import { media, rm } from "@/styles";
+import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 import Button from "../UI/Button";
 import LoginModal from "../UI/Modal/LoginModal";
@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import useStore from "@/store/store";
 import Link from "next/link";
 import { Icons } from "../UI/Icons";
+import MobileCart from "../Cart/MobileCart";
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -28,8 +29,7 @@ const HeaderContainer = styled.div`
         align-items: center;
         justify-content: space-between;
 
-        
-        svg{
+        svg {
             width: ${rm(150)};
             height: 100%;
         }
@@ -39,6 +39,9 @@ const HeaderContainer = styled.div`
         font-size: 20px;
         display: flex;
         gap: ${rm(20)};
+        ${media.md`
+            gap: ${rm(14)};
+        `}
     }
 
     ${media.md`
@@ -57,6 +60,51 @@ const HeaderContainer = styled.div`
 
     }
     `}
+
+    .mobile-button {
+        background: transparent;
+        border: none;
+        position: relative;
+        svg {
+            height: ${rm(24)};
+            width: ${rm(24)};
+        }
+        .cart-counter {
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            color: white;
+            background-color: ${colors.purple};
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .user-context-menu {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translateY(60%);
+            flex-direction: column;
+            align-items: start;
+            gap: ${rm(10)};
+            display: none;
+            background-color: #ffffff18;
+            padding: ${rm(10)};
+            border-radius: ${rm(6)};
+
+            .user-context-menu-item {
+                font-size: ${rm(16)};
+                font-weight: bold;
+            }
+
+            &.open {
+                display: flex;
+            }
+        }
+    }
 `;
 
 const Logo = styled.img`
@@ -68,49 +116,120 @@ const Logo = styled.img`
 `;
 
 const Header = () => {
-    const setLoginModal = useStore((state: any) => (state.setLoginModal))
-
+    const setLoginModal = useStore((state: any) => state.setLoginModal);
+    const order = useStore((state: any) => state.order);
+    const amounts = useStore((state: any) => state.amounts);
     const jwt = useStore((state: any) => state.jwtToken);
 
-    const setProfileModal = useStore((state: any) => (state.setProfileModal))
-    const isLoginModalOpen = useStore((state: any) => (state.isLoginModalOpen))
+    const setProfileModal = useStore((state: any) => state.setProfileModal);
+    const setTrackOpen = useStore((state: any) => state.setTrackOpen);
 
-    const [isAuth, setIsAuth] = useState<boolean>(false)
+    const isLoginModalOpen = useStore((state: any) => state.isLoginModalOpen);
 
+    const [isAuth, setIsAuth] = useState<boolean>(false);
+    const [cartCounter, setCartCounter] = useState(0);
+    const [cartOpen, setCartOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+    const isMobile = window.innerWidth <= 768;
 
     const handleLoginOpen = () => {
-        setLoginModal(true)
-        console.log('oppening loginModal')
-    }
+        setLoginModal(true);
+        console.log("oppening loginModal");
+    };
 
     const handleLogOut = () => {
-        useStore.setState({jwtToken: null})
-    }
+        useStore.setState({ jwtToken: null });
+    };
 
     useEffect(() => {
-        console.log(jwt?.length)
-        if(jwt?.length > 7) {
-            setIsAuth(true)
-        } else {
-            setIsAuth(false)
+        const finalOrder: any = [];
+
+        for (const [key, value] of amounts.entries()) {
+            for (let i = 0; i < value; i++) {
+                finalOrder.push(key);
+            }
         }
-    }, [jwt])
+
+        setCartCounter(finalOrder.length);
+    }, [amounts, order]);
+
+    useEffect(() => {
+        console.log(jwt?.length);
+        if (jwt?.length > 7) {
+            setIsAuth(true);
+        } else {
+            setIsAuth(false);
+        }
+    }, [jwt]);
 
     return (
         <>
             <HeaderContainer>
                 <div className="header-content">
-                    <Link href='/'>
-                        <Icons.logo/>
+                    <Link href="/">
+                        <Icons.logo />
                     </Link>
                     <div className="button-container">
-                        {!isAuth ? <Button onClick={handleLoginOpen}>
-                            Войти
-                        </Button> : <Button onClick={() => setProfileModal(true)}>Открыть профиль</Button>}
-                        {!isAuth ? <></> : <Button onClick={handleLogOut}>Выйти</Button>}
+                        {!isAuth ? (
+                            <Button onClick={handleLoginOpen}>Войти</Button>
+                        ) : isMobile ? (
+                            <button
+                                onClick={() => setUserMenuOpen((prev) => !prev)}
+                                className="mobile-button"
+                            >
+                                <Icons.user />
+                                <div
+                                    className={`user-context-menu ${
+                                        userMenuOpen ? "open" : ""
+                                    }`}
+                                >
+                                    <span
+                                        onClick={() => setProfileModal(true)}
+                                        className="user-context-menu-item"
+                                    >
+                                        Профиль
+                                    </span>
+                                    <span
+                                        onClick={() => setTrackOpen(true)}
+                                        className="user-context-menu-item"
+                                    >
+                                        Мои заказы
+                                    </span>
+                                    <span
+                                        onClick={handleLogOut}
+                                        className="user-context-menu-item"
+                                    >
+                                        Выйти
+                                    </span>
+                                </div>
+                            </button>
+                        ) : (
+                            <Button onClick={() => setProfileModal(true)}>
+                                Открыть профиль
+                            </Button>
+                        )}
+                        {!isAuth ? (
+                            <></>
+                        ) : isMobile ? (
+                            <button
+                                onClick={() => setCartOpen(true)}
+                                className="mobile-button"
+                            >
+                                {cartCounter > 0 && (
+                                    <span className="cart-counter">
+                                        {cartCounter}
+                                    </span>
+                                )}
+                                <Icons.cartMobile />
+                            </button>
+                        ) : (
+                            <Button onClick={handleLogOut}>Выйти</Button>
+                        )}
                     </div>
                 </div>
             </HeaderContainer>
+            <MobileCart open={cartOpen} onClose={() => setCartOpen(false)} />
         </>
     );
 };

@@ -48,13 +48,32 @@ const StyledFooter = styled.footer`
     `}
 `;
 
+const footerLinks = [
+    {
+        title: "Контакты",
+        href: "/",
+    },
+    {
+        title: "Пользовательское соглашение",
+        href: "/",
+    },
+    {
+        title: "Банковские реквизиты",
+        href: "/",
+    },
+    {
+        title: "Доставка и оплата",
+        href: "/",
+    },
+];
+
 const Footer = () => {
     return (
         <StyledFooter>
             <div className="links">
-                {new Array(5).fill(0).map((i, index) => (
-                    <a key={index} href="/">
-                        Какая-то ссылка
+                {footerLinks.map((i, index) => (
+                    <a key={index} href={i.href}>
+                        {i.title}
                     </a>
                 ))}
             </div>

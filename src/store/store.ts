@@ -28,7 +28,8 @@ const useStore = create((set, get) => ({
     isPaymentOver: false,
     isPayed: false,
     institution: null,
-    jwtToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsImlhdCI6MTczMTUyMDA1NiwiZXhwIjoxNzM0MTEyMDU2fQ.EFeyUxIzdPRC_skHDAghMxwI6RkF4OU37ZbnJQs1JG0', //null
+    jwtToken:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsImlhdCI6MTczMTUyMDA1NiwiZXhwIjoxNzM0MTEyMDU2fQ.EFeyUxIzdPRC_skHDAghMxwI6RkF4OU37ZbnJQs1JG0", //null
     isAuth: false,
     paymentLink: "",
     promocode: null,
@@ -126,14 +127,16 @@ const useStore = create((set, get) => ({
     isSecondStepModalOpen: false,
     isProfileModalOpen: false,
     isOrderModalOpen: false,
-    isTrackOpen: true,
+    isTrackOpen: false,
 
-    setLoginModal: (value: string) => set({isLoginModalOpen: value}),
-    setRegistrationModal: (value: string) => set({isRegistrationModalOpen: value}),
-    setSecondStepModal: (value: string) => set({isSecondStepModalOpen: value}),
-    setProfileModal: (value: string) => set({isProfileModalOpen: value}),
-    setOrderModal: (value: string) => set({isOrderModalOpen: value}),
-    setTrackOpen: (value: string) => set({isTrackOpen: value}),
+    setLoginModal: (value: string) => set({ isLoginModalOpen: value }),
+    setRegistrationModal: (value: string) =>
+        set({ isRegistrationModalOpen: value }),
+    setSecondStepModal: (value: string) =>
+        set({ isSecondStepModalOpen: value }),
+    setProfileModal: (value: string) => set({ isProfileModalOpen: value }),
+    setOrderModal: (value: string) => set({ isOrderModalOpen: value }),
+    setTrackOpen: (value: string) => set({ isTrackOpen: value }),
 }));
 
 export default useStore;

@@ -10,20 +10,30 @@ import { getDeliveryPrice } from "@/utils/getDeliveryPrice";
 import Button from "../UI/Button";
 
 const StyledCart = styled.div`
-    grid-column: 10 / 13;
-    grid-row: 1/ 3;
-    min-height: ${rm(450)};
-    height: auto;
-    border-top-right-radius: ${rm(24)};
-    position: sticky;
-    align-self: start;
-    top: ${rm(140)};
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
     left: 0;
-    padding: ${rm(20)} ${rm(14)};
+    transform: translateX(100%);
+    transition: transform 0.5s ease-out;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding-inline: ${rm(26)};
+    padding-block: ${rm(44)} ${rm(24)};
     gap: ${rm(80)};
+
+    .cross {
+        position: absolute;
+        top: ${rm(16)};
+        right: ${rm(16)};
+    }
+
+    &.open {
+        transform: translateX(0%);
+    }
 
     .order {
         display: flex;
@@ -32,7 +42,7 @@ const StyledCart = styled.div`
     }
 
     .cart-title {
-        font-size: ${rm(30)};
+        font-size: ${rm(36)};
         color: ${colors.purple};
     }
 
@@ -58,21 +68,25 @@ const StyledCart = styled.div`
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        height: ${rm(200)};
+        width: ${rm(200)};
     }
 
-    ${media.md`
-            display: none;
-        `}
+    .order-button {
+        font-size: ${rm(24)};
+    }
 
-    background: #d9d9d90c;
-    border-radius: ${rm(8)};
-
-    ${media.md`
-        border-radius: ${rm(4)};
-        `}
+    background: ${colors.black100};
+    z-index: 10000;
 `;
 
-const Cart = () => {
+const MobileCart = ({
+    open,
+    onClose,
+}: {
+    open: boolean;
+    onClose: () => void;
+}) => {
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
@@ -121,8 +135,11 @@ const Cart = () => {
         getPrice();
     }, [amounts, order]);
 
+    const handleClose = () => onClose();
+
     return (
-        <StyledCart className="">
+        <StyledCart className={open ? "open" : ""}>
+            <Icons.cross onClick={handleClose} className="cross" />
             <div className="mainContainer">
                 <span className="cart-title">Ваш заказ</span>
                 {!order.length && <Icons.cartDesktop className="bag" />}
@@ -150,7 +167,7 @@ const Cart = () => {
                         <p>Стоимость доставки:</p>
                         <p>{deliveryPrice} BYN</p>
                     </div>
-                    <Button onClick={handleOrder}>
+                    <Button className="order-button" onClick={handleOrder}>
                         Заказать за {price} BYN
                     </Button>
                 </div>
@@ -159,4 +176,4 @@ const Cart = () => {
     );
 };
 
-export default Cart;
+export default MobileCart;

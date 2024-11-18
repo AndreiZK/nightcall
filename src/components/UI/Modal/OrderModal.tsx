@@ -7,7 +7,7 @@ import { colors, media, rm } from "@/styles";
 import { BASE_API_URL } from "../../../../constants";
 import { requestOptions } from "../../../../constants";
 import { validateTelegramId } from "@/utils/validateTelegramId";
-import useStore from '../../../store/store'
+import useStore from "../../../store/store";
 import { useEffect, useState } from "react";
 import { fontNotoSans } from "@/styles/fonts";
 import { redirect } from "next/navigation";
@@ -28,14 +28,14 @@ const StyledContainer = styled.div`
     display: flex;
     gap: ${rm(100)};
 
-    .left{
+    .left {
         display: flex;
         flex-direction: column;
         min-height: 100%;
         justify-content: space-between;
         gap: ${rm(24)};
 
-        button{
+        button {
             width: auto;
             height: ${rm(60)};
             font-size: ${rm(24)};
@@ -51,26 +51,26 @@ const StyledBottomContainer = styled.div`
     height: 100%;
     justify-content: space-between;
 
-    .promo{
+    .promo {
         display: flex;
         gap: ${rm(20)};
         flex-direction: column;
 
-        >:last-child{
+        > :last-child {
             align-self: flex-end;
         }
     }
 
-    .price{
+    .price {
         display: flex;
         flex-direction: column;
         gap: ${rm(8)};
 
-        .priceContainer{
+        .priceContainer {
             display: flex;
             justify-content: space-between;
 
-            p{
+            p {
                 color: ${colors.white100};
                 font-size: ${rm(20)};
             }
@@ -80,24 +80,23 @@ const StyledBottomContainer = styled.div`
     button {
         font-size: ${rm(20)};
     }
-`
+`;
 
 const StyledSubTitle = styled.p`
     font-size: ${rm(24)};
     color: ${colors.white100};
-`
+`;
 
 const StyledTitle = styled.p`
     font-size: ${rm(48)};
     color: ${colors.purple};
     margin-bottom: ${rm(0)};
     margin-top: ${rm(40)};
-`
+`;
 
 const OrderModal = (props: Omit<ModalProps, "children">) => {
-
-    const setOrderModal = useStore((state: any) => (state.setOrderModal))
-    const isOrderModalOpen = useStore((state: any) => (state.isOrderModalOpen))
+    const setOrderModal = useStore((state: any) => state.setOrderModal);
+    const isOrderModalOpen = useStore((state: any) => state.isOrderModalOpen);
 
     const [home, setHome] = useState<string>("");
     const [entrance, setEntrance] = useState<string>("");
@@ -113,9 +112,9 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const [price, setPrice] = useState<number>(0);
     const [discountPrice, setDiscountPrice] = useState<number>(0);
 
-    const jwt = useStore((state: any) => (state.jwtToken));
+    const jwt = useStore((state: any) => state.jwtToken);
 
-    const paymentLink = useStore((state: any) => (state.paymentLink));
+    const paymentLink = useStore((state: any) => state.paymentLink);
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
@@ -125,50 +124,53 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
     const getPrice = async () => {
         const finalOrder: any = [];
-    
+
         for (const [key, value] of amounts.entries()) {
-          for (let i = 0; i < value; i++) {
-            finalOrder.push(key);
-          }
+            for (let i = 0; i < value; i++) {
+                finalOrder.push(key);
+            }
         }
-    
+
         const price = await getOrderPrice(finalOrder);
         const deliveryPrice = await getDeliveryPrice(finalOrder);
-    
+
         useStore.setState({ price: price.totalPrice });
         setPrice(price.totalPrice);
-    
+
         setDeliveryPrice(deliveryPrice);
 
-        setOrderPrice(price.totalPrice - deliveryPrice)
-      };
+        setOrderPrice(price.totalPrice - deliveryPrice);
+    };
 
-      const handlePay = async () => {
+    const handlePay = async () => {
         // useStore.setState({ isOver: true, promocode: promocode });
 
         const finalOrder: any = [];
 
         for (const [key, value] of amounts.entries()) {
-          for (let i = 0; i < value; i++) {
-            finalOrder.push(key);
-          }
+            for (let i = 0; i < value; i++) {
+                finalOrder.push(key);
+            }
         }
-  
+
         const orderData = JSON.stringify({
-          comment: "none",
-          cart: finalOrder,
+            comment: "none",
+            cart: finalOrder,
         });
 
         const orderId = await createOrder(orderData, jwt);
 
-        console.log('token',jwt)
+        console.log("token", jwt);
 
-        const { paymentLink, hashIds, error } = await getPaymentLink(orderId, promocode, jwt);
+        const { paymentLink, hashIds, error } = await getPaymentLink(
+            orderId,
+            promocode,
+            jwt
+        );
 
         // if(!error){
         //     let tg: any = window.Telegram.WebApp;
 
-      
         //     const tgData = {
         //       orderId: orderId,
         //       paymentLink: paymentLink,
@@ -181,64 +183,56 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         // } else {
         //     console.log("error", error);
         // }
-      };
-    
-      const handleDiscount = async () => {
-        const finalOrder: any = [];
-    
-        for (const [key, value] of amounts.entries()) {
-          for (let i = 0; i < value; i++) {
-            finalOrder.push(key);
-          }
-        }
-    
-        const discountedPrice = await getDiscountedPrice(finalOrder, promocode)
-    
-        setDiscountPrice(discountedPrice)
-      }
+    };
 
-      useEffect(() => {
+    const handleDiscount = async () => {
+        const finalOrder: any = [];
+
+        for (const [key, value] of amounts.entries()) {
+            for (let i = 0; i < value; i++) {
+                finalOrder.push(key);
+            }
+        }
+
+        const discountedPrice = await getDiscountedPrice(finalOrder, promocode);
+
+        setDiscountPrice(discountedPrice);
+    };
+
+    useEffect(() => {
         console.log("paymentLink", paymentLink);
-      }, [paymentLink]);
+    }, [paymentLink]);
 
     useEffect(() => {
         getProductsForCart();
-        getPrice()
+        getPrice();
     }, [amounts, order]);
-
 
     return (
         <Modal isOpen={isOrderModalOpen} onClose={() => setOrderModal(false)}>
             <StyledTitle>Оформление заказа</StyledTitle>
             <StyledContainer>
                 <div className="left">
-                    <OrderView/>
+                    <OrderView />
                     <Button onClick={handlePay}>Перейти к оплате</Button>
                 </div>
                 <StyledBottomContainer>
                     <div className="promo">
-                        <StyledSubTitle>
-                            Ввести промокод
-                        </StyledSubTitle>
-                        <Textfield value={promocode} onChange={(e) => setPromocode(e.target.value)} required label="Промокод" />
+                        <Textfield
+                            value={promocode}
+                            onChange={(e) => setPromocode(e.target.value)}
+                            label="Промокод"
+                        />
                         <Button onClick={handleDiscount}>Подтвердить</Button>
                     </div>
                     <div className="price">
                         <div className="priceContainer">
-                            <p>
-                                Сумма заказа
-                            </p>
-                            <p>
-                                {orderPrice}BYN
-                            </p>
+                            <p>Сумма заказа</p>
+                            <p>{orderPrice}BYN</p>
                         </div>
                         <div className="priceContainer">
-                            <p>
-                                Стоимость доставки
-                            </p>
-                            <p>
-                                {deliveryPrice}BYN
-                            </p>
+                            <p>Стоимость доставки</p>
+                            <p>{deliveryPrice}BYN</p>
                         </div>
                         {/* <div className="priceContainer">
                             <p>
@@ -248,13 +242,15 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                                 {discountPrice}BYN
                             </p>
                         </div> */}
+                        {discountPrice > 0 && (
+                            <div className="priceContainer">
+                                <p>Сумма скидки</p>
+                                <p>{discountPrice}BYN</p>
+                            </div>
+                        )}
                         <div className="priceContainer">
-                            <p>
-                                Итоговая стоимость
-                            </p>
-                            <p>
-                                {price - discountPrice}BYN
-                            </p>
+                            <p>Итоговая стоимость</p>
+                            <p>{price - discountPrice}BYN</p>
                         </div>
                     </div>
                 </StyledBottomContainer>

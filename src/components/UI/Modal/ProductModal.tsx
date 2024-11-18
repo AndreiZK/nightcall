@@ -3,7 +3,7 @@ import Modal, { ModalProps } from ".";
 import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
-import { colors, rm } from "@/styles";
+import { colors, media, rm } from "@/styles";
 import { IProduct, IProductExtra, IProductType } from "../../../../types";
 import { BASE_IMAGE_URL } from "../../../../constants";
 import { useState } from "react";
@@ -17,22 +17,37 @@ const StyledContainer = styled.div`
     flex-direction: column;
     gap: ${rm(32)};
 
+    ${media.md`
+           padding-block: ${rm(20)};
+           `}
+
     .description {
         width: 40vw;
         display: flex;
         margin-left: auto;
         gap: ${rm(24)};
+
+        ${media.md`
+            flex-direction: column;
+            width: auto;
+        `}
         img {
             border-radius: ${rm(16)};
             height: ${rm(180)};
             width: ${rm(180)};
             object-fit: cover;
+            ${media.md`
+           order: 2;
+           `}
         }
 
         .text {
             display: flex;
             flex-direction: column;
             gap: ${rm(20)};
+            ${media.md`
+                
+           `}
             .title {
                 font-size: ${rm(32)};
                 color: ${colors.purple};
@@ -53,12 +68,14 @@ const StyledContainer = styled.div`
     .bottom {
         display: flex;
         gap: ${rm(40)};
-
+        ${media.md`
+            gap: ${rm(16)};
+           flex-direction: column-reverse;
+           `}
         .counter {
             display: flex;
             align-items: center;
             gap: ${rm(12)};
-
             .counter-button {
                 cursor: pointer;
                 height: ${rm(46)};
@@ -158,7 +175,7 @@ const ProductModal = (props: ProductModalProps) => {
         }
         updateAmount(product, count);
 
-        props.onClose()
+        props.onClose();
     };
 
     const handleExtraSelect = (val: string) => {
