@@ -51,19 +51,19 @@ const StyledFooter = styled.footer`
 const footerLinks = [
     {
         title: "Контакты",
-        href: "/",
+        href: "/contacts",
     },
     {
         title: "Пользовательское соглашение",
-        href: "/",
+        href: "/policy",
     },
     {
         title: "Банковские реквизиты",
-        href: "/",
+        href: "/banking",
     },
     {
         title: "Доставка и оплата",
-        href: "/",
+        href: "/payment",
     },
 ];
 

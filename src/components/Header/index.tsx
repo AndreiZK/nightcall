@@ -8,6 +8,7 @@ import useStore from "@/store/store";
 import Link from "next/link";
 import { Icons } from "../UI/Icons";
 import MobileCart from "../Cart/MobileCart";
+import { toast } from "react-toastify";
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -57,9 +58,36 @@ const HeaderContainer = styled.div`
     }
 
     .button-container {
-
+        
     }
     `}
+
+    .desktop-button {
+        position: relative;
+
+        .user-context-menu {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translateY(60%);
+            flex-direction: column;
+            align-items: start;
+            gap: ${rm(14)};
+            display: none;
+            background-color: #ffffff18;
+            padding: ${rm(12)};
+            border-radius: ${rm(8)};
+
+            .user-context-menu-item {
+                font-size: ${rm(18)};
+                font-weight: bold;
+            }
+
+            &.open {
+                display: flex;
+            }
+        }
+    }
 
     .mobile-button {
         background: transparent;
@@ -205,8 +233,35 @@ const Header = () => {
                                 </div>
                             </button>
                         ) : (
-                            <Button onClick={() => setProfileModal(true)}>
-                                Открыть профиль
+                            <Button
+                                className="desktop-button"
+                                onClick={() => setUserMenuOpen((prev) => !prev)}
+                            >
+                                Мой аккаунт
+                                <div
+                                    className={`user-context-menu ${
+                                        userMenuOpen ? "open" : ""
+                                    }`}
+                                >
+                                    <span
+                                        onClick={() => setProfileModal(true)}
+                                        className="user-context-menu-item"
+                                    >
+                                        Профиль
+                                    </span>
+                                    <span
+                                        onClick={() => setTrackOpen(true)}
+                                        className="user-context-menu-item"
+                                    >
+                                        Мои заказы
+                                    </span>
+                                    <span
+                                        onClick={handleLogOut}
+                                        className="user-context-menu-item"
+                                    >
+                                        Выйти
+                                    </span>
+                                </div>
                             </Button>
                         )}
                         {!isAuth ? (
@@ -224,7 +279,7 @@ const Header = () => {
                                 <Icons.cartMobile />
                             </button>
                         ) : (
-                            <Button onClick={handleLogOut}>Выйти</Button>
+                            <></>
                         )}
                     </div>
                 </div>

@@ -18,7 +18,11 @@ import { getAdress } from "@/utils/getAdress";
 import { Accordion } from "@/components/Modals/Accordion";
 
 const StyledContainer = styled.div`
-    padding-block: ${rm(55)};
+    padding-block: ${rm(40)};
+
+    display: flex;
+    flex-direction: column;
+    gap: ${rm(32)};
 
     .info {
         margin-top: ${rm(10)};
@@ -48,6 +52,12 @@ const StyledContainer = styled.div`
             gap: ${rm(16)};
         }
     `}
+
+    .orders {
+        display: flex;
+        flex-direction: column;
+        gap: ${rm(20)};
+    }
 `;
 
 const StyledBottomContainer = styled.div`
@@ -91,7 +101,7 @@ const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
 
     const [isValid, setIsValid] = useState<boolean>(false);
 
-    const [activeIndex, setActiveIndex] = useState<number>(0);
+    const [activeIndex, setActiveIndex] = useState<number>(-1);
 
     const [dataToRender, setDataToRender] = useState<any>([]);
 
@@ -127,16 +137,19 @@ const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
     return (
         <Modal isOpen={isTrackOpen} onClose={() => setTrackOpen(false)}>
             <StyledContainer>
-                <ModalTitle>Предыдущие заказы</ModalTitle>
-                {dataToRender.map((item: any, index: number) => (
-                    <Accordion
-                        data={item}
-                        key={item.id}
-                        index={index}
-                        activeIndex={activeIndex}
-                        setActiveIndex={setActiveIndex}
-                    />
-                ))}
+                <ModalTitle>История заказов</ModalTitle>
+                <div className="orders">
+                    {dataToRender.map((item: any, index: number) => (
+                        <Accordion
+                            data={item}
+                            key={item.id}
+                            index={index}
+                            activeIndex={activeIndex}
+                            setActiveIndex={setActiveIndex}
+                        />
+                    ))}
+                </div>
+
                 {/* <StyledBottomContainer>
                     <Button onClick={updateUserData}>Сохранить</Button>
                 </StyledBottomContainer> */}

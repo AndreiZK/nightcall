@@ -127,9 +127,14 @@ const useStore = create((set, get) => ({
     isSecondStepModalOpen: false,
     isProfileModalOpen: false,
     isOrderModalOpen: false,
+    isCourierModalOpen: false,
+    isPartnershipModalOpen: false,
     isTrackOpen: false,
 
     setLoginModal: (value: string) => set({ isLoginModalOpen: value }),
+    setCourierModal: (value: string) => set({ isCourierModalOpen: value }),
+    setPartnershipModal: (value: string) =>
+        set({ isPartnershipModalOpen: value }),
     setRegistrationModal: (value: string) =>
         set({ isRegistrationModalOpen: value }),
     setSecondStepModal: (value: string) =>

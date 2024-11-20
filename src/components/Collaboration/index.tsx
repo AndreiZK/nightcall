@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import SectionTitle from "../UI/SectionTitle";
 import { media, rm } from "@/styles";
+import useStore from "@/store/store";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -24,6 +25,8 @@ const StyledContainer = styled.div`
                 border-radius: ${rm(24)};
                 height: 100%;
                 width: 100%;
+                object-fit: cover;
+                object-position: center 10%;
                 cursor: pointer;
             }
         }
@@ -56,6 +59,15 @@ const StyledContainer = styled.div`
 `;
 
 const Collaboration = () => {
+    const setCourierModal = useStore((state: any) => state.setCourierModal);
+
+    const data = [
+        {
+            img: "/images/courier.jpg",
+            onClick: () => setCourierModal(true),
+        },
+    ];
+
     return (
         <StyledContainer>
             <SectionTitle>Сотрудничество</SectionTitle>
@@ -64,12 +76,9 @@ const Collaboration = () => {
                 сотрудничать с новыми заведениями и людьми!
             </p>
             <div className="cards">
-                {new Array(2).fill(0).map((i, index) => (
-                    <a key={index} href="/">
-                        <img
-                            src="https://loremflickr.com/cache/resized/65535_53837803942_3ca28590ae_n_200_200_nofilter.jpg"
-                            alt=""
-                        />
+                {data.map((i, index) => (
+                    <a key={index} onClick={i.onClick}>
+                        <img src={i.img} alt="" />
                     </a>
                 ))}
             </div>

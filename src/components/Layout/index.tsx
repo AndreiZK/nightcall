@@ -9,6 +9,9 @@ import { BASE_API_URL } from "../../../constants";
 // import { toast } from "react-toastify";
 import parseCookie from "@/utils/parseCookie";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import styled from "styled-components";
 
 import { media, rm } from "@/styles";
@@ -267,6 +270,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Header />
                 <div className="content-container">
                     {children}
+                    <ToastContainer />
                     <a
                         href={paymentLink}
                         id="redirectLink"

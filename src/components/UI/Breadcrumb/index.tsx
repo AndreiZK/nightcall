@@ -23,7 +23,13 @@ const StyledBreadcrumb = styled.div`
 const breadcrumbMap = {
     "/": "Главная",
     restaurants: "Рестораны",
+    "1": "Галактика",
+    "2": "Harat's",
     "3": "СОН",
+    "4": "Мистерия",
+    "5": "test_merch",
+    "6": "Биг джонс",
+    "7": "Shaw_box",
 };
 
 const Breadcrumb = () => {
@@ -37,7 +43,7 @@ const Breadcrumb = () => {
     // console.log(breadcrumbItems);
     return (
         <StyledBreadcrumb>
-            {/* {breadcrumbItems.map((item, index) =>
+            {breadcrumbItems.map((item, index) =>
                 index === breadcrumbItems.length - 1 ? (
                     <span>{item}</span>
                 ) : (
@@ -46,7 +52,7 @@ const Breadcrumb = () => {
                         <Icons.chevroneRight />
                     </>
                 )
-            )} */}
+            )}
         </StyledBreadcrumb>
     );
 };

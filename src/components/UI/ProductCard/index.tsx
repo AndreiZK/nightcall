@@ -96,9 +96,9 @@ const ProductCard = (props: ProductCardProps) => {
                                 ? props.title.slice(0, 14) + "..."
                                 : props.title}
                         </span>
-                        <span className="weight">
+                        {/* <span className="weight">
                             {props.weight ? props.weight + " г" : ""}
-                        </span>
+                        </span> */}
                     </div>
                     <span className="price">
                         {props.price
