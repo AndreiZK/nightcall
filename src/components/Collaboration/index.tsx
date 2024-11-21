@@ -18,7 +18,7 @@ const StyledContainer = styled.div`
     .cards {
         display: flex;
         gap: ${rm(40)};
-        a {
+        .offer {
             height: ${rm(200)};
             width: ${rm(360)};
             img {
@@ -44,7 +44,7 @@ const StyledContainer = styled.div`
         display: flex;
         flex-direction: column;
         gap: ${rm(16)};
-        a {
+        .offer {
             height: ${rm(200)};
             width: ${rm(360)};
             img {
@@ -76,11 +76,14 @@ const Collaboration = () => {
                 сотрудничать с новыми заведениями и людьми!
             </p>
             <div className="cards">
-                {data.map((i, index) => (
-                    <a key={index} onClick={i.onClick}>
-                        <img src={i.img} alt="" />
-                    </a>
-                ))}
+                {/* {data.map((i, index) => (
+                    <div className="offer" key={index} >
+                        <img onClick={i.onClick} src={i.img} alt="" />
+                    </div>
+                ))} */}
+                <div className="offer" >
+                        <img onClick={() => setCourierModal(true)} src='/images/courier.jpg' alt="" />
+                    </div>
             </div>
         </StyledContainer>
     );

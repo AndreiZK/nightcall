@@ -8,6 +8,8 @@ import SecondStepModal from "../UI/Modal/SecondStepModal"
 import ProfileModal from "../UI/Modal/ProfileModal"
 import OrderModal from "../UI/Modal/OrderModal"
 import MyOrdersModal from "../UI/Modal/MyOrdersModal"
+import BecomeCourierModal from "../UI/Modal/BecomeCourierModal"
+import BecomePartnerModal from "../UI/Modal/BecomePartnerModal"
 
 export const Modals = () => {
 
@@ -21,6 +23,8 @@ export const Modals = () => {
             <ProfileModal />
             <OrderModal />
             <MyOrdersModal />
+            <BecomeCourierModal />
+            <BecomePartnerModal />
         </>
     )
 }

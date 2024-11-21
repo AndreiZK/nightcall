@@ -10,6 +10,7 @@ const StyledFooter = styled.footer`
     gap: ${rm(10)};
     background: rgba(255, 255, 255, 0.05);
     padding-block: ${rm(37)};
+    z-index: 1000;
 
     .links {
         display: flex;
@@ -43,6 +44,7 @@ const StyledFooter = styled.footer`
                 font-size: ${rm(12)};
                 color: ${colors.white100};
                 text-decoration: none;
+                cursor: pointer;
             }
         }
     `}

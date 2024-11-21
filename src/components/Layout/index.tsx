@@ -34,14 +34,19 @@ declare global {
 }
 
 const StyledWrapperWithFooter = styled.div`
+    position: relative;
     width: 100%;
     min-height: 100vh;
     background: #070707;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
 `;
 
 const LayoutContainer = styled.div`
     max-width: ${rm(1320)};
-
+    overflow: hidden;
     margin-inline: auto;
     position: relative;
     .content-container {

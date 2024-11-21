@@ -8,8 +8,8 @@ const StyledContainer = styled.div`
     gap: ${rm(20)};
 
     .title {
-        font-size: ${rm(24)};
-        font-weight: block;
+        font-size: ${rm(36)};
+        font-weight: bold;
         color: ${colors.purple};
         margin-bottom: ${rm(10)};
     }
