@@ -168,6 +168,9 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
             jwt
         );
 
+
+        console.log("paymentLink", paymentLink)
+
         // if(!error){
         //     let tg: any = window.Telegram.WebApp;
 

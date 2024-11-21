@@ -1,5 +1,5 @@
-import BecomePartner from "@/views/BecomePartner";
+// import BecomePartner from "@/views/BecomePartner";
 
-export default function page() {
-  return <BecomePartner></BecomePartner>;
-}
+// export default function page() {
+//   return <BecomePartner></BecomePartner>;
+// }

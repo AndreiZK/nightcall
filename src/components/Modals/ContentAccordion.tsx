@@ -46,17 +46,16 @@ export const ContentAccordion = ({
     const [deliveryStatus, setDeliveryStatus] = useState<string>("");
     const [orderStatus, setOrderStatus] = useState<string>("");
 
-    const animation: any = useMemo(() => {
+    const animation: any = useMemo(() => { 
         const innerStyle = {
-            position: "relative",
-            maxHeight: activeIndex == index ? `${height + 60}px` : "0px",
-            paddingBlock: activeIndex == index ? `${rm(16)}` : "0px",
-            transition: `max-height 0.8s ease, padding-block 0.8s ease`,
-            overflow: "hidden",
-        };
+            position: 'relative',
+            maxHeight: height === -1 ? 'auto' : (activeIndex === index ? `${height * 2}px` : '0px'),
+            transition: `max-height 0.8s ease` ,
+            overflow: 'hidden',
+        }
 
-        return innerStyle;
-    }, [activeIndex]);
+        return innerStyle
+    }, [ activeIndex, height, data])
 
     useEffect(() => {
         if (data.merchant_status === "cooking") {

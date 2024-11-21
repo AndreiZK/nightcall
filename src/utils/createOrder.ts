@@ -13,20 +13,16 @@ const requestOptions: any = (raw: any, jwt: string) => {
   };
 }
 
-export function createOrder(orderData: any, jwt: string) {
- 
-    let orderId: any = null;
-
-    fetch(`${BASE_API_URL}api/order/createOrder`, requestOptions(orderData, jwt))
-    .then((response) => response.text())
-    .then((result) => {
-      console.log("результат", JSON.parse(result));
-
-      orderId = JSON.parse(result).data.id;
-
-      if (orderId) {
+export async function createOrder(orderData: any, jwt: string) {
+    try {
+        const response = await fetch(`${BASE_API_URL}api/order/createOrder`, requestOptions(orderData, jwt));
+        const result = await response.json();
+        console.log("результат", result);
+        
+        const orderId = result.data.id;
         return orderId;
-      }
-    })
-    .catch((error) => console.error(error));
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }

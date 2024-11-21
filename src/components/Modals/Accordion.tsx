@@ -102,15 +102,18 @@ export const Accordion = ({
     setActiveIndex,
 }: AccordionProps) => {
     const ref = useRef<any>(null);
-    const [height, setHeight] = useState(0);
+    const [height, setHeight] = useState<number>(-1);
 
     const [hours, setHours] = useState<string>("");
     const [minutes, setMinutes] = useState<string>("");
 
     useEffect(() => {
         let heightContent = ref?.current?.offsetHeight;
-        setHeight(heightContent);
-    }, [ref]);
+  
+        setTimeout(() => {
+          setHeight(heightContent)
+        }, 50)
+      },[ref, activeIndex])
 
     const firstSpring = useSpring({
         transform:
