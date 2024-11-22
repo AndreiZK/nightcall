@@ -69,10 +69,24 @@ const RestaurantsGrid = styled.div`
     `}
 `;
 
-export const categories = ["Все", "Бургеры", "Пицца", "Суши", "Паста"];
+export const categories =[
+    {
+        title: 'рестораны',
+        name: 'restrant',
+    },
+    {
+        title: 'фастфуд',
+        name: 'fast-food',
+    },
+    
+]
+;
+
+
+
 
 export default function Restaurants() {
-    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
     const [search, setSearch] = useState("");
 
@@ -88,9 +102,14 @@ export default function Restaurants() {
     }, []);
 
     const searchRests = async () => {
-        const result = await getSearchResult(search);
+        let result = []
+        if(selectedCategory) {
+            result = await getSearchResult(search);
+        } else result = await getSearchResult(search);
+        
 
-        setRestaurantsData(result);
+        setRestaurantsData(result)
+
     };
 
     useEffect(() => {
@@ -114,13 +133,13 @@ export default function Restaurants() {
                 <Filters>
                     {categories.map((category) => (
                         <span
-                            onClick={() => setSelectedCategory(category)}
-                            key={category}
+                            onClick={() => setSelectedCategory(category.name)}
+                            key={category.name}
                             className={
-                                category === selectedCategory ? "selected" : ""
+                                category.name === selectedCategory ? "selected" : ""
                             }
                         >
-                            {category}
+                            {category.title}
                         </span>
                     ))}
                 </Filters>

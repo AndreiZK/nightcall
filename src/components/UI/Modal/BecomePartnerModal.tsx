@@ -8,10 +8,11 @@ import { BASE_API_URL } from "../../../../constants";
 import { requestOptions } from "../../../../constants";
 import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from "../../../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fontNotoSans } from "@/styles/fonts";
 import { toast } from "react-toastify";
-
+import emailJs from "@emailjs/browser";
+import { serviceId, templateId, userId } from '../../../../constants'
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
 
@@ -70,56 +71,34 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
         (state: any) => state.setPartnershipModal
     );
 
-    // const loginHandler = () => {
-    //     const raw = JSON.stringify({
-    //         identifier: mail,
-    //         password: pass,
-    //     });
-
-    //     fetch(`${BASE_API_URL}api/auth/local`, requestOptions(raw))
-    //         .then((response) => response.text())
-    //         .then((result) => {
-    //             const token = JSON.parse(result).jwt;
-
-    //             console.log(JSON.parse(result));
-
-    //             if (token) {
-    //                 document.cookie = `jwt=${token}; max-age=86400`;
-    //                 //86400 - 24 hours
-
-    //                 validateTelegramId(token);
-
-    //                 useStore.setState({ jwtToken: token, isAuth: true });
-    //                 //   toast.success("Вход выполнен успешно");
-    //                 // props.onClose()
-    //                 setCourierModal(false);
-    //             } else {
-    //                 //   toast.error("Проверьте введённые данные");
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //             // toast.error("Проверьте введённые данные");
-    //         });
-
-    //     setTrackOpen(true);
-    // };
-
-    const handleSubmit = () => {
-        const raw = JSON.stringify({
-            mail,
-            name,
-            restaurant,
-            phone,
+    const templateParams = {
+        from_name: name,
+        email: mail,
+        phone: phone,
+        address: restaurant,
+      };
+    
+      useEffect(() => {
+        emailJs.init({
+            publicKey: userId,
+            blockHeadless: true,
+            limitRate: {
+                id: "app",
+                throttle: 10000,
+            },
         });
-
-        console.log(raw);
-    };
-
-    const handleSuccess = () => {
-        setPartnershipModal(false);
-
-        toast.success("Заявка отправлена");
+    }, []);
+    
+    const handleSubmit = () => {
+        emailJs.send(serviceId, 'template_0zjaapd', templateParams).then(
+            (response) => {
+                toast.success("Заявка отправлена!");
+                setPartnershipModal(false);
+            },
+            (error) => {
+                toast.error("Что-то пошло не так, попробуйте позже");
+            }
+        );
     };
 
     return (
@@ -128,7 +107,7 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
             onClose={() => setPartnershipModal(false)}
         >
             <StyledContainer>
-                <ModalTitle>Стать курьером</ModalTitle>
+                <ModalTitle>Стать партнером</ModalTitle>
                 <div className="textfields">
                     <Textfield
                         value={name}

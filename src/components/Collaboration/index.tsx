@@ -60,6 +60,7 @@ const StyledContainer = styled.div`
 
 const Collaboration = () => {
     const setCourierModal = useStore((state: any) => state.setCourierModal);
+    const setPartnershipModal = useStore((state: any) => state.setPartnershipModal);
 
     const data = [
         {
@@ -83,6 +84,9 @@ const Collaboration = () => {
                 ))} */}
                 <div className="offer" >
                         <img onClick={() => setCourierModal(true)} src='/images/courier.jpg' alt="" />
+                    </div>
+                    <div className="offer" >
+                        <img onClick={() => setPartnershipModal(true)} src='/images/partner.jpg' alt="" />
                     </div>
             </div>
         </StyledContainer>

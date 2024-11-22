@@ -15,6 +15,7 @@ import { RedirectType } from "next/navigation";
 import { parseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { getUser } from "@/utils/getUser";
 import { getAdress } from "@/utils/getAdress";
+import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -147,11 +148,12 @@ const ProfileModal = (props: Omit<ModalProps, "children">) => {
           fetch(`${BASE_API_URL}api/addAdress`, requestAdressOptions(raw))
             .then((response) => response.text())
             .then((result) => {
-            //   toast.success("Данные успешно обновлены");
+            toast.success("Данные успешно обновлены");
               setIsValid(true)
               console.log("Результат обновления адреса", result);
+              setProfileModal(false)
             })
-            .catch((error) => console.error(error));
+            .catch((error) => toast.error('Не удалось обновить данные'));
         } else {
         //   toast.error("Авторизуйтесь");
         }

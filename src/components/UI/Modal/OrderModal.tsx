@@ -135,11 +135,12 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         const deliveryPrice = await getDeliveryPrice(finalOrder);
 
         useStore.setState({ price: price.totalPrice });
-        setPrice(price.totalPrice);
-
         setDeliveryPrice(deliveryPrice);
 
-        setOrderPrice(price.totalPrice - deliveryPrice);
+        setPrice(price.totalPrice + deliveryPrice);
+
+        
+        setOrderPrice(price.totalPrice);
     };
 
     const handlePay = async () => {
@@ -228,10 +229,10 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                         />
                         <Button onClick={handleDiscount}>Подтвердить</Button>
                     </div>
-                    <div className="price">
+                    {orderPrice && <div className="price">
                         <div className="priceContainer">
                             <p>Сумма заказа</p>
-                            <p>{orderPrice}BYN</p>
+                            <p>{orderPrice.toFixed(2)}BYN</p>
                         </div>
                         <div className="priceContainer">
                             <p>Стоимость доставки</p>
@@ -253,9 +254,9 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                         )}
                         <div className="priceContainer">
                             <p>Итоговая стоимость</p>
-                            <p>{price - discountPrice}BYN</p>
+                            <p>{typeof discountPrice === 'number' && discountPrice ? (price - discountPrice).toFixed(2) : price.toFixed(2)}BYN</p>
                         </div>
-                    </div>
+                    </div>}
                 </StyledBottomContainer>
             </StyledContainer>
         </Modal>

@@ -3,7 +3,7 @@ import { BASE_API_URL } from "../../constants";
 
 export async function getSearchResult(
     keyword: string,
-    category: string = "restaurants"
+    category: string = "restrant"
 ) {
     const url = `${BASE_API_URL}api/search`;
 
