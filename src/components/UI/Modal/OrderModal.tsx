@@ -172,6 +172,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
         console.log("paymentLink", paymentLink)
 
+        redirect(paymentLink);
+
         // if(!error){
         //     let tg: any = window.Telegram.WebApp;
 

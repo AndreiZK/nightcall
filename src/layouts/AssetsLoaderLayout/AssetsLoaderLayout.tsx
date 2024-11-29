@@ -134,7 +134,7 @@ export const AssetsLoaderLayout = ({
                     <animated.div style={logoValues}>
                         <SquareLoader />
                     </animated.div>
-                    <animated.span style={textValues}>TEXTURA agency</animated.span>
+                    <animated.span style={textValues}>NIGHTCALL</animated.span>
                 </animated.div>
                 <StyledBackground style={backgroundValues} />
             </StyledLoader>
