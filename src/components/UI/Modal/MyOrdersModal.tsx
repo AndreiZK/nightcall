@@ -16,6 +16,7 @@ import { parseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { getUser } from "@/utils/getUser";
 import { getAdress } from "@/utils/getAdress";
 import { Accordion } from "@/components/Modals/Accordion";
+import { Icons } from "../Icons";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(40)};
