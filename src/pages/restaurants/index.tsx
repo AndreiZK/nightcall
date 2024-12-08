@@ -69,24 +69,21 @@ const RestaurantsGrid = styled.div`
     `}
 `;
 
-export const categories =[
+export const categories = [
     {
-        title: 'рестораны',
-        name: 'restrant',
+        title: "рестораны",
+        name: "restrant",
     },
     {
-        title: 'фастфуд',
-        name: 'fast-food',
+        title: "фастфуд",
+        name: "fast-food",
     },
-    
-]
-;
-
-
-
+];
 
 export default function Restaurants() {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(
+        null
+    );
     const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
     const [search, setSearch] = useState("");
 
@@ -102,18 +99,16 @@ export default function Restaurants() {
     }, []);
 
     const searchRests = async () => {
-        let result = []
-        if(selectedCategory) {
+        let result = [];
+        if (selectedCategory) {
             result = await getSearchResult(search);
         } else result = await getSearchResult(search);
-        
 
-        setRestaurantsData(result)
-
+        setRestaurantsData(result);
     };
 
     useEffect(() => {
-
+        if (!restaurantsData) return;
         searchRests();
     }, [search, selectedCategory]);
 
@@ -136,7 +131,9 @@ export default function Restaurants() {
                             onClick={() => setSelectedCategory(category.name)}
                             key={category.name}
                             className={
-                                category.name === selectedCategory ? "selected" : ""
+                                category.name === selectedCategory
+                                    ? "selected"
+                                    : ""
                             }
                         >
                             {category.title}
@@ -144,9 +141,10 @@ export default function Restaurants() {
                     ))}
                 </Filters>
                 <RestaurantsGrid>
-                    {restaurantsData.map((item, index) => (
-                        <RestaurantCard key={index} data={item} />
-                    ))}
+                    {restaurantsData.length > 0 &&
+                        restaurantsData.map((item, index) => (
+                            <RestaurantCard key={index} data={item} />
+                        ))}
                 </RestaurantsGrid>
             </Layout>
         </>

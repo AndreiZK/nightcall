@@ -19,7 +19,7 @@ const StyledContainer = styled.div`
         display: flex;
         gap: ${rm(40)};
         .offer {
-            height: ${rm(200)};
+            height: ${rm(240)};
             width: ${rm(360)};
             img {
                 border-radius: ${rm(24)};
@@ -45,7 +45,7 @@ const StyledContainer = styled.div`
         flex-direction: column;
         gap: ${rm(16)};
         .offer {
-            height: ${rm(200)};
+            height: ${rm(240)};
             width: ${rm(360)};
             img {
                 border-radius: ${rm(24)};
@@ -60,14 +60,9 @@ const StyledContainer = styled.div`
 
 const Collaboration = () => {
     const setCourierModal = useStore((state: any) => state.setCourierModal);
-    const setPartnershipModal = useStore((state: any) => state.setPartnershipModal);
-
-    const data = [
-        {
-            img: "/images/courier.jpg",
-            onClick: () => setCourierModal(true),
-        },
-    ];
+    const setPartnershipModal = useStore(
+        (state: any) => state.setPartnershipModal
+    );
 
     return (
         <StyledContainer>
@@ -82,12 +77,20 @@ const Collaboration = () => {
                         <img onClick={i.onClick} src={i.img} alt="" />
                     </div>
                 ))} */}
-                <div className="offer" >
-                        <img onClick={() => setCourierModal(true)} src='/images/courier.jpg' alt="" />
-                    </div>
-                    <div className="offer" >
-                        <img onClick={() => setPartnershipModal(true)} src='/images/partner.jpg' alt="" />
-                    </div>
+                <div className="offer">
+                    <img
+                        onClick={() => setCourierModal(true)}
+                        src="/images/courier.jpg"
+                        alt=""
+                    />
+                </div>
+                <div className="offer">
+                    <img
+                        onClick={() => setPartnershipModal(true)}
+                        src="/images/partner.jpg"
+                        alt=""
+                    />
+                </div>
             </div>
         </StyledContainer>
     );
