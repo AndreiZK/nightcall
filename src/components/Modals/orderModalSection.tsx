@@ -8,6 +8,6 @@ const StyledSection = styled.div`
 
 export const OrderModalSection = () => {
     return (
-        
+        <div></div>
     )
 }
