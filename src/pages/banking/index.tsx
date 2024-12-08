@@ -6,12 +6,20 @@ const StyledContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${rm(20)};
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 
     .title {
         font-size: ${rm(36)};
         font-weight: bold;
         color: ${colors.purple};
         margin-bottom: ${rm(10)};
+        width: 40%;
+    }
+
+    .banking-content {
+        width: 40%;
     }
 `;
 

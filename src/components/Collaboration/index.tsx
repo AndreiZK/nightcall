@@ -30,6 +30,13 @@ const StyledContainer = styled.div`
                 cursor: pointer;
             }
         }
+
+        .secondOffer {
+            img {
+                object-fit: cover;
+                object-position: center 40%;
+            }
+        }
     }
 
     ${media.md`
@@ -84,7 +91,7 @@ const Collaboration = () => {
                         alt=""
                     />
                 </div>
-                <div className="offer">
+                <div className="offer secondOffer">
                     <img
                         onClick={() => setPartnershipModal(true)}
                         src="/images/partner.jpg"

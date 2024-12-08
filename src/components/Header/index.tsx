@@ -74,7 +74,7 @@ const HeaderContainer = styled.div`
             align-items: start;
             gap: ${rm(14)};
             display: none;
-            background-color: #ffffff18;
+            background-color: #07070780;
             padding: ${rm(12)};
             border-radius: ${rm(8)};
 

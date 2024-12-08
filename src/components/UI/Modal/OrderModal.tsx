@@ -22,6 +22,7 @@ import { getProductsByIds } from "@/requests/getProductsByIds";
 import { getDiscountedPrice } from "@/utils/getDiscountedPrice";
 import { createOrder } from "@/utils/createOrder";
 import { getPaymentLink } from "@/utils/getPaymentLink";
+import { useRouter } from 'next/navigation';
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -118,6 +119,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
+    const router = useRouter();
+
     const getProductsForCart = async () => {
         const products = await getProductsByIds(order);
     };
@@ -144,8 +147,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     };
 
     const handlePay = async () => {
-        // useStore.setState({ isOver: true, promocode: promocode });
-
         const finalOrder: any = [];
 
         for (const [key, value] of amounts.entries()) {
@@ -161,19 +162,14 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
         const orderId = await createOrder(orderData, jwt);
 
-        console.log("token", jwt);
-
         const { paymentLink, hashIds, error } = await getPaymentLink(
             orderId,
             promocode,
             jwt
         );
 
-
-        console.log("paymentLink", paymentLink)
-
-        redirect(paymentLink);
-
+        console.log("paymentLink", paymentLink);
+        
         // if(!error){
         //     let tg: any = window.Telegram.WebApp;
 
@@ -189,6 +185,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         // } else {
         //     console.log("error", error);
         // }
+
+        router.push(paymentLink);
     };
 
     const handleDiscount = async () => {
@@ -255,7 +253,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                             </div>
                         )}
                         <div className="priceContainer">
-                            <p>Итоговая стоимость</p>
+                            <p>Итог��вая стоимость</p>
                             <p>{typeof discountPrice === 'number' && discountPrice ? (price - discountPrice).toFixed(2) : price.toFixed(2)}BYN</p>
                         </div>
                     </div>}

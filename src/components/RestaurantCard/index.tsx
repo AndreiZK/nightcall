@@ -45,7 +45,7 @@ const StyledCard = styled.a`
 `;
 
 interface RestauratCardProps {
-    data: IRestaurant;
+    data: any;
 }
 
 const RestaurantCard = (props: RestauratCardProps) => {
@@ -54,7 +54,11 @@ const RestaurantCard = (props: RestauratCardProps) => {
             <img
                 src={
                     BASE_IMAGE_URL +
-                    props.data?.attributes?.preview_image?.data[0]?.attributes.url
+                    (props.data?.attributes?.preview_image?.data[0]?.attributes
+                        .url
+                        ? props.data?.attributes?.preview_image?.data[0]?.attributes
+                              .url
+                        : props.data?.preview_image[0]?.url)
                 }
                 alt=""
             />

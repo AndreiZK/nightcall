@@ -71,27 +71,23 @@ const RestaurantsGrid = styled.div`
 
 export const categories = [
     {
-        title: "рестораны",
-        name: "restrant",
+        title: "все",
+        name: "all",
     },
     {
-        title: "фастфуд",
-        name: "fast-food",
+        title: "рестораны",
+        name: "restrant",
     },
 ];
 
 export default function Restaurants() {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(
-        null
-    );
+    const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
     const [search, setSearch] = useState("");
 
     useEffect(() => {
         const getData = async () => {
-            const { data } = await getStrapiData("merchants");
-
-            console.log(data);
+            const { data } = await getSearchResult("");
             setRestaurantsData(data);
         };
 
@@ -99,12 +95,8 @@ export default function Restaurants() {
     }, []);
 
     const searchRests = async () => {
-        let result = [];
-        if (selectedCategory) {
-            result = await getSearchResult(search);
-        } else result = await getSearchResult(search);
-
-        setRestaurantsData(result);
+        const result = await getSearchResult(search, selectedCategory);
+        setRestaurantsData(result.data);
     };
 
     useEffect(() => {
