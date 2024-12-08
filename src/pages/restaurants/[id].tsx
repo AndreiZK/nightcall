@@ -165,8 +165,6 @@ export default function RestaurantPage() {
         }
     }
 
-    console.log(id);
-
     useEffect(() => {
         fetchData();
     }, []);

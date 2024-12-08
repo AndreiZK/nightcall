@@ -1,6 +1,8 @@
 import styles, { colors, media, rm } from "@/styles";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { Icons } from "../UI/Icons";
+import { BASE_API_URL } from "../../../constants";
 
 const StyledContent = styled.div`
     transform: translateY(-4px);
@@ -37,6 +39,26 @@ interface ContentAccordionProps {
     data: any;
 }
 
+const StarsContainer = styled.div`
+    display: flex;
+    margin-left: auto;
+    flex-direction: row-reverse;
+
+    svg {
+        path {
+            fill: grey;
+        }
+
+        /* When hovering any SVG, affect itself and all previous siblings */
+        &:hover,
+        &:hover ~ svg {
+            path {
+                fill: ${colors.purple};
+            }
+        }
+    }
+`;
+
 export const ContentAccordion = ({
     activeIndex,
     index,
@@ -46,16 +68,56 @@ export const ContentAccordion = ({
     const [deliveryStatus, setDeliveryStatus] = useState<string>("");
     const [orderStatus, setOrderStatus] = useState<string>("");
 
-    const animation: any = useMemo(() => { 
-        const innerStyle = {
-            position: 'relative',
-            maxHeight: height === -1 ? 'auto' : (activeIndex === index ? `${height * 2}px` : '0px'),
-            transition: `max-height 0.8s ease` ,
-            overflow: 'hidden',
-        }
+    console.log(data);
 
-        return innerStyle
-    }, [ activeIndex, height, data])
+    const animation: any = useMemo(() => {
+        const innerStyle = {
+            position: "relative",
+            maxHeight:
+                height === -1
+                    ? "auto"
+                    : activeIndex === index
+                    ? `${height * 4}px`
+                    : "0px",
+            transition: `max-height 0.8s ease`,
+            overflow: "hidden",
+        };
+
+        return innerStyle;
+    }, [activeIndex, height, data]);
+
+    const setRating = async (rating: number) => {
+        const url = `${BASE_API_URL}api/rate`;
+
+        const raw = JSON.stringify({
+            order: data.id,
+            rating,
+        });
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+                },
+                body: raw,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            console.log("Полученные данные:", data);
+
+            return data;
+        } catch (error) {
+            console.error("Ошибка при получении данных:", error);
+            return [];
+        }
+    };
 
     useEffect(() => {
         if (data.merchant_status === "cooking") {
@@ -99,6 +161,11 @@ export const ContentAccordion = ({
                     {data.adress.flat_number ? ", квартира" : ""}{" "}
                     {data.adress.flat_number}
                 </p>
+                <StarsContainer>
+                    {new Array(5).fill(0).map((i, index) => (
+                        <Icons.star onClick={() => setRating(index + 1)} />
+                    ))}
+                </StarsContainer>
             </div>
         </StyledContent>
     );
