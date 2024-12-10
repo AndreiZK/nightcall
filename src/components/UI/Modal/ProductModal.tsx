@@ -179,12 +179,10 @@ const ProductModal = (props: ProductModalProps) => {
     };
 
     const handleExtraSelect = (val: string) => {
-        console.log(val);
         setSelectedExtra(Number(val));
     };
 
     const handleTypeSelect = (val: string) => {
-        console.log(val);
         setSelectedType(Number(val));
     };
 
@@ -202,7 +200,7 @@ const ProductModal = (props: ProductModalProps) => {
             <StyledContainer>
                 <div className="description">
                     <img
-                        src={BASE_IMAGE_URL + props.productData.image[0].url}
+                        src={BASE_IMAGE_URL + props?.productData?.image[0]?.url}
                         alt=""
                     />
                     <div className="text">

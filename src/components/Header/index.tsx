@@ -163,7 +163,6 @@ const Header = () => {
 
     const handleLoginOpen = () => {
         setLoginModal(true);
-        console.log("oppening loginModal");
     };
 
     const handleLogOut = () => {
@@ -183,7 +182,6 @@ const Header = () => {
     }, [amounts, order]);
 
     useEffect(() => {
-        console.log(jwt?.length);
         if (jwt?.length > 7) {
             setIsAuth(true);
         } else {

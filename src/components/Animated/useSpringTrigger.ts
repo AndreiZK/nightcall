@@ -292,7 +292,6 @@ function getToggledValue(start: number, end: number, progress: number, allProgre
     //     }
     // }
 
-    // console.log(allProgress )
 
     if (progress > 0) {
         return end

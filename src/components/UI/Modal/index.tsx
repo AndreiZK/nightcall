@@ -2,8 +2,9 @@ import { colors, media, rm } from "@/styles";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Icons } from "../Icons";
+import { animated, easings, useSpring } from "@react-spring/web";
 
-const ModalOverlay = styled.div`
+const ModalOverlay = styled(animated.div)`
     position: fixed;
     top: 0;
     left: 0;
@@ -13,16 +14,23 @@ const ModalOverlay = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    display: none;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    userSelect: none;
 
     &.open {
-        display: block;
+        pointer-events: auto;
+        userSelect: auto;
     }
+
 `;
 
-const StyledModal = styled.div`
+const StyledModal = styled(animated.div)`
     z-index: 1000;
-    display: none;
+    display: block;
+    pointer-events: none;
+    userSelect: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -32,9 +40,11 @@ const StyledModal = styled.div`
     border-radius: ${rm(40)};
     max-width: 80%;
     min-width: 30%;
+    opacity: 0;
 
     &.open {
-        display: block;
+        pointer-events: auto;
+        userSelect: auto;
     }
 
     .cross {
@@ -92,10 +102,15 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
         };
     }, []);
 
+    const appearSpring = useSpring({
+        opacity: isOpen ? 1 : 0,
+        config: { duration: 300, ease: easings.easeInOutQuad },
+      })
+
     return (
         <>
-            <ModalOverlay ref={overlayRef} className={isOpen ? "open" : ""} />
-            <StyledModal className={isOpen ? "open" : ""}>
+            <ModalOverlay ref={overlayRef} className={isOpen ? "open" : ""} style={appearSpring} />
+            <StyledModal className={isOpen ? "open" : ""} style={appearSpring}>
                 <Icons.cross onClick={onClose} className="cross" />
                 {children}
             </StyledModal>

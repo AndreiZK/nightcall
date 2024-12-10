@@ -23,6 +23,7 @@ import { getDiscountedPrice } from "@/utils/getDiscountedPrice";
 import { createOrder } from "@/utils/createOrder";
 import { getPaymentLink } from "@/utils/getPaymentLink";
 import { useRouter } from 'next/navigation';
+import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -35,6 +36,12 @@ const StyledContainer = styled.div`
         min-height: 100%;
         justify-content: space-between;
         gap: ${rm(24)};
+
+        p{
+            font-size: ${rm(22)};
+            font-weight: 600;
+            line-height: 100%;
+        }
 
         button {
             width: auto;
@@ -168,8 +175,13 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
             jwt
         );
 
-        console.log("paymentLink", paymentLink);
         
+        if(!error && paymentLink && hashIds){
+            router.push(paymentLink);
+        } else {
+            toast.error(error);
+        }
+
         // if(!error){
         //     let tg: any = window.Telegram.WebApp;
 
@@ -186,7 +198,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         //     console.log("error", error);
         // }
 
-        router.push(paymentLink);
     };
 
     const handleDiscount = async () => {
@@ -204,10 +215,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     };
 
     useEffect(() => {
-        console.log("paymentLink", paymentLink);
-    }, [paymentLink]);
-
-    useEffect(() => {
         getProductsForCart();
         getPrice();
     }, [amounts, order]);
@@ -218,7 +225,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
             <StyledContainer>
                 <div className="left">
                     <OrderView />
-                    <Button onClick={handlePay}>Перейти к оплате</Button>
+                    <Button onClick={handlePay}><p>Перейти к оплате</p></Button>
                 </div>
                 <StyledBottomContainer>
                     <div className="promo">
@@ -253,7 +260,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                             </div>
                         )}
                         <div className="priceContainer">
-                            <p>Итог��вая стоимость</p>
+                            <p>Итоговая стоимость</p>
                             <p>{typeof discountPrice === 'number' && discountPrice ? (price - discountPrice).toFixed(2) : price.toFixed(2)}BYN</p>
                         </div>
                     </div>}

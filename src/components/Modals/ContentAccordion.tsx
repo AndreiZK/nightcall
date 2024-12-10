@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Icons } from "../UI/Icons";
 import { BASE_API_URL } from "../../../constants";
+import useStore from "@/store/store";
 
 const StyledContent = styled.div`
     transform: translateY(-4px);
@@ -68,7 +69,7 @@ export const ContentAccordion = ({
     const [deliveryStatus, setDeliveryStatus] = useState<string>("");
     const [orderStatus, setOrderStatus] = useState<string>("");
 
-    console.log(data);
+    const jwt = useStore((state: any) => (state.jwtToken)) ;
 
     const animation: any = useMemo(() => {
         const innerStyle = {
@@ -91,7 +92,7 @@ export const ContentAccordion = ({
 
         const raw = JSON.stringify({
             order: data.id,
-            rating,
+            value: rating,
         });
 
         try {
@@ -99,7 +100,7 @@ export const ContentAccordion = ({
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    // 'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+                    'Authorization': `Bearer ${jwt}`
                 },
                 body: raw,
             });
@@ -109,8 +110,6 @@ export const ContentAccordion = ({
             }
 
             const data = await response.json();
-
-            console.log("Полученные данные:", data);
 
             return data;
         } catch (error) {
@@ -163,7 +162,7 @@ export const ContentAccordion = ({
                 </p>
                 <StarsContainer>
                     {new Array(5).fill(0).map((i, index) => (
-                        <Icons.star onClick={() => setRating(index + 1)} />
+                        <Icons.star key={index} onClick={() => setRating(index + 1)} />
                     ))}
                 </StarsContainer>
             </div>

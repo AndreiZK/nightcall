@@ -1,4 +1,4 @@
-import GlobalStyles from "@/styles";
+import GlobalStyles, { ToastStyles } from "@/styles";
 
 // import { ScrollLayout } from '@/layouts/ScrollLayout/ScrollLayout'
 import { AssetsLoaderLayout } from "@/layouts/AssetsLoaderLayout/AssetsLoaderLayout";
@@ -83,15 +83,10 @@ export default function App({ Component, pageProps }: AppProps) {
             <ScrollLayout>
                 <AssetsLoaderLayout>
                     <AnimatedRouterLayout>
-                        {/* Normalize & Global Styles */}
                         <GlobalStyles />
-
-                        {/* Grid to scale sizes, configure it in styles/index.ts */}
+                        <ToastStyles />
                         <SmartCSSGrid />
-
-                        {/* Lvh Logic for IG in-app */}
                         <Lvh />
-
                         <Component {...pageProps} />
                         <Modals/>
                     </AnimatedRouterLayout>

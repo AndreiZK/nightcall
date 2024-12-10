@@ -126,7 +126,6 @@ const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
                     .slice()
                     .sort((a: any, b: any) => b.id - a.id); // Создаем копию и сортируем по id в обратном порядке
                 setDataToRender(reversedArray);
-                console.log("data to render", reversedArray);
             })
             .catch((error) => console.error(error));
     };

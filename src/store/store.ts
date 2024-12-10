@@ -132,17 +132,17 @@ const useStore = create((set, get) => ({
     isPartnershipModalOpen: false,
     isTrackOpen: false,
 
-    setLoginModal: (value: string) => set({ isLoginModalOpen: value }),
-    setCourierModal: (value: string) => set({ isCourierModalOpen: value }),
-    setPartnershipModal: (value: string) =>
+    setLoginModal: (value: boolean) => set({ isLoginModalOpen: value }),
+    setCourierModal: (value: boolean) => set({ isCourierModalOpen: value }),
+    setPartnershipModal: (value: boolean) =>
         set({ isPartnershipModalOpen: value }),
-    setRegistrationModal: (value: string) =>
+    setRegistrationModal: (value: boolean) =>
         set({ isRegistrationModalOpen: value }),
-    setSecondStepModal: (value: string) =>
+    setSecondStepModal: (value: boolean) =>
         set({ isSecondStepModalOpen: value }),
-    setProfileModal: (value: string) => set({ isProfileModalOpen: value }),
-    setOrderModal: (value: string) => set({ isOrderModalOpen: value }),
-    setTrackOpen: (value: string) => set({ isTrackOpen: value }),
+    setProfileModal: (value: boolean) => set({ isProfileModalOpen: value }),
+    setOrderModal: (value: boolean) => set({ isOrderModalOpen: value }),
+    setTrackOpen: (value: boolean) => set({ isTrackOpen: value }),
 }));
 
 export default useStore;

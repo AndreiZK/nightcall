@@ -119,3 +119,28 @@ export default GlobalStyles
 export { colors } from './colors'
 export { fonts } from './fonts'
 export { SmartCSSGrid, media, rm, em }
+
+export const ToastStyles = createGlobalStyle`
+  .Toastify__toast {
+    background: ${colors.black200};
+    color: ${colors.white100};
+    border-radius: 8px;
+  }
+
+  .Toastify__progress-bar {
+    background: linear-gradient(42.715deg, #523ffd 0%, #622697 100%);
+  }
+
+  .Toastify__toast-icon {
+    color: ${colors.purple};
+  }
+
+  .Toastify__close-button {
+    color: ${colors.white100};
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;

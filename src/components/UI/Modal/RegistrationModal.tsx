@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { fontNotoSans } from "@/styles/fonts";
 import { redirect } from "next/navigation";
 import { RedirectType } from "next/navigation";
+import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -77,12 +78,12 @@ const RegistrationModal = (props: Omit<ModalProps, "children">) => {
     
       const registrationHandler = () => {
         if (!validateEmail(mail)) {
-        //   toast.error("Проверьте почту на ошибки");
+          toast.error("Проверьте почту на ошибки");
           return;
         }
     
         if (pass.length < 8) {
-        //   toast.error("Минимальная длина пароля - 8 символов");
+          toast.error("Минимальная длина пароля - 8 символов");
           return;
         }
 

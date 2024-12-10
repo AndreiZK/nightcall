@@ -10,6 +10,8 @@ import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from '../../../store/store'
 import { useState } from "react";
 import { fontNotoSans } from "@/styles/fonts";
+import { useSpring } from "@react-spring/web";
+import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -64,7 +66,7 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
     const isLoginModalOpen = useStore((state: any) => (state.isLoginModalOpen))
     const setLoginModal = useStore((state: any) => (state.setLoginModal))
 
-    const setTrackOpen = useStore((state: any) => (state.setTrackOpen))
+    const setProfileModal = useStore((state: any) => (state.setProfileModal))
 
     const setRegistrationModal = useStore((state: any) => (state.setRegistrationModal))
 
@@ -79,8 +81,6 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
           .then((result) => {
             const token = JSON.parse(result).jwt;
     
-            console.log(JSON.parse(result));
-    
             if (token) {
               document.cookie = `jwt=${token}; max-age=86400`;
               //86400 - 24 hours
@@ -88,21 +88,21 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
               validateTelegramId(token)
     
               useStore.setState({ jwtToken: token, isAuth: true });
-            //   toast.success("Вход выполнен успешно");
+              toast.success("Вход выполнен успешно");
             // props.onClose()
-            setLoginModal(false)
+              setProfileModal(true)
+
+              setLoginModal(false)
     
             } else {
-            //   toast.error("Проверьте введённые данные");
+              toast.error("Проверьте введённые данные");
             }
           })
           .catch((error) => {
             console.log(error);
-            // toast.error("Проверьте введённые данные");
+            toast.error("Проверьте введённые данные");
           });
-
-          setTrackOpen(true)
-      };
+    };
 
       const handleRegisterChange = () => {
         setLoginModal(false)
