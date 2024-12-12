@@ -150,6 +150,8 @@ export default function RestaurantPage() {
 
     async function fetchData() {
         try {
+            if (!id) return;
+
             const products: IProduct[] = await getProductsFromMerchant(id);
             const merchant: { data: IRestaurant } = await getStrapiData(`merchants/${id}`);
             console.log('API response for merchant:', merchant);
@@ -167,8 +169,10 @@ export default function RestaurantPage() {
     }
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (id) {
+            fetchData();
+        }
+    }, [id]);
 
     return (
         <Layout>
