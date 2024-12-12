@@ -212,7 +212,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
         const discountedPrice = await getDiscountedPrice(finalOrder, promocode);
 
-        if(discountedPrice.discountedPrice.discountedPrice != undefined && discountedPrice.discountedPrice.discountedPrice != null){
+        if(discountedPrice?.discountedPrice?.discountedPrice != undefined && discountedPrice?.discountedPrice?.discountedPrice != null){
             console.log('setting')
             setPrice(discountedPrice.discountedPrice.discountedPrice);
             setDiscountPrice(discountedPrice.discountedPrice.discountAmount);

@@ -149,19 +149,20 @@ export default function RestaurantPage() {
     const { id } = router.query;
 
     async function fetchData() {
-        const products: IProduct[] = await getProductsFromMerchant(id);
-        const merchant: { data: IRestaurant } = await getStrapiData(
-            `merchants/${id}`
-        );
-        console.log(merchant.data);
-        console.log(products);
-        if (products && products.length) {
-            setMerchantData(merchant.data);
-            setProducts(products);
-            setLoaded(true);
-            setSelectedCategory(
-                merchantData?.attributes.categories.categories[0]
-            );
+        try {
+            const products: IProduct[] = await getProductsFromMerchant(id);
+            const merchant: { data: IRestaurant } = await getStrapiData(`merchants/${id}`);
+            console.log('API response for merchant:', merchant);
+            console.log('API response for products:', products);
+
+            if (products && products.length) {
+                setMerchantData(merchant.data);
+                setProducts(products);
+                setLoaded(true);
+                setSelectedCategory(merchantData?.attributes.categories.categories[0]);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
     }
 
