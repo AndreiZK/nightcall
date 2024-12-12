@@ -90,15 +90,19 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
     }, []);
     
     const handleSubmit = () => {
-        emailJs.send(serviceId, 'template_0zjaapd', templateParams).then(
-            (response) => {
-                toast.success("Заявка отправлена!");
-                setPartnershipModal(false);
-            },
-            (error) => {
-                toast.error("Что-то пошло не так, попробуйте позже");
-            }
-        );
+        if(name != '' && mail != '' && phone != '' && restaurant != ''){
+            emailJs.send(serviceId, 'template_0zjaapd', templateParams).then(
+                (response) => {
+                    toast.success("Заявка отправлена!");
+                    setPartnershipModal(false);
+                },
+                (error) => {
+                    toast.error("Что-то пошло не так, попробуйте позже");
+                }
+            );
+        } else {
+            toast.error("Заполните все поля");
+        }
     };
 
     return (
@@ -119,6 +123,7 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
                         value={mail}
                         onChange={(e) => setMail(e.target.value)}
                         label="Электронная почта"
+                        required
                     />
                     <Textfield
                         value={restaurant}
@@ -130,6 +135,7 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         label="Мобильный телефон"
+                        required
                     />
                 </div>
 

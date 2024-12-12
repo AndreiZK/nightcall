@@ -1,5 +1,6 @@
 import { Product } from "@/store/store";
 import { BASE_API_URL } from "../../constants";
+import {toast} from 'react-toastify'
 
 export async function getDiscountedPrice(order: Array<Product>, promocode: string) {
   const url = `${BASE_API_URL}api/payment/getDiscountedPrice`;
@@ -30,9 +31,16 @@ export async function getDiscountedPrice(order: Array<Product>, promocode: strin
 
     console.log("Цена с дискаунтом:", data);
 
+    if (data.discountedPrice) {
+      toast.success("Промокод применен");
+    } else {
+      toast.error("Проверьте правильность промокода");
+    }
+
     return data;
   } catch (error) {
     console.error("Ошибка при получении данных:", error);
+    toast.error("Проверьте правильность промокода");
     return [];
   }
 }

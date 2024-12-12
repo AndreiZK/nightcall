@@ -58,6 +58,7 @@ const StyledBottomContainer = styled.div`
     flex-direction: column;
     height: 100%;
     justify-content: space-between;
+    min-width: ${rm(300)};
 
     .promo {
         display: flex;
@@ -118,7 +119,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const [orderPrice, setOrderPrice] = useState<number>(0);
     const [deliveryPrice, setDeliveryPrice] = useState<number>(0);
     const [price, setPrice] = useState<number>(0);
-    const [discountPrice, setDiscountPrice] = useState<number>(0);
+    const [discountPrice, setDiscountPrice] = useState<any>(undefined);
 
     const jwt = useStore((state: any) => state.jwtToken);
 
@@ -211,7 +212,11 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
         const discountedPrice = await getDiscountedPrice(finalOrder, promocode);
 
-        setDiscountPrice(discountedPrice);
+        if(discountedPrice.discountedPrice.discountedPrice != undefined && discountedPrice.discountedPrice.discountedPrice != null){
+            console.log('setting')
+            setPrice(discountedPrice.discountedPrice.discountedPrice);
+            setDiscountPrice(discountedPrice.discountedPrice.discountAmount);
+        }
     };
 
     useEffect(() => {
@@ -237,22 +242,15 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                         <Button onClick={handleDiscount}>Подтвердить</Button>
                     </div>
                     {orderPrice && <div className="price">
-                        <div className="priceContainer">
+                        {!discountPrice && <div className="priceContainer">
                             <p>Сумма заказа</p>
                             <p>{orderPrice.toFixed(2)}BYN</p>
-                        </div>
-                        <div className="priceContainer">
+                        </div>}
+
+                        {!discountPrice && <div className="priceContainer">
                             <p>Стоимость доставки</p>
                             <p>{deliveryPrice}BYN</p>
-                        </div>
-                        {/* <div className="priceContainer">
-                            <p>
-                                Скидка по промокоду
-                            </p>
-                            <p>
-                                {discountPrice}BYN
-                            </p>
-                        </div> */}
+                        </div>}
                         {discountPrice > 0 && (
                             <div className="priceContainer">
                                 <p>Сумма скидки</p>
@@ -261,7 +259,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                         )}
                         <div className="priceContainer">
                             <p>Итоговая стоимость</p>
-                            <p>{typeof discountPrice === 'number' && discountPrice ? (price - discountPrice).toFixed(2) : price.toFixed(2)}BYN</p>
+                            <p>{price}BYN</p>
                         </div>
                     </div>}
                 </StyledBottomContainer>

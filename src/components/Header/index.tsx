@@ -71,12 +71,13 @@ const HeaderContainer = styled.div`
             right: 0;
             transform: translateY(60%);
             flex-direction: column;
-            align-items: start;
+            align-items: center;
             gap: ${rm(14)};
             display: none;
             background-color: #07070780;
             padding: ${rm(12)};
             border-radius: ${rm(8)};
+            width: ${rm(140)};
 
             .user-context-menu-item {
                 font-size: ${rm(18)};
