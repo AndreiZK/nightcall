@@ -153,8 +153,9 @@ export const Accordion = ({
             >
                 <StyledQuestion>
                     <span className="green">Заказ</span> номер{" "}
-                    <span className="underline">{data.id}</span> в {hours}:
-                    {minutes}
+                    <span className="underline">{data.id}</span> {" "}
+                    <span className="green">из</span> {data.products[0].product.merchant.name}{" "}
+                     в {hours}:{minutes}
                 </StyledQuestion>
                 <StyledPlusContainer>
                     <animated.div

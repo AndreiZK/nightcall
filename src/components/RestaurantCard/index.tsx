@@ -65,7 +65,7 @@ const RestaurantCard = (props: RestauratCardProps) => {
             <div className="description">
                 <div className="rating">
                     <Icons.star />
-                    <span>{props?.data?.attributes?.rating || 5}</span>
+                    <span>{(props?.data?.attributes?.rating || props?.data?.rating || 5).toFixed(1)}</span>
                 </div>
             </div>
         </StyledCard>

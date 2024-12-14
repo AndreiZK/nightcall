@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Icons } from "../UI/Icons";
 import { BASE_API_URL } from "../../../constants";
 import useStore from "@/store/store";
+import { toast } from "react-toastify";
 
 const StyledContent = styled.div`
     transform: translateY(-4px);
@@ -43,20 +44,42 @@ interface ContentAccordionProps {
 const StarsContainer = styled.div`
     display: flex;
     margin-left: auto;
-    flex-direction: row-reverse;
+    flex-direction: row;
 
     svg {
+        cursor: pointer;
         path {
             fill: grey;
+            transition: fill 0.2s ease;
         }
 
-        /* When hovering any SVG, affect itself and all previous siblings */
-        &:hover,
-        &:hover ~ svg {
-            path {
-                fill: ${colors.purple};
-            }
+        &.active path {
+            fill: ${colors.purple};
         }
+    }
+`;
+
+const RateContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: ${rm(46)};
+    margin-top: ${rm(22)};
+    margin-bottom: ${rm(22)};
+`;
+
+const StyledRateButton = styled.button`
+    background-color: ${colors.purple};
+    border-radius: ${rm(6)};
+    padding: ${rm(12)} ${rm(24)};
+    font-size: ${rm(18)};
+    color: ${colors.white100};
+    cursor: pointer;
+
+    transition: opacity 0.5s ease;
+
+    &:hover {
+        opacity: 0.7;
     }
 `;
 
@@ -68,6 +91,9 @@ export const ContentAccordion = ({
 }: ContentAccordionProps) => {
     const [deliveryStatus, setDeliveryStatus] = useState<string>("");
     const [orderStatus, setOrderStatus] = useState<string>("");
+
+    const [chosenStars, setChosenStars] = useState<number>(0);
+
 
     const jwt = useStore((state: any) => (state.jwtToken)) ;
 
@@ -87,12 +113,12 @@ export const ContentAccordion = ({
         return innerStyle;
     }, [activeIndex, height, data]);
 
-    const setRating = async (rating: number) => {
+    const updateRating = async () => {
         const url = `${BASE_API_URL}api/rate`;
 
         const raw = JSON.stringify({
             order: data.id,
-            value: rating,
+            value: chosenStars,
         });
 
         try {
@@ -107,6 +133,8 @@ export const ContentAccordion = ({
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
+            } else {
+                toast.success("Оценка заведения успешно добавлена");
             }
 
             const data = await response.json();
@@ -160,11 +188,20 @@ export const ContentAccordion = ({
                     {data.adress.flat_number ? ", квартира" : ""}{" "}
                     {data.adress.flat_number}
                 </p>
-                <StarsContainer>
-                    {new Array(5).fill(0).map((i, index) => (
-                        <Icons.star key={index} onClick={() => setRating(index + 1)} />
-                    ))}
-                </StarsContainer>
+                <RateContainer>
+                    <StarsContainer>
+                        {new Array(5).fill(0).map((_, index) => (
+                            <Icons.star
+                                key={index}
+                                className={index < chosenStars ? 'active' : ''}
+                                onClick={() => {
+                                    setChosenStars(index + 1);
+                                }}
+                            />
+                        ))}
+                    </StarsContainer>
+                    <StyledRateButton onClick={updateRating}>Оценить заведение</StyledRateButton>
+                </RateContainer>
             </div>
         </StyledContent>
     );

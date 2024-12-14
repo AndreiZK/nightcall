@@ -58,49 +58,14 @@ const StyledContainer = styled.div`
         display: flex;
         flex-direction: column;
         gap: ${rm(20)};
-    }
-`;
-
-const StyledBottomContainer = styled.div`
-    display: flex;
-    align-items: center;
-    gap: ${rm(20)};
-
-    button {
-        font-size: ${rm(20)};
-    }
-
-    .registration {
-        display: flex;
-        align-items: center;
-
-        p {
-            font-size: ${rm(16)};
-            color: ${colors.white100};
-        }
-
-        span {
-            font-size: ${rm(16)};
-            color: ${colors.purple};
-            cursor: pointer;
-        }
+        max-height: ${rm(500)};
+        overflow-y: scroll;
     }
 `;
 
 const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
     const setTrackOpen = useStore((state: any) => state.setTrackOpen);
     const isTrackOpen = useStore((state: any) => state.isTrackOpen);
-
-    const [home, setHome] = useState<string>("");
-    const [entrance, setEntrance] = useState<string>("");
-    const [street, setStreet] = useState<string>("");
-    const [flat, setFlat] = useState<string>("");
-    const [name, setName] = useState<string>("");
-    const [phone, setPhone] = useState<string>("");
-    const [mail, setMail] = useState<string>("");
-    const [pass, setPass] = useState<string>("");
-
-    const [isValid, setIsValid] = useState<boolean>(false);
 
     const [activeIndex, setActiveIndex] = useState<number>(-1);
 

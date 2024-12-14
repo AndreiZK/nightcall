@@ -89,6 +89,8 @@ export default function Restaurants() {
         const getData = async () => {
             const { data } = await getSearchResult("");
             setRestaurantsData(data);
+
+            console.log(data);
         };
 
         getData();
