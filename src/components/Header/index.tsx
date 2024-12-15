@@ -24,6 +24,10 @@ const HeaderContainer = styled.div`
 
     backdrop-filter: blur(7px);
 
+    ${media.xsm`
+        border-radius: 0 !important;
+    `}
+
     .header-content {
         padding: ${rm(28)} ${rm(50)};
         display: flex;
@@ -47,12 +51,14 @@ const HeaderContainer = styled.div`
 
     ${media.md`
         max-width: unset;
-        top: ${rm(16)};
-        left: ${rm(16)};
-        background: transparent;
-        backdrop-filter: none;
+        top: 0;
+        left: 0;
+        padding: ${rm(16)};
+        background: #07070780;
         transform: unset;
-        width: calc(100% - 32px);
+        border-radius: 0;
+        width: 100%;
+
         .header-content {
         padding: 0;
     }
@@ -115,14 +121,18 @@ const HeaderContainer = styled.div`
             position: absolute;
             top: 0;
             right: 0;
-            transform: translateY(60%);
+            transform: translate(45%, 35%);
             flex-direction: column;
             align-items: start;
             gap: ${rm(10)};
             display: none;
-            background-color: #ffffff18;
+            background-color: #07070780;
             padding: ${rm(10)};
             border-radius: ${rm(6)};
+
+            ${media.xsm`
+                align-items: center;
+            `}
 
             .user-context-menu-item {
                 font-size: ${rm(16)};

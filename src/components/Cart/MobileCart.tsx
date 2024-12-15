@@ -8,10 +8,12 @@ import CartItem from "./CartItem";
 import { getOrderPrice } from "@/utils/getOrderPrice";
 import { getDeliveryPrice } from "@/utils/getDeliveryPrice";
 import Button from "../UI/Button";
+import { heightLvh } from "@/styles/utils";
+import { toast } from "react-toastify";
 
 const StyledCart = styled.div`
     position: relative;
-    height: 100vh;
+    ${heightLvh(100)};
     width: 100vw;
     position: fixed;
     top: 0;
@@ -96,7 +98,7 @@ const MobileCart = ({
 
     const setOrderModal = useStore((state: any) => state.setOrderModal);
 
-    const token = useStore((state: any) => state.jwtToken);
+    const token = useStore((state: any) => (state.jwtToken));
 
     const getProductsForCart = async () => {
         const products = await getProductsByIds(order);
@@ -125,8 +127,9 @@ const MobileCart = ({
     const handleOrder = () => {
         if (token?.length > 7) {
             setOrderModal(true);
+            onClose();
         } else {
-            // toast.error('Авторизуйтесь')
+            toast.error('Авторизуйтесь')
         }
     };
 

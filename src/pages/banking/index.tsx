@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import { colors, rm } from "@/styles";
+import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 
 const StyledContainer = styled.div`
@@ -16,10 +16,18 @@ const StyledContainer = styled.div`
         color: ${colors.purple};
         margin-bottom: ${rm(10)};
         width: 40%;
+
+        ${media.xsm`
+            width: 100%;
+        `}
     }
 
     .banking-content {
         width: 40%;
+
+        ${media.xsm`
+            width: 100%;
+        `}
     }
 `;
 

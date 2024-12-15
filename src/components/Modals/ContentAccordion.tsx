@@ -46,6 +46,10 @@ const StarsContainer = styled.div`
     margin-left: auto;
     flex-direction: row;
 
+    ${media.xsm`
+        margin-left: 0;
+    `}
+
     svg {
         cursor: pointer;
         path {
@@ -66,6 +70,12 @@ const RateContainer = styled.div`
     gap: ${rm(46)};
     margin-top: ${rm(22)};
     margin-bottom: ${rm(22)};
+
+    ${media.xsm`
+        gap: ${rm(12)};
+        margin-top: ${rm(12)};
+        margin-bottom: ${rm(12)};
+    `}
 `;
 
 const StyledRateButton = styled.button`
@@ -77,6 +87,12 @@ const StyledRateButton = styled.button`
     cursor: pointer;
 
     transition: opacity 0.5s ease;
+
+    ${media.xsm`
+        font-size: ${rm(16)};
+        padding: ${rm(6)} ${rm(12)};
+        width: 46%;
+    `}
 
     &:hover {
         opacity: 0.7;
@@ -93,7 +109,6 @@ export const ContentAccordion = ({
     const [orderStatus, setOrderStatus] = useState<string>("");
 
     const [chosenStars, setChosenStars] = useState<number>(0);
-
 
     const jwt = useStore((state: any) => (state.jwtToken)) ;
 
@@ -131,10 +146,10 @@ export const ContentAccordion = ({
                 body: raw,
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            } else {
+            if(response.ok){
                 toast.success("Оценка заведения успешно добавлена");
+            } else {
+                toast.error("Невозможно повторно оценить заведение");
             }
 
             const data = await response.json();
@@ -147,6 +162,10 @@ export const ContentAccordion = ({
     };
 
     useEffect(() => {
+        if(data?.star?.value){
+            setChosenStars(data.star.value);
+        }
+
         if (data.merchant_status === "cooking") {
             setOrderStatus("Заказ готовится");
         } else if (data.merchant_status === "decline") {
@@ -200,7 +219,7 @@ export const ContentAccordion = ({
                             />
                         ))}
                     </StarsContainer>
-                    <StyledRateButton onClick={updateRating}>Оценить заведение</StyledRateButton>
+                    {!data?.star?.value ? <StyledRateButton onClick={updateRating}>Оценить заведение</StyledRateButton> : <StyledRateButton style={{userSelect: "none", opacity: 0, pointerEvents: "none"}}>Изменить оценку</StyledRateButton>}
                 </RateContainer>
             </div>
         </StyledContent>

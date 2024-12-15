@@ -9,6 +9,7 @@ import { BASE_IMAGE_URL } from "../../../../constants";
 import { useState } from "react";
 import useStore from "@/store/store";
 import Select from "../Select";
+import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(50)};
@@ -29,16 +30,19 @@ const StyledContainer = styled.div`
 
         ${media.md`
             flex-direction: column;
-            width: auto;
+            width: 100%;
+            margin-left: 0;
         `}
         img {
             border-radius: ${rm(16)};
             height: ${rm(180)};
             width: ${rm(180)};
             object-fit: cover;
+            
             ${media.md`
-           order: 2;
-           `}
+                width: 100%;
+                order: 2;
+            `}
         }
 
         .text {
@@ -110,12 +114,17 @@ const ProductModal = (props: ProductModalProps) => {
     const [selectedExtra, setSelectedExtra] = useState(0);
     const [selectedType, setSelectedType] = useState(0);
 
+    const jwt = useStore((state: any) => (state.jwtToken));
+
     const institution = useStore((state: any) => state.institution);
     const order = useStore((state: any) => state.order);
     const addToOrder = useStore((state: any) => state.addToOrder);
     const updateAmount = useStore((state: any) => state.updateAmount);
 
     const handleAdd = () => {
+        if(jwt?.length > 7) {
+
+        
         let inst;
 
         const letter = props.productData.merchant.unique_prefix;
@@ -174,6 +183,10 @@ const ProductModal = (props: ProductModalProps) => {
             addToOrder(product);
         }
         updateAmount(product, count);
+        } else {
+            toast.error("Для добавления товара необходимо авторизоваться");
+            return;
+        }
 
         props.onClose();
     };

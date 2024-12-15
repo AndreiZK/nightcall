@@ -45,6 +45,10 @@ const StyledBottomContainer = styled.div`
         display: flex;
         align-items: center;
 
+        ${media.xsm`
+            flex-direction: column;
+        `}
+
         p{
             font-size: ${rm(16)};
             color: ${colors.white100};

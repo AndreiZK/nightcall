@@ -30,6 +30,11 @@ const StyledContainer = styled.div`
     display: flex;
     gap: ${rm(100)};
 
+    ${media.xsm`
+        flex-direction: column-reverse;
+        gap: ${rm(24)};
+    `}
+
     .left {
         display: flex;
         flex-direction: column;
@@ -67,6 +72,10 @@ const StyledBottomContainer = styled.div`
 
         > :last-child {
             align-self: flex-end;
+
+            ${media.xsm`
+                align-self: flex-start;
+            `}
         }
     }
 
@@ -101,6 +110,10 @@ const StyledTitle = styled.p`
     color: ${colors.purple};
     margin-bottom: ${rm(0)};
     margin-top: ${rm(40)};
+
+    ${media.xsm`
+        font-size: ${rm(30)};
+    `}
 `;
 
 const OrderModal = (props: Omit<ModalProps, "children">) => {
