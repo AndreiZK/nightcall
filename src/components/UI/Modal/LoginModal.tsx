@@ -44,6 +44,7 @@ const StyledBottomContainer = styled.div`
     .registration{
         display: flex;
         align-items: center;
+        gap: ${rm(6)};
 
         ${media.xsm`
             flex-direction: column;
@@ -120,7 +121,7 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
                 <ModalTitle>Вход в учетную запись</ModalTitle>
                 <div className="textfields">
                     <Textfield value={mail} onChange={(e) => setMail(e.target.value)} required label="email" />
-                    <Textfield value={pass} onChange={(e) => setPass(e.target.value)} label="пароль" />
+                    <Textfield value={pass} onChange={(e) => setPass(e.target.value)} required label="пароль" />
                 </div>
 
                 <StyledBottomContainer>

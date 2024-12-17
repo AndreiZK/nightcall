@@ -1,7 +1,7 @@
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 import { Icons } from "../Icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const StyledInput = styled.div`
     position: relative;
@@ -78,21 +78,27 @@ interface TextfieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Textfield = ({ label, required, search, value, ...props }: TextfieldProps) => {
     const [isFocused, setIsFocused] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const isActive = isFocused || value;
+
+    const handleLabelClick = () => {
+        inputRef.current?.focus();
+    };
 
     return (
         <StyledInput 
         //@ts-expect-error
         isActive={isActive}>
             <input
+                ref={inputRef}
                 {...props}
                 value={value}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
             />
             {label && (
-                <span className="label">
+                <span className="label" onClick={handleLabelClick}>
                     {label}
                     {required && "*"}
                 </span>

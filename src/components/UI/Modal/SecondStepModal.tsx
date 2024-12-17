@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { fontNotoSans } from "@/styles/fonts";
 import { redirect } from "next/navigation";
 import { RedirectType } from "next/navigation";
+import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -79,7 +80,7 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
     const [entrance, setEntrance] = useState<string>("");
     const [flat, setFlat] = useState<string>("");
     const [name, setName] = useState<string>("");
-    const [phone, setPhone] = useState<string>("");
+    const [phone, setPhone] = useState<string>("+375");
     const [street, setStreet] = useState<string>("");
 
     const [validation, setValidation] = useState<boolean>(false)
@@ -122,14 +123,14 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
               JSON.parse(result)?.error?.message ===
               "Email or Username are already taken"
             ) {
-            //   toast.error("Такая почта уже используется");
+              toast.error("Такая почта уже используется");
               return;
             }
   
             const token = JSON.parse(result).jwt
   
             if (token) {
-            //   toast.success("Пользователь успешно создан");
+              toast.success("Пользователь успешно создан");
   
               document.cookie = `jwt=${token}; max-age=86400`;
     
@@ -145,7 +146,7 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
           })
           .catch((error) => console.error(error));
       } else {
-        // toast.error("Проверьте введённые данные");
+        toast.error("Проверьте введённые данные");
       }
     };
   
@@ -164,7 +165,7 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
         fetch(`${BASE_API_URL}api/addAdress`, requestAdressOptions(raw))
           .then((response) => response.text())
           .then((result) => {
-            // toast.success("Данные успешно добавлены");
+            toast.success("Данные успешно добавлены");
             console.log("Результат обновления адреса", result);
           })
           .catch((error) => console.error(error));
@@ -173,6 +174,15 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
         setSecondStepModal(false)
       }
     }, [validation]);
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value.startsWith('+375')) {
+            setPhone(value);
+        } else {
+            setPhone('+375');
+        }
+    };
 
     return (
         <Modal isOpen={isSecondStepModal} onClose={() => setSecondStepModal(false)}>
@@ -186,7 +196,12 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
                         <Textfield value={entrance} onChange={(e) => setEntrance(e.target.value)} label="Подьезд" />
                     </div>
                     <Textfield value={name} onChange={(e) => setName(e.target.value)} required label="имя" />
-                    <Textfield value={phone} onChange={(e) => setPhone(e.target.value)} required label="Телефонный номер" />
+                    <Textfield 
+                        value={phone} 
+                        onChange={handlePhoneChange} 
+                        required 
+                        label="Телефонный номер" 
+                    />
                 </div>
 
                 <StyledBottomContainer>

@@ -80,6 +80,8 @@ const StyledContainer = styled.div`
             display: flex;
             align-items: center;
             gap: ${rm(12)};
+            position: relative;
+
             .counter-button {
                 cursor: pointer;
                 height: ${rm(46)};
@@ -89,8 +91,16 @@ const StyledContainer = styled.div`
                 text-align: center;
                 background-color: rgba(164, 63, 253, 0.3);
                 font-size: ${rm(46)};
+                position: relative;
 
                 color: rgba(130, 93, 217, 1);
+
+                span{
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -58%);
+                }
 
                 &.disabled {
                     background-color: rgba(255, 255, 255, 0.1);
@@ -267,7 +277,9 @@ const ProductModal = (props: ProductModalProps) => {
                                 count === 1 ? "disabled" : ""
                             }`}
                         >
-                            -
+                            <span>
+                                -
+                            </span>
                         </span>
                         <span className="count">{count}</span>
                         <span

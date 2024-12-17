@@ -107,7 +107,7 @@ const RegistrationModal = (props: Omit<ModalProps, "children">) => {
                 <ModalTitle>Создайте учётную запись!</ModalTitle>
                 <div className="textfields">
                     <Textfield value={mail} onChange={(e) => setMail(e.target.value)} required label="email" />
-                    <Textfield value={pass} onChange={(e) => setPass(e.target.value)} label="пароль" />
+                    <Textfield value={pass} onChange={(e) => setPass(e.target.value)} required label="пароль" />
                 </div>
 
                 <StyledBottomContainer>
