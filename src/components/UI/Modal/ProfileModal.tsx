@@ -5,14 +5,8 @@ import Textfield from "../Textfield";
 import Button from "../Button";
 import { colors, media, rm } from "@/styles";
 import { BASE_API_URL } from "../../../../constants";
-import { requestOptions } from "../../../../constants";
-import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from '../../../store/store'
 import { useEffect, useState } from "react";
-import { fontNotoSans } from "@/styles/fonts";
-import { redirect } from "next/navigation";
-import { RedirectType } from "next/navigation";
-import { parseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { getUser } from "@/utils/getUser";
 import { getAdress } from "@/utils/getAdress";
 import { toast } from "react-toastify";
@@ -123,14 +117,10 @@ const ProfileModal = (props: Omit<ModalProps, "children">) => {
     };
   
     useEffect(() => {
-    //   const token: any = parseCookie(document.cookie).jwt;
-  
-      if (jwt) { //token
-        //get user data
-        getUserInfo(jwt); //token
+      if (jwt) {
+        getUserInfo(jwt);
       } else {
         useStore.setState({ isAuth: false });
-        // redirect("/login", RedirectType.replace);
       }
     }, [jwt]); //nothing
   

@@ -1,14 +1,11 @@
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 import Button from "../UI/Button";
-import LoginModal from "../UI/Modal/LoginModal";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
 import useStore from "@/store/store";
 import Link from "next/link";
 import { Icons } from "../UI/Icons";
 import MobileCart from "../Cart/MobileCart";
-import { toast } from "react-toastify";
 
 const HeaderContainer = styled.div`
     position: fixed;

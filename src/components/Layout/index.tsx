@@ -1,10 +1,7 @@
 "use client";
 
 import useStore from "@/store/store";
-import styles from "./Layout.module.scss";
 import { useEffect, useState } from "react";
-import getApiUrl from "@/utils/getUrl";
-import { redirect, RedirectType } from "next/navigation";
 import { BASE_API_URL } from "../../../constants";
 // import { toast } from "react-toastify";
 import parseCookie from "@/utils/parseCookie";

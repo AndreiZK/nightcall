@@ -1,22 +1,11 @@
 import styled from "styled-components";
 import Modal, { ModalProps } from ".";
 import ModalTitle from "./ModalTitle";
-import Textfield from "../Textfield";
-import Button from "../Button";
 import { colors, media, rm } from "@/styles";
 import { BASE_API_URL } from "../../../../constants";
-import { requestOptions } from "../../../../constants";
-import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from "../../../store/store";
 import { useEffect, useState } from "react";
-import { fontNotoSans } from "@/styles/fonts";
-import { redirect } from "next/navigation";
-import { RedirectType } from "next/navigation";
-import { parseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { getUser } from "@/utils/getUser";
-import { getAdress } from "@/utils/getAdress";
 import { Accordion } from "@/components/Modals/Accordion";
-import { Icons } from "../Icons";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(40)};

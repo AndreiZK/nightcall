@@ -9,9 +9,6 @@ import { requestOptions } from "../../../../constants";
 import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from '../../../store/store'
 import { useEffect, useState } from "react";
-import { fontNotoSans } from "@/styles/fonts";
-import { redirect } from "next/navigation";
-import { RedirectType } from "next/navigation";
 import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`

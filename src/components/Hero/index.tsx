@@ -79,14 +79,14 @@ const Hero = () => {
                 <h3>Первая ночная доставка еды в Гродно!</h3>
                 <img
                     className="hero-img-mobile"
-                    src="/images/ryan.png"
+                    src="/images/vadim.jpg"
                     alt=""
                 />
                 <Link href='/restaurants' className="button-container">
                     <Button>Заказать</Button>
                 </Link>
             </div>
-            <img className="hero-img-desktop" src="/images/ryan.png" alt="" />
+            <img className="hero-img-desktop" src="/images/vadim.jpg" alt="" />
         </HeroContainer>
     );
 };

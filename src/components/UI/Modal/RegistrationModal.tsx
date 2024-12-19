@@ -4,14 +4,8 @@ import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
 import { colors, media, rm } from "@/styles";
-import { BASE_API_URL } from "../../../../constants";
-import { requestOptions } from "../../../../constants";
-import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from '../../../store/store'
 import { useEffect, useState } from "react";
-import { fontNotoSans } from "@/styles/fonts";
-import { redirect } from "next/navigation";
-import { RedirectType } from "next/navigation";
 import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
