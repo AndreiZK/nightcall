@@ -22,7 +22,7 @@ const { damp } = THREE.MathUtils
 export function ScrollLayout({ children }: any) {
     const isEnableScroll = useScroll(state => state.isEnableScroll)
 
-    // const [hash, setHash] = useState<string>('')
+    const [hash, setHash] = useState<string>('')
     const [lenis, setLenis] = useScroll((state) => [state.lenis, state.setLenis])
     const router = useRouter()
 
@@ -45,7 +45,7 @@ export function ScrollLayout({ children }: any) {
         // const effectSub = addEffect((time) => lenis.raf(time))
         
         // IMPORTANT: Use this instead [addEffect] if CanvasLayout is not used
-        let rq = null
+        let rq: number | null = null;
         const raf = (time: number) => {
             lenis?.raf(time);
             rq = requestAnimationFrame(raf);
@@ -53,10 +53,11 @@ export function ScrollLayout({ children }: any) {
         rq = requestAnimationFrame(raf);
 
         return () => {
-            // cancelAnimationFrame(rq)
-            // effectSub()
-            lenis.destroy()
-            setLenis(null)
+            if (rq) {
+                cancelAnimationFrame(rq);
+            }
+            lenis?.destroy();
+            setLenis(null);
         }
     }, [])
 
@@ -72,49 +73,49 @@ export function ScrollLayout({ children }: any) {
     }, [isEnableScroll, lenis])
 
 
-    // useEffect(() => {
-    //     if (lenis && hash) {
-    //         const target = document.querySelector(hash);
-    //         if (target) {
-    //             lenis.scrollTo(target as HTMLElement, { offset: 0 });
-    //         }
-    //     }
-    // }, [lenis, hash]);
+    useEffect(() => {
+        if (lenis && hash) {
+            const target = document.querySelector(hash);
+            if (target) {
+                lenis.scrollTo(target as HTMLElement, { offset: 0 });
+            }
+        }
+    }, [lenis, hash]);
 
-    // useEffect(() => {
-    //     // update scroll position on page refresh based on hash
-    //     if (router.asPath.includes('#')) {
-    //         const hash = router.asPath.split('#').pop()
-    //         setHash('#' + hash)
-    //     }
-    // }, [router])
+    useEffect(() => {
+        // update scroll position on page refresh based on hash
+        if (router.asPath.includes('#')) {
+            const hash = router.asPath.split('#').pop()
+            setHash('#' + hash)
+        }
+    }, [router])
 
-    // useEffect(() => {
-    //     // catch anchor links clicks
-    //     function onClick(e: any) {
-    //         e.preventDefault()
-    //         const node = e.currentTarget
-    //         const hash = node.href.split('#').pop()
-    //         setHash('#' + hash)
-    //         setTimeout(() => {
-    //             window.location.hash = hash
-    //         }, 0)
-    //     }
-    //     // @ts-expect-error
-    //     const internalLinks = [...document.querySelectorAll('[href]')].filter(
-    //         (node) => node.href.includes(router.pathname + '#')
-    //     )
+    useEffect(() => {
+        // catch anchor links clicks
+        function onClick(e: any) {
+            e.preventDefault()
+            const node = e.currentTarget
+            const hash = node.href.split('#').pop()
+            setHash('#' + hash)
+            setTimeout(() => {
+                window.location.hash = hash
+            }, 0)
+        }
+        // @ts-expect-error
+        const internalLinks = [...document.querySelectorAll('[href]')].filter(
+            (node) => node.href.includes(router.pathname + '#')
+        )
 
-    //     internalLinks.forEach((node) => {
-    //         node.addEventListener('click', onClick, false)
-    //     })
+        internalLinks.forEach((node) => {
+            node.addEventListener('click', onClick, false)
+        })
 
-    //     return () => {
-    //         internalLinks.forEach((node) => {
-    //             node.removeEventListener('click', onClick, false)
-    //         })
-    //     }
-    // }, [])
+        return () => {
+            internalLinks.forEach((node) => {
+                node.removeEventListener('click', onClick, false)
+            })
+        }
+    }, [])
 
     return <>{children}</>
 }
