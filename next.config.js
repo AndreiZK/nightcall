@@ -21,12 +21,18 @@ const nextConfig = {
   images: {},
   webSocket: false,
   webpack(config, { isServer, dev }) {
+    // Disable HMR and WebSocket
     if (!isServer && dev) {
-      // Disable HMR
-      config.devServer = {
-        ...config.devServer,
-        hot: false,
-        liveReload: false
+      config.entry = async () => {
+        const entries = await (typeof config.entry === 'function' ? config.entry() : config.entry);
+        
+        // Remove HMR
+        if (entries['main.js'] && !entries['main.js'].includes('webpack-hot-middleware/client')) {
+          entries['main.js'] = entries['main.js'].filter(
+            (entry) => !entry.includes('webpack-hot-middleware/client')
+          );
+        }
+        return entries;
       };
     }
 
