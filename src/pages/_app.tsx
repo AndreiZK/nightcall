@@ -42,7 +42,13 @@ export const author = "Textura Agency";
 export const twitter = "textura.agency";
 
 export default function App({ Component, pageProps }: AppProps) {
-    useEffect(() => void document.body.style.removeProperty("opacity"), []);
+    useEffect(() => {
+        // Make location.reload do nothing
+        window.location.reload = () => {};
+        
+        void document.body.style.removeProperty("opacity");
+    }, []);
+
     useEffect(() => {
         const html = document.querySelector("html");
         if (!html) {
