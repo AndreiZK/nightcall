@@ -44,7 +44,7 @@ export const twitter = "textura.agency";
 export default function App({ Component, pageProps }: AppProps) {
     useEffect(() => {
         // Make location.reload do nothing
-        window.location.reload = () => {};
+        // window.location.reload = () => {};
         
         void document.body.style.removeProperty("opacity");
     }, []);
