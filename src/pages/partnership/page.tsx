@@ -1,5 +1,6 @@
 // import BecomePartner from "@/views/BecomePartner";
 
-// export default function page() {
+export default function page() {
 //   return <BecomePartner></BecomePartner>;
-// }
+    return <></>
+}

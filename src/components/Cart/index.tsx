@@ -116,10 +116,10 @@ const Cart = () => {
         }
     };
 
-    // useEffect(() => {
-    //     getProductsForCart();
-    //     getPrice();
-    // }, [amounts, order]);
+    useEffect(() => {
+        getProductsForCart();
+        getPrice();
+    }, [amounts, order]);
 
     return (
         <StyledCart className="">

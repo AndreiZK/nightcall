@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
-export const SquareLoader = (props: any) => {
-    const StyledLoader = styled.div`
+const StyledLoader = styled.div`
     width: var(--size-loader, 1.25em);
     height: var(--size-loader, 1.25em);
     display: inline-block;
@@ -45,5 +44,6 @@ export const SquareLoader = (props: any) => {
   }
     `
 
+export const SquareLoader = (props: any) => {
     return <StyledLoader {...props} />
 }
