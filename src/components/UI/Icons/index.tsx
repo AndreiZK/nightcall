@@ -114,8 +114,8 @@ export const Icons = {
             <path
                 d="M26.6663 5.33332L5.33301 26.6666M26.6663 26.6666L5.33301 5.33331"
                 stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
+                strokeWidth="2"
+                strokeLinecap="round"
             />
         </svg>
     ),
@@ -146,9 +146,9 @@ export const Icons = {
             <path
                 d="M22.569 22.72L27.1998 27.2M25.7065 15.2533C25.7065 21.0265 21.0264 25.7067 15.2531 25.7067C9.47992 25.7067 4.7998 21.0265 4.7998 15.2533C4.7998 9.48012 9.47992 4.8 15.2531 4.8C21.0264 4.8 25.7065 9.48012 25.7065 15.2533Z"
                 stroke="#E1F7FF"
-                stroke-opacity="0.5"
-                stroke-width="2"
-                stroke-linecap="round"
+                strokeOpacity="0.5"
+                strokeWidth="2"
+                strokeLinecap="round"
             />
         </svg>
     ),
@@ -164,10 +164,10 @@ export const Icons = {
             <path
                 d="M58.5 31.5V20.25C58.5 12.7942 52.4558 6.75 45 6.75C37.5442 6.75 31.5 12.7942 31.5 20.25V31.5M17.7273 83.25H72.2727C77.0927 83.25 81 79.4153 81 74.6849L75.4091 29.2499C75.4091 24.5195 71.5017 20.6848 66.6818 20.6848H22.2273C17.4073 20.6848 13.5 24.5195 13.5 29.2499L9 74.6849C9 79.4153 12.9073 83.25 17.7273 83.25Z"
                 stroke="#E1F7FF"
-                stroke-opacity="0.5"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeOpacity="0.5"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     ),
@@ -196,12 +196,12 @@ export const Icons = {
             <path
                 d="M2.3999 20.5124C2.3999 16.7369 5.55419 13.6762 11.9999 13.6762C18.4456 13.6762 21.5999 16.7369 21.5999 20.5124C21.5999 21.1131 21.1617 21.6 20.6211 21.6H3.37873C2.83814 21.6 2.3999 21.1131 2.3999 20.5124Z"
                 stroke="white"
-                stroke-width="2"
+                strokeWidth="2"
             />
             <path
                 d="M15.5999 5.99999C15.5999 7.98822 13.9881 9.59999 11.9999 9.59999C10.0117 9.59999 8.3999 7.98822 8.3999 5.99999C8.3999 4.01177 10.0117 2.39999 11.9999 2.39999C13.9881 2.39999 15.5999 4.01177 15.5999 5.99999Z"
                 stroke="white"
-                stroke-width="2"
+                strokeWidth="2"
             />
         </svg>
     ),
@@ -216,9 +216,9 @@ export const Icons = {
             <path
                 d="M5.3999 9.62388L10.2307 4.35388C11.1819 3.3162 12.8179 3.3162 13.7691 4.35388L18.5999 9.62388M21.1974 10.9209L18.4654 19.7209C18.3355 20.1392 17.9484 20.4244 17.5103 20.4244H6.55548C6.1196 20.4244 5.73394 20.142 5.60223 19.7265L2.81268 10.9265C2.60831 10.2818 3.08958 9.62436 3.76594 9.62436H20.2424C20.9162 9.62436 21.3972 10.2773 21.1974 10.9209Z"
                 stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     ),
