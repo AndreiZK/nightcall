@@ -223,7 +223,8 @@ const ProductModal = (props: ProductModalProps) => {
             <StyledContainer>
                 <div className="description">
                     <img
-                        src={BASE_IMAGE_URL + props?.productData?.image[0]?.attributes?.url}
+                    //@ts-expect-error
+                        src={BASE_IMAGE_URL + props?.productData?.image[0]?.url}
                         alt=""
                     />
                     <div className="text">
