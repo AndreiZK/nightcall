@@ -133,10 +133,10 @@ const MobileCart = ({
         }
     };
 
-    useEffect(() => {
-        getProductsForCart();
-        getPrice();
-    }, [amounts, order]);
+    // useEffect(() => {
+    //     getProductsForCart();
+    //     getPrice();
+    // }, [amounts, order]);
 
     const handleClose = () => onClose();
 

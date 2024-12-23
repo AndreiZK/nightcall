@@ -94,7 +94,7 @@ export default function App({ Component, pageProps }: AppProps) {
                         <SmartCSSGrid />
                         <Lvh />
                         <Component {...pageProps} />
-                        <Modals/>
+                        {/* <Modals/> */}
                     </AnimatedRouterLayout>
                 </AssetsLoaderLayout>
             </ScrollLayout>
