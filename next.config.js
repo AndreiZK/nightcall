@@ -59,7 +59,7 @@ const nextConfig = {
   },
 }
 
-const KEYS_TO_OMIT = ['webpackDevMiddleware', 'configOrigin', 'target', 'analyticsId', 'webpack5', 'amp', 'assetPrefix']
+const KEYS_TO_OMIT = ['webpackDevMiddleware', 'configOrigin', 'target', 'analyticsId', 'webpack5', 'amp']
 
 module.exports = (_phase, { defaultConfig }) => {
   const plugins = [/*[withPWA],*/ [withBundleAnalyzer, {}]]
