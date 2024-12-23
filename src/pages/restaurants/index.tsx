@@ -85,26 +85,26 @@ export default function Restaurants() {
     const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
     const [search, setSearch] = useState("");
 
-    useEffect(() => {
-        const getData = async () => {
-            const { data } = await getSearchResult("");
-            setRestaurantsData(data);
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         const { data } = await getSearchResult("");
+    //         setRestaurantsData(data);
 
-            console.log(data);
-        };
+    //         console.log(data);
+    //     };
 
-        getData();
-    }, []);
+    //     getData();
+    // }, []);
 
     const searchRests = async () => {
         const result = await getSearchResult(search, selectedCategory);
         setRestaurantsData(result.data);
     };
 
-    useEffect(() => {
-        if (!restaurantsData) return;
-        searchRests();
-    }, [search, selectedCategory]);
+    // useEffect(() => {
+    //     if (!restaurantsData) return;
+    //     searchRests();
+    // }, [search, selectedCategory]);
 
     return (
         <>
