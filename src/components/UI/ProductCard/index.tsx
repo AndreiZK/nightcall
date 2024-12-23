@@ -86,7 +86,8 @@ const ProductCard = (props: ProductCardProps) => {
         <>
             <StyledContainer onClick={() => setModalOpen(true)}>
                 <div className="image-container">
-                    <img src={BASE_IMAGE_URL + props.image[0]?.attributes?.url} alt="" />
+                    {/* @ts-expect-error */}
+                    <img src={BASE_IMAGE_URL + props.image[0].url} alt="" />
                 </div>
 
                 <div className="info">
