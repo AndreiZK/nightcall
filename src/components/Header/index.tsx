@@ -261,6 +261,9 @@ const Header = () => {
                                     >
                                         Мои заказы
                                     </span>
+                                    <Link href="/track" className="user-context-menu-item">
+                                        Активные заказы
+                                    </Link>
                                     <span
                                         onClick={handleLogOut}
                                         className="user-context-menu-item"
