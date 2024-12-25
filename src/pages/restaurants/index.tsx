@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IRestaurant } from "../../../types";
 import { getSearchResult } from "@/requests/getSearchResult";
+import { getCategories } from "@/requests/getCategories";
 
 const TopContainer = styled.div`
     display: flex;
@@ -69,30 +70,36 @@ const RestaurantsGrid = styled.div`
     `}
 `;
 
-export const categories = [
-    {
-        title: "все",
-        name: "all",
-    },
-    {
-        title: "рестораны",
-        name: "restrant",
-    },
-];
+// export const categories = [
+//     {
+//         title: "все",
+//         name: "all",
+//     },
+//     {
+//         title: "рестораны",
+//         name: "restrant",
+//     },
+// ];
 
 export default function Restaurants() {
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [restaurantsData, setRestaurantsData] = useState<IRestaurant[]>([]);
     const [search, setSearch] = useState("");
 
+    const [categories, setCategories] = useState<string[]>([]);
+
     useEffect(() => {
         const getData = async () => {
             const { data } = await getSearchResult("");
             setRestaurantsData(data);
-
-            console.log(data);
         };
 
+        const getAllCategories = async () => {
+            const categories = await getCategories();
+            setCategories(categories.data);
+        };
+
+        getAllCategories();
         getData();
     }, []);
 
@@ -120,17 +127,18 @@ export default function Restaurants() {
                     />
                 </TopContainer>
                 <Filters>
-                    {categories.map((category) => (
-                        <span
-                            onClick={() => setSelectedCategory(category.name)}
-                            key={category.name}
-                            className={
-                                category.name === selectedCategory
+                    {categories?.length > 0 &&
+                        categories?.map((category: any) => (
+                            <span
+                                onClick={() => setSelectedCategory(category.category)}
+                                key={category.category}
+                                className={
+                                category.category === selectedCategory
                                     ? "selected"
                                     : ""
                             }
                         >
-                            {category.title}
+                            {category.category}
                         </span>
                     ))}
                 </Filters>
