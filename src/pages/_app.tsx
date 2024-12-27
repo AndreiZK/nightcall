@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { Modals } from "@/components/Modals/Modals";
 import { initializeTelegramWebApp } from "@/utils/initializeTelegramWebApp";
+import Script from "next/script";
 
 export const onest = Onest({
     weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -85,6 +86,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     content="width=device-width, minimum-scale=1, initial-scale=1.0"
                 />
                 <meta name="theme-color" content="#000" />
+                <Script src="https://telegram.org/js/telegram-web-app.js"></Script>
             </Head>
             <ScrollLayout>
                 <AssetsLoaderLayout>
