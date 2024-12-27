@@ -55,9 +55,15 @@ const StyledContainer = styled.div`
             justify-content: space-between;
             align-items: center;
             .title {
+
                 font-size: ${rm(18)};
                 ${media.md`
                     font-size: ${rm(16)};
+                `}
+
+                ${media.xsm`
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 `}
             }
 

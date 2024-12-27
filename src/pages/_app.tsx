@@ -35,10 +35,10 @@ const ScrollLayout = dynamic(
     { ssr: false }
 );
 
-export const title = "React Three Next Styled Starter";
+export const title = "Nightcall - ночная доставка в Гродно";
+export const description = `Работаем в тестовом режиме⏱️`;
+export const keywords = `ночная доставка еды Гродно, Nightcall доставка, еда ночью Гродно, доставка бургеров Гродно, доставка пиццы ночью, заказ еды ночью, напитки и закуски ночная доставка, 24/7 доставка еды Гродно, Nightcall.by официальный сайт, быстрая ночная доставка еды`;
 export const url = "https://textura.agency";
-export const description = "Textura Agency";
-export const keywords = "Textura Agency, Textura Agency";
 export const author = "Textura Agency";
 export const twitter = "textura.agency";
 

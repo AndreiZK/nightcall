@@ -39,7 +39,8 @@ export default function Document() {
                 {/* <meta name="format-detection" content="telephone=yes"/>
                     <meta name="HandheldFriendly" content="true"/>  */}
 
-                <link rel='shortcut icon' href='/icons/apple-touch-icon.png' />
+                <link rel="shortcut icon" href="/favicon.ico" />
+
 
                 {/* 
                 Twitter Summary card

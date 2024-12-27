@@ -22,10 +22,18 @@ const StyledCart = styled.div`
     transition: transform 0.5s ease-out;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     padding-inline: ${rm(26)};
     padding-block: ${rm(44)} ${rm(24)};
     gap: ${rm(80)};
+    padding-bottom: ${rm(100)};
+
+    .order {
+        display: flex;
+        flex-direction: column;
+        max-height: ${rm(500)};
+        overflow-y: auto;
+        gap: ${rm(15)};
+    }
 
     .cross {
         position: absolute;

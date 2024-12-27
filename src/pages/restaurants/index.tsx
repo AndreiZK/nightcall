@@ -97,6 +97,9 @@ export default function Restaurants() {
         const getAllCategories = async () => {
             const categories = await getCategories();
             setCategories(categories.data);
+            if (categories.data && categories.data.length > 0) {
+                setSelectedCategory(categories.data[0].category);
+            }
         };
 
         getAllCategories();
