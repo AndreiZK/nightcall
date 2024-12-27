@@ -49,16 +49,26 @@ const StyledContainer = styled.div`
             display: flex;
             flex-direction: column;
             gap: ${rm(20)};
-            ${media.md`
-                
-           `}
+
+            ${media.xsm`
+                gap: ${rm(10)};
+            `}
+
             .title {
                 font-size: ${rm(32)};
                 color: ${colors.purple};
+
+                ${media.xsm`
+                    font-size: ${rm(22)};
+                `}
             }
             .info,
             .weight {
                 font-size: ${rm(20)};
+
+                ${media.xsm`
+                    font-size: ${rm(14)};
+                `}
             }
             .weight {
                 opacity: 0.7;
