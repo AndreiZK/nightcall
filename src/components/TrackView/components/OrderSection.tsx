@@ -40,7 +40,7 @@ export const OrderSection = ({ data }: OrderSectionProps) => {
         else if (data.courier_status === 'finished') {
             setCurrentSection(3)
             setCurrentStatus('Заказ доставлен')
-        } else {
+        } else if(data.merchant_status === 'decline'){
             setCurrentSection(0)
             setCurrentStatus('Отклонён заведением')
         }
