@@ -25,7 +25,7 @@ export const OrderSection = ({ data }: OrderSectionProps) => {
     }, [data]);
 
     useEffect(() => {
-        if (data.merchant_status === 'cooking') {
+        if (data.merchant_status === 'cooking' || data.merchant_status === 'waiting') {
             setCurrentSection(0)
             setCurrentStatus('Заказ готовится')
         }
@@ -33,11 +33,11 @@ export const OrderSection = ({ data }: OrderSectionProps) => {
             setCurrentSection(1)
             setCurrentStatus('Заказ готов')
         }
-        else if (data.courier_status === 'delivering') {
+        else if (data.courier_status === 'delivering' || data.courier_status === 'accepted' || data.courier_status === 'searching') {
             setCurrentSection(2)
             setCurrentStatus('Заказ доставляется')
         }
-        else if (data.courier_status === 'finished') {
+        else if (data.courier_status === 'on_place') {
             setCurrentSection(3)
             setCurrentStatus('Заказ доставлен')
         } else if(data.merchant_status === 'decline'){
@@ -47,10 +47,10 @@ export const OrderSection = ({ data }: OrderSectionProps) => {
     }, [data, currentSection]);
 
     const rocketSpring = useSpring({
-        from: { left: `${currentSection * 250}px` },
+        from: { left: `${currentSection * 25}%` },
         to: [
-            { left: `${(currentSection + 1) * 250}px` },
-            { left: `${currentSection * 250}px` }
+            { left: `${(currentSection + 1) * 25}%` },
+            { left: `${currentSection * 25}%` }
         ],
         config: { duration: 3000 },
         loop: true,
@@ -185,11 +185,20 @@ const StyledTrackingContainer = styled.div`
         margin-bottom: ${rm(65)};
         position: relative;
         
+        ${media.xsm`
+            gap: ${rm(20)};
+            margin-bottom: ${rm(20)};
+        `}
+        
         div{
             height: ${rm(4)};
             border-radius: ${rm(10)};
             border: ${rm(1)} solid ${colors.white100};
             width: ${rm(250)};
+
+            ${media.xsm`
+                width: 25%;
+            `}
         }
     }
 `
@@ -200,8 +209,13 @@ const AnimatedRocket = styled(animated.span)`
     background-color: ${colors.white100};
     position: absolute;
     top: 50%;
-    transform: translate(0, -50%);
+    transform: translate(-50%, -50%);
     border-radius: 50%;
+
+    ${media.xsm`
+        width: ${rm(20)};
+        height: ${rm(20)};
+    `}
 
     svg {
         width: 100%;
