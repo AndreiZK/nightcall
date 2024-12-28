@@ -75,10 +75,10 @@ export function ScrollLayout({ children }: any) {
 
     useEffect(() => {
         if (lenis && hash) {
-            const target = document.querySelector(hash);
-            if (target) {
-                lenis.scrollTo(target as HTMLElement, { offset: 0 });
-            }
+            // const target = document.querySelector(hash);
+            // if (target) {
+            //     lenis.scrollTo(target as HTMLElement, { offset: 0 });
+            // }
         }
     }, [lenis, hash]);
 
@@ -101,20 +101,19 @@ export function ScrollLayout({ children }: any) {
                 window.location.hash = hash
             }, 0)
         }
-        // @ts-expect-error
-        const internalLinks = [...document.querySelectorAll('[href]')].filter(
-            (node) => node.href.includes(router.pathname + '#')
-        )
+        // const internalLinks = [...document.querySelectorAll('[href]')].filter(
+        //     (node) => node.href.includes(router.pathname + '#')
+        // )
 
-        internalLinks.forEach((node) => {
-            node.addEventListener('click', onClick, false)
-        })
+        // internalLinks.forEach((node) => {
+        //     node.addEventListener('click', onClick, false)
+        // })
 
-        return () => {
-            internalLinks.forEach((node) => {
-                node.removeEventListener('click', onClick, false)
-            })
-        }
+        // return () => {
+        //     internalLinks.forEach((node) => {
+        //         node.removeEventListener('click', onClick, false)
+        //     })
+        // }
     }, [])
 
     return <>{children}</>
@@ -129,16 +128,16 @@ export const ScrollTicker = ({ smooth = 9999999 }) => {
 }
 
 export const enableNativeScroll = (value: boolean) => {
-    if (!document) { return }
-    const html = document.querySelector('html')
-    if (!html) { return }
-    if (!value) {
-        html.style.position = 'relative'
-        html.style.overflow = 'hidden'
-        html.style.height = '100%'
-    } else {
-        html.style.removeProperty('position')
-        html.style.removeProperty('overflow')
-        html.style.removeProperty('height')
-    }
+    // if (!document) { return }
+    // const html = document.querySelector('html')
+    // if (!html) { return }
+    // if (!value) {
+    //     html.style.position = 'relative'
+    //     html.style.overflow = 'hidden'
+    //     html.style.height = '100%'
+    // } else {
+    //     html.style.removeProperty('position')
+    //     html.style.removeProperty('overflow')
+    //     html.style.removeProperty('height')
+    // }
 }
