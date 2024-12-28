@@ -30,7 +30,7 @@ export const OrderSection = ({ data }: OrderSectionProps) => {
             setCurrentStatus('Отклонён заведением')
             return
         }
-        
+
         if(data.merchant_status === 'waiting') {
             setCurrentSection(0)
             setCurrentStatus('Ожидаем ответ от заведения')
@@ -39,7 +39,7 @@ export const OrderSection = ({ data }: OrderSectionProps) => {
             setCurrentSection(0)
             setCurrentStatus('Заказ готовится')
         }
-        else if (data.merchant_status === 'ready' && data.courier_status != 'delivering') {
+        else if (data.merchant_status === 'ready' && data.courier_status != 'delivering' && data.courier_status != 'on_place') {
             setCurrentSection(1)
             setCurrentStatus('Заказ готов')
         }
