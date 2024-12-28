@@ -26,11 +26,11 @@ export const OrderSection = ({ data }: OrderSectionProps) => {
 
     useEffect(() => {
         if(data.merchant_status === 'waiting') {
-            setCurrentSection(2)
+            setCurrentSection(0)
             setCurrentStatus('Ожидаем ответ от заведения')
         }
         else if (data.merchant_status === 'cooking') {
-            setCurrentSection(2)
+            setCurrentSection(0)
             setCurrentStatus('Заказ готовится')
         }
         else if (data.merchant_status === 'ready') {
