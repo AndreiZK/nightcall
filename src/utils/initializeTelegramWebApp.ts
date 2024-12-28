@@ -12,11 +12,11 @@ export const initializeTelegramWebApp = () => {
 
     const tg: any = window.Telegram.WebApp;
 
-    // Ensure we're in a Telegram WebApp environment
-    if (!tg.initData) {
-      console.warn("Not in Telegram WebApp environment");
-      return;
-    }
+    // Log the raw data for debugging
+    console.log("Raw WebApp data:", {
+      initData: tg.initData,
+      initDataUnsafe: tg.initDataUnsafe
+    });
 
     // Initialize the WebApp
     tg.ready();
@@ -30,10 +30,19 @@ export const initializeTelegramWebApp = () => {
       return;
     }
 
-    console.log("Telegram user data:", initDataUnsafe.user);
+    // Parse the init data if it's a string
+    let parsedData;
+    try {
+      parsedData = typeof safeData === 'string' ? JSON.parse(safeData) : safeData;
+    } catch (e) {
+      console.warn("Failed to parse initData:", e);
+      parsedData = safeData;
+    }
 
     const url = `${BASE_API_URL}api/validateTelegramUser`;
-    const params = new URLSearchParams({ data: safeData });
+    const params = new URLSearchParams({ 
+      data: typeof parsedData === 'string' ? parsedData : JSON.stringify(parsedData) 
+    });
     const fullURL = `${url}?${params}`;
 
     fetch(fullURL)

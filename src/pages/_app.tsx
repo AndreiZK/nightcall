@@ -88,9 +88,15 @@ export default function App({ Component, pageProps }: AppProps) {
                 <meta name="theme-color" content="#000" />
                 <Script 
                     src="https://telegram.org/js/telegram-web-app.js"
-                    strategy="afterInteractive"
-                    onReady={() => {
-                        initializeTelegramWebApp();
+                    strategy="beforeInteractive"
+                    onError={(e) => {
+                        console.error("Error loading Telegram WebApp script:", e);
+                    }}
+                    onLoad={() => {
+                        console.log("Telegram WebApp script loaded");
+                        setTimeout(() => {
+                            initializeTelegramWebApp();
+                        }, 1000);
                     }}
                 />
             </Head>
