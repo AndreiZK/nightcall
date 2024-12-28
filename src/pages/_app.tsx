@@ -86,7 +86,10 @@ export default function App({ Component, pageProps }: AppProps) {
                     content="width=device-width, minimum-scale=1, initial-scale=1.0"
                 />
                 <meta name="theme-color" content="#000" />
-                <Script src="https://telegram.org/js/telegram-web-app.js"></Script>
+                <Script 
+                    src="https://telegram.org/js/telegram-web-app.js"
+                    strategy="beforeInteractive"
+                />
             </Head>
             <ScrollLayout>
                 <AssetsLoaderLayout>
