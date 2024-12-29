@@ -124,7 +124,7 @@ const HeaderContainer = styled.div`
             position: absolute;
             top: 0;
             right: 0;
-            transform: translate(45%, 35%);
+            transform: translate(35%, 35%);
             flex-direction: column;
             align-items: start;
             gap: ${rm(10)};
@@ -157,7 +157,7 @@ const Logo = styled.img`
      `}
 `;
 
-const StyledTrackIcon = styled.svg`
+const StyledTrackIcon = styled.div`
     height: ${rm(36)} !important;
     width: ${rm(36)} !important;
     position: relative;
@@ -176,16 +176,11 @@ const StyledTrackIcon = styled.svg`
     }
     svg {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         width: 100%;
         height: 100%;
-
-
-            ${media.md`
-                width: ${rm(24)};
-                height: ${rm(24)};
-            `}
         }
 `;
 
@@ -247,9 +242,9 @@ const Header = () => {
         <>
             <HeaderContainer>
                 <div className="header-content">
-                    <Link href="/">
+                    <a href="/">
                         <Icons.logo />
-                    </Link>
+                    </a>
                     <div className="button-container">
                         <StyledTrackIcon onClick={() => {handleTrackRedirect()}}>
                             <svg onClick={() => {handleTrackRedirect}} width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">

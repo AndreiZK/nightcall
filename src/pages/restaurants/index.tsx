@@ -50,8 +50,14 @@ const Filters = styled.div`
         color: ${colors.purple};
     }
 
-    ${media.md`
-        display: none;
+    ${media.xsm`
+        font-size: ${rm(16)};
+        gap: ${rm(22)};
+        // overflow-x: scroll;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        padding: ${rm(12)} ${rm(16)};
     `}
 `;
 
