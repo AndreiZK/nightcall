@@ -59,17 +59,17 @@ export default function App({ Component, pageProps }: AppProps) {
         html.style.setProperty("--font-noto", notoSans.style.fontFamily);
     });
 
-    // useEffect(() => {
-    // if (document.readyState === "complete") {
-    //     initializeTelegramWebApp();
-    //   } else {
-    //     window.addEventListener("load", initializeTelegramWebApp);
-    //   }
+    useEffect(() => {
+    if (document.readyState === "complete") {
+        initializeTelegramWebApp();
+      } else {
+        window.addEventListener("load", initializeTelegramWebApp);
+      }
   
-    //   return () => {
-    //     window.removeEventListener("load", initializeTelegramWebApp);
-    //   };
-    // }, []);
+      return () => {
+        window.removeEventListener("load", initializeTelegramWebApp);
+      };
+    }, []);
 
     return (
         <>
@@ -100,7 +100,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     }}
                 />
             </Head>
-            <ScrollLayout>
+            {/* <ScrollLayout> */}
                 <AssetsLoaderLayout>
                     <AnimatedRouterLayout>
                         <GlobalStyles />
@@ -111,7 +111,7 @@ export default function App({ Component, pageProps }: AppProps) {
                         <Modals/>
                     </AnimatedRouterLayout>
                 </AssetsLoaderLayout>
-            </ScrollLayout>
+            {/* </ScrollLayout> */}
         </>
     );
 }
