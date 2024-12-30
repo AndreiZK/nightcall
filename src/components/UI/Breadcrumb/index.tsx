@@ -30,7 +30,8 @@ const breadcrumbMap: Record<string, string> = {
     "4": "Мистерия",
     "5": "test_merch",
     "6": "Биг джонс",
-    "7": "Shaw_box"
+    "7": "Shaw_box",
+    "8": ""
 };
 
 const Breadcrumb = () => {
