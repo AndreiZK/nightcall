@@ -33,7 +33,7 @@ export default function Document() {
                 <link rel='apple-touch-icon' sizes='180x180' href='/icons/apple-touch-icon.png' />
                 <link rel='manifest' href='/manifest.json' />
                 <link rel='mask-icon' color='#000000' href='/icons/safari-pinned-tab.svg' />
-                <link rel='apple-touch-startup-image' href='/icons/startup.png' />
+                <link rel='apple-touch-startup-image' href='/favicon.ico' />
 
                 {/* Meta Tags for HTML pages on Mobile */}
                 {/* <meta name="format-detection" content="telephone=yes"/>

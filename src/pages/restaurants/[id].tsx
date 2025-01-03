@@ -16,6 +16,7 @@ import {
 import { BASE_IMAGE_URL } from "../../../constants";
 import { getStrapiData } from "@/requests/getStrapiData";
 import Cart from "@/components/Cart";
+import { isOpen } from "@/utils/isOpen";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -138,6 +139,18 @@ const StyledContainer = styled.div`
     }
 `;
 
+const StyledClosed = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: ${rm(36)};
+    text-align: center;
+    color: red;
+    margin-top: ${rm(200)};
+`;
+
 export default function RestaurantPage() {
     const [merchantData, setMerchantData] = useState<IRestaurant | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<ICategory>();
@@ -147,6 +160,7 @@ export default function RestaurantPage() {
 
     const router = useRouter();
     const { id } = router.query;
+
 
     async function fetchData() {
         try {
@@ -174,10 +188,19 @@ export default function RestaurantPage() {
         }
     }, [id]);
 
+    useEffect(() => {
+        if (merchantData?.attributes) {
+            // @ts-expect-error
+            const isOpenNow = isOpen(merchantData?.attributes?.work_schedule);
+            
+            setIsOpen(isOpenNow);
+        }
+    }, [merchantData]);
+
     return (
         <Layout>
             <Breadcrumb />
-            {loaded && (
+            {(loaded && isOpened) ? (
                 <StyledContainer>
                     <div className="top-bar">
                         <img
@@ -241,7 +264,9 @@ export default function RestaurantPage() {
                             )}
                     </div>
                 </StyledContainer>
-            )}
+            ) : <StyledClosed>
+                   В данный момент ресторан закрыт
+                </StyledClosed>}
         </Layout>
     );
 }
