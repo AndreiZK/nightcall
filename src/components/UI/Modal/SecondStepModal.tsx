@@ -99,52 +99,70 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
     };
   
     const registrationHandler = () => {
-      if (
-        (home != "") &&
-        name != "" &&
-        street != "" &&
-        phoneRegex.test(phone)
-      ) {
-        const raw = JSON.stringify({
-          email: mail,
-          username: mail,
-          password: pass,
-        });
-  
-        fetch(`${BASE_API_URL}api/auth/local/register`, requestOptions(raw))
-          .then((response) => response.text())
-          .then((result) => {
-            console.log(result);
-  
-            if (
-              JSON.parse(result)?.error?.message ===
-              "Email or Username are already taken"
-            ) {
-              toast.error("Такая почта уже используется");
-              return;
-            }
-  
-            const token = JSON.parse(result).jwt
-  
-            if (token) {
-              toast.success("Пользователь успешно создан");
-  
-              document.cookie = `jwt=${token}; max-age=86400`;
-    
-              validateTelegramId(token)
-  
-              useStore.setState({
-                jwtToken: token,
-                isAuth: true,
-              });
-  
-              setValidation(true);
-            }
-          })
-          .catch((error) => console.error(error));
-      } else {
-        toast.error("Проверьте введённые данные");
+      // Проверяем каждое обязательное поле отдельно
+      if (!street.trim()) {
+        toast.error("Укажите улицу");
+        return;
       }
+
+      if (!home.trim()) {
+        toast.error("Укажите номер дома");
+        return;
+      }
+
+      if (!name.trim()) {
+        toast.error("Укажите ваше имя");
+        return;
+      }
+
+      if (!phone.trim()) {
+        toast.error("Укажите номер телефона");
+        return;
+      }
+
+      if (!phoneRegex.test(phone)) {
+        toast.error("Неверный формат номера телефона");
+        return;
+      }
+
+      // Если все проверки пройдены, продолжаем регистрацию
+      const raw = JSON.stringify({
+        email: mail,
+        username: mail,
+        password: pass,
+      });
+
+      fetch(`${BASE_API_URL}api/auth/local/register`, requestOptions(raw))
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+
+          if (
+            JSON.parse(result)?.error?.message ===
+            "Email or Username are already taken"
+          ) {
+            toast.error("Такая почта уже используется");
+            return;
+          }
+
+          const token = JSON.parse(result).jwt
+
+          if (token) {
+            toast.success("Пользователь успешно создан");
+
+            document.cookie = `jwt=${token}; max-age=86400`;
+
+            validateTelegramId(token)
+
+            useStore.setState({
+              jwtToken: token,
+              isAuth: true,
+            });
+
+            setValidation(true);
+          }
+        })
+        .catch((error) => console.error(error));
     };
   
     useEffect(() => {

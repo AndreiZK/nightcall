@@ -23,7 +23,7 @@ export default function Document() {
                 <meta property='og:title' content={title} />
                 <meta property='og:type' content='site' />
                 <meta property='og:url' content={url} />
-                <meta property='og:image' content={'/icons/share.png'} />
+                <meta property='og:image' content={'/icons/apple-icon.png'} />
                 <meta property='og:site_name' content={title} />
                 <meta property='og:description' content={description} />
 
@@ -48,6 +48,10 @@ export default function Document() {
                     Be sure validate your Twitter card markup on the documentation site. */}
                 <meta name='twitter:card' content='summary' />
                 <meta name='twitter:site' content={twitter} />
+
+                {/* <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:type" content="image/png" /> */}
             </Head>
             <body style={{ opacity: 0 }}>
                 <Main />

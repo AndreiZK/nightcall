@@ -31,10 +31,10 @@ export async function getDiscountedPrice(order: Array<Product>, promocode: strin
 
     console.log("Цена с дискаунтом:", data);
 
-    if (data.discountedPrice) {
+    if (!data.discountedPrice.error) {
       toast.success("Промокод применен");
     } else {
-      toast.error("Проверьте правильность промокода");
+      toast.error(data.discountedPrice.error);
     }
 
     return data;
