@@ -22,7 +22,6 @@ export async function getAdress(token: string) {
 
     const data = await response.json();
     
-    console.log('Полученный адресс:', data);
 
     return data;
   } catch (error) {

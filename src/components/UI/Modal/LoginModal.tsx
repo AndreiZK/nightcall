@@ -104,7 +104,6 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
             }
           })
           .catch((error) => {
-            console.log(error);
             toast.error("Проверьте введённые данные");
           });
     };

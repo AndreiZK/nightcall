@@ -5,6 +5,5 @@ if (!BASE_API_URL) {
 }
 
 export default function getApiUrl(uri: any) {
-    console.log(BASE_API_URL, new URL(uri, BASE_API_URL));
     return new URL(uri, BASE_API_URL);
 }

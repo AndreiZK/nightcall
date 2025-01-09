@@ -51,8 +51,6 @@ interface PopularRestaurantsProps {
 }
 
 const PopularRestaurants = ({ data }: PopularRestaurantsProps) => {
-    console.log(data);
-
     return (
         <StyledContainer>
             <SectionTitle>Популярные рестораны</SectionTitle>

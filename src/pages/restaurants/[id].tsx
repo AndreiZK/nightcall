@@ -168,8 +168,6 @@ export default function RestaurantPage() {
 
             const products: IProduct[] = await getProductsFromMerchant(id);
             const merchant: { data: IRestaurant } = await getStrapiData(`merchants/${id}`);
-            console.log('API response for merchant:', merchant);
-            console.log('API response for products:', products);
 
             if (products && products.length) {
                 setMerchantData(merchant.data);

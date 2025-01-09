@@ -17,8 +17,6 @@ export async function createOrder(orderData: any, jwt: string) {
     try {
         const response = await fetch(`${BASE_API_URL}api/order/createOrder`, requestOptions(orderData, jwt));
         const result = await response.json();
-        console.log("результат", result);
-        
         const orderId = result.data.id;
         return orderId;
     } catch (error) {

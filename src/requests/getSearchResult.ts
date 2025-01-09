@@ -28,8 +28,6 @@ export async function getSearchResult(
 
         const data = await response.json();
 
-        console.log("Полученные данные цены:", data);
-
         return data;
     } catch (error) {
         console.error("Ошибка при получении данных:", error);

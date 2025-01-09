@@ -17,8 +17,6 @@ export const validateTelegramId = async (token: string) => {
         // Извлекаем telegramId из initDataUnsafe.user
         const telegramId = initDataUnsafe.user.id;
 
-        console.log('телеграм айдишник', telegramId)
-
         await setTelegramId(token, telegramId);
     }
 };

@@ -44,9 +44,6 @@ export const twitter = "textura.agency";
 
 export default function App({ Component, pageProps }: AppProps) {
     useEffect(() => {
-        // Make location.reload do nothing
-        // window.location.reload = () => {};
-        
         void document.body.style.removeProperty("opacity");
     }, []);
 
@@ -93,7 +90,6 @@ export default function App({ Component, pageProps }: AppProps) {
                         console.error("Error loading Telegram WebApp script:", e);
                     }}
                     onLoad={() => {
-                        console.log("Telegram WebApp script loaded");
                         setTimeout(() => {
                             initializeTelegramWebApp();
                         }, 1000);

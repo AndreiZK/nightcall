@@ -24,7 +24,6 @@ export async function getDeliveryPrice(order: Array<Product>) {
 
         const data = await response.json();
 
-        console.log("Полученные данные цены:", data);
 
         return data;
     } catch (error) {

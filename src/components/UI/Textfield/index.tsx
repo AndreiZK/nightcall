@@ -82,12 +82,6 @@ const Textfield = ({ label, required, search, value, ...props }: TextfieldProps)
 
     const isActive = isFocused || value;
 
-    useEffect(() => {
-        if (isActive) {
-            console.log("isActive", isActive);
-        }
-    }, [isActive]);
-
     const handleLabelClick = () => {
         inputRef.current?.focus();
     };

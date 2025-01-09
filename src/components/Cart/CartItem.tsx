@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { IProduct, IProductExtra, IProductType } from "../../../types";
-import { rm } from "@/styles";
+import { media, rm } from "@/styles";
 import { useEffect, useState } from "react";
 import useStore, { Product } from "@/store/store";
 import { Icons } from "../UI/Icons";
@@ -11,6 +11,10 @@ const StyledCartItem = styled.div`
     gap: ${rm(10)};
     margin-top: ${rm(20)};
     position: relative;
+
+    ${media.xsm`
+        width: 97%;
+    `}
 
     .top-row {
         display: flex;
@@ -37,7 +41,6 @@ const StyledCartItem = styled.div`
         justify-content: space-between;
         align-items: center;
 
-
         .counter-button {
             cursor: pointer;
             height: ${rm(46)};
@@ -49,6 +52,13 @@ const StyledCartItem = styled.div`
             font-size: ${rm(46)};
 
             color: rgba(130, 93, 217, 1);
+
+            span{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: ${rm(37)};
+            }
 
             &.disabled {
                 background-color: rgba(255, 255, 255, 0.1);
@@ -161,10 +171,10 @@ const CartItem = (props: CartItemProps) => {
                     onClick={
                         handleRemove
                     }
-                    className={`counter-button ${
+                    className={`counter-button minus ${
                         amount === 1 ? "disabled" : ""
                     }`}
-                >-</span>
+                ><span>-</span></span>
                 <span className="extras-string">{extrasString}</span>
                 <span 
                         onClick={handleAdd}

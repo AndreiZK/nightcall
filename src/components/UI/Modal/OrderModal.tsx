@@ -193,7 +193,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
         //     tg.sendData(JSON.stringify(tgData));
         // } else {
-        //     console.log("error", error);
         // }
 
         if(!error && paymentLink && hashIds){
@@ -216,7 +215,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         const discountedPrice = await getDiscountedPrice(finalOrder, promocode);
 
         if(discountedPrice?.discountedPrice?.discountedPrice != undefined && discountedPrice?.discountedPrice?.discountedPrice != null){
-            console.log('setting')
             setPrice(discountedPrice.discountedPrice.discountedPrice);
             setDiscountPrice(discountedPrice.discountedPrice.discountAmount);
         }

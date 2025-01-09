@@ -1,7 +1,7 @@
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 import { Icons } from "../UI/Icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getProductsByIds } from "@/requests/getProductsByIds";
 import useStore from "@/store/store";
 import CartItem from "./CartItem";
@@ -10,6 +10,7 @@ import { getDeliveryPrice } from "@/utils/getDeliveryPrice";
 import Button from "../UI/Button";
 import { heightLvh } from "@/styles/utils";
 import { toast } from "react-toastify";
+import { useDrag } from '@use-gesture/react';
 
 const StyledCart = styled.div`
     position: relative;
@@ -30,9 +31,19 @@ const StyledCart = styled.div`
     .order {
         display: flex;
         flex-direction: column;
-        max-height: ${rm(500)};
-        overflow-y: auto;
+        height: ${rm(340)};
+        touch-action: pan-y;
+        overflow: hidden;
+        position: relative;
         gap: ${rm(15)};
+    }
+
+    .order-content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        will-change: transform;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .cross {
@@ -43,12 +54,6 @@ const StyledCart = styled.div`
 
     &.open {
         transform: translateX(0%);
-    }
-
-    .order {
-        display: flex;
-        flex-direction: column;
-        gap: ${rm(15)};
     }
 
     .cart-title {
@@ -103,14 +108,28 @@ const MobileCart = ({
     const [price, setPrice] = useState<number>(0);
     const [deliveryPrice, setDeliveryPrice] = useState<number>(8);
     const [dataToRender, setDataToRender] = useState([]);
+    const orderContentRef = useRef<HTMLDivElement>(null);
+    const scrollYRef = useRef(0);
 
     const setOrderModal = useStore((state: any) => state.setOrderModal);
+    const token = useStore((state: any) => state.jwtToken);
 
-    const token = useStore((state: any) => (state.jwtToken));
+    useEffect(() => {
+        const savedOrder = localStorage.getItem('order');
+        const savedLoadedIds = localStorage.getItem('loadedIds');
+        const savedAmounts = localStorage.getItem('amounts');
+
+        if (savedOrder && savedLoadedIds && savedAmounts) {
+            useStore.setState({
+                order: JSON.parse(savedOrder),
+                loadedIds: new Set(JSON.parse(savedLoadedIds)),
+                amounts: new Map(JSON.parse(savedAmounts))
+            });
+        }
+    }, []);
 
     const getProductsForCart = async () => {
         const products = await getProductsByIds(order);
-
         setDataToRender(products);
     };
 
@@ -126,9 +145,10 @@ const MobileCart = ({
         const price = await getOrderPrice(finalOrder);
         const deliveryPrice = await getDeliveryPrice(finalOrder);
 
-        useStore.setState({ price: price.totalPrice });
-        setPrice(price.totalPrice);
+        const roundedPrice = Number(price.totalPrice.toFixed(2));
 
+        useStore.setState({ price: roundedPrice });
+        setPrice(roundedPrice);
         setDeliveryPrice(deliveryPrice);
     };
 
@@ -148,6 +168,28 @@ const MobileCart = ({
 
     const handleClose = () => onClose();
 
+    const bindDrag = useDrag(({ movement: [mx, y], direction: [dx, dy] }) => {
+        const newY = (y * 0.6) + scrollYRef.current;
+        const containerHeight = 340;
+        const contentHeight = dataToRender.length * 100;
+        const maxScroll = Math.min(0, containerHeight - contentHeight);
+        
+        scrollYRef.current = Math.max(maxScroll, Math.min(0, newY));
+        
+        if (orderContentRef.current) {
+            orderContentRef.current.style.transform = `translateY(${scrollYRef.current}px)`;
+        }
+    }, {
+        from: () => [0, scrollYRef.current],
+        bounds: {
+            top: Math.min(0, 340 - dataToRender.length * 100),
+            bottom: 0
+        },
+        rubberband: true,
+        filterTaps: true,
+        pointer: { touch: true },
+    });
+
     return (
         <StyledCart className={open ? "open" : ""}>
             <Icons.cross onClick={handleClose} className="cross" />
@@ -155,16 +197,22 @@ const MobileCart = ({
                 <span className="cart-title">Ваш заказ</span>
                 {!order.length && <Icons.cartDesktop className="bag" />}
                 <div className="order">
-                    {dataToRender.length > 0 &&
-                        dataToRender.map((element: any, index: number) => (
-                            <CartItem
-                                key={index}
-                                calculatedPrice={element.calculatedPrice}
-                                extra={element.extra}
-                                type={element.type}
-                                product={element.product}
-                            />
-                        ))}
+                    <div 
+                        ref={orderContentRef}
+                        className="order-content"
+                        {...bindDrag()}
+                    >
+                        {dataToRender.length > 0 &&
+                            dataToRender.map((element: any, index: number) => (
+                                <CartItem
+                                    key={index}
+                                    calculatedPrice={element.calculatedPrice}
+                                    extra={element.extra}
+                                    type={element.type}
+                                    product={element.product}
+                                />
+                            ))}
+                    </div>
                 </div>
             </div>
             {!order.length ? (
@@ -179,7 +227,7 @@ const MobileCart = ({
                         <p>{deliveryPrice} BYN</p>
                     </div>
                     <Button className="order-button" onClick={handleOrder}>
-                        Заказать за {price} BYN
+                        Заказать за {price.toFixed(2)} BYN
                     </Button>
                 </div>
             )}

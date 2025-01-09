@@ -102,9 +102,10 @@ const Cart = () => {
         const price = await getOrderPrice(finalOrder);
         const deliveryPrice = await getDeliveryPrice(finalOrder);
 
-        useStore.setState({ price: price.totalPrice });
-        setPrice(price.totalPrice);
+        const roundedPrice = Number(price.totalPrice.toFixed(2));
 
+        useStore.setState({ price: roundedPrice });
+        setPrice(roundedPrice);
         setDeliveryPrice(deliveryPrice);
     };
 
@@ -151,7 +152,7 @@ const Cart = () => {
                         <p>{deliveryPrice} BYN</p>
                     </div>
                     <Button onClick={handleOrder}>
-                        Заказать за {price} BYN
+                        Заказать за {price.toFixed(2)} BYN
                     </Button>
                 </div>
             )}

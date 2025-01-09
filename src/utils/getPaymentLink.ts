@@ -21,7 +21,6 @@ export async function getPaymentLink(orderId: any, promocode: string, jwt: strin
         );
 
         const result = await response.text();
-        console.log('API Response:', result);
 
         const parsedResult = JSON.parse(result);
 

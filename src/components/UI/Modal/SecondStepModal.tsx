@@ -135,8 +135,6 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
       fetch(`${BASE_API_URL}api/auth/local/register`, requestOptions(raw))
         .then((response) => response.text())
         .then((result) => {
-          console.log(result);
-
           if (
             JSON.parse(result)?.error?.message ===
             "Email or Username are already taken"
@@ -181,7 +179,6 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
           .then((response) => response.text())
           .then((result) => {
             toast.success("Данные успешно добавлены");
-            console.log("Результат обновления адреса", result);
           })
           .catch((error) => console.error(error));
   

@@ -42,6 +42,10 @@ const useStore = create((set, get) => ({
                 const toastIndicator = state.toastIndicator;
 
                 updatedIds.add(product);
+                
+                // Save to localStorage
+                localStorage.setItem('order', JSON.stringify(updatedOrder));
+                localStorage.setItem('loadedIds', JSON.stringify(Array.from(updatedIds)));
 
                 return {
                     order: updatedOrder,
@@ -61,6 +65,9 @@ const useStore = create((set, get) => ({
         if (productKey) amounts.set(productKey, amount);
         else amounts.set(product, amount);
 
+        // Save to localStorage
+        localStorage.setItem('amounts', JSON.stringify(Array.from(amounts)));
+
         set({ amounts });
     },
     addItem: (product: Product) => {
@@ -75,11 +82,20 @@ const useStore = create((set, get) => ({
             const updatedIds = new Set(state.loadedIds);
             updatedIds.delete(product);
 
+            // Save to localStorage
+            localStorage.setItem('order', JSON.stringify(newOrder));
+            localStorage.setItem('loadedIds', JSON.stringify(Array.from(updatedIds)));
+
             return { order: newOrder, loadedIds: updatedIds };
         });
     },
     clearOrder: () => {
         set((state) => {
+            // Clear from localStorage
+            localStorage.removeItem('order');
+            localStorage.removeItem('loadedIds');
+            localStorage.removeItem('amounts');
+
             return { order: [], loadedIds: new Set() };
         });
     },

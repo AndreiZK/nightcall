@@ -13,7 +13,6 @@ export const AnimatedRouterLayout: NextPage<{ children: any }> = ({ children }) 
 
     useEffect(() => {
         router.events.on('routeChangeStart', () => {
-            // console.log('change start')
         })
         router.events.on('routeChangeComplete', () => {
             routeChangeComplete()

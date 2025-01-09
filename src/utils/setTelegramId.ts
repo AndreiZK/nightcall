@@ -14,10 +14,6 @@ if(!telegramId) {
   });
 
   
-  console.log('финальный айдишник для телеги', finalTelegramId)
-
-  console.log('токенидзе', token)
-
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -35,7 +31,6 @@ if(!telegramId) {
 
     const data = await response.json();
     
-    console.log('Полученные данные:', data);
 
     return data;
   } catch (error) {

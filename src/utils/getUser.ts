@@ -22,7 +22,6 @@ export async function getUser(token: string) {
 
     const data = await response.json();
     
-    console.log('Полученный токен:', data);
 
     return data;
   } catch (error) {

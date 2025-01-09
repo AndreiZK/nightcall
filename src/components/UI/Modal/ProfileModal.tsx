@@ -140,7 +140,6 @@ const ProfileModal = (props: Omit<ModalProps, "children">) => {
             .then((result) => {
             toast.success("Данные успешно обновлены");
               setIsValid(true)
-              console.log("Результат обновления адреса", result);
               setProfileModal(false)
             })
             .catch((error) => toast.error('Не удалось обновить данные'));

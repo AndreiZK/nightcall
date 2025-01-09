@@ -24,8 +24,6 @@ export async function getProductsByIds(products: Array<Product>) {
 
         const data = await response.json();
 
-        console.log("Полученные данные:", data);
-
         return data;
     } catch (error) {
         console.error("Ошибка при получении данных:", error);

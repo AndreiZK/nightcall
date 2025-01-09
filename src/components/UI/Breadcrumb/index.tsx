@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { Icons } from "../Icons";
 import { colors, rm } from "@/styles";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getStrapiData } from "@/requests/getStrapiData";
+import { IRestaurant } from "../../../../types";
 
 const StyledBreadcrumb = styled.div`
     display: flex;
@@ -21,33 +24,37 @@ const StyledBreadcrumb = styled.div`
     }
 `;
 
-const breadcrumbMap: Record<string, string> = {
-    "/": "Главная",
-    "restaurants": "Рестораны",
-    "1": "Галактика",
-    "2": "Harat's",
-    "3": "СОН", 
-    "4": "Мистерия",
-    "5": "test_merch",
-    "6": "Биг джонс",
-    "7": "Shaw_box",
-    "8": ""
-};
-
 const Breadcrumb = () => {
     const pathname = usePathname();
     const pathParts = pathname?.split("/").filter(Boolean);
+    const [restaurants, setRestaurants] = useState<{[key: string]: string}>({
+        "/": "Главная",
+        "restaurants": "Рестораны"
+    });
+
+    useEffect(() => {
+        const fetchRestaurants = async () => {
+            const { data } = await getStrapiData("merchants");
+            const restaurantMap = { ...restaurants };
+            
+            data.forEach((restaurant: IRestaurant) => {
+                restaurantMap[restaurant.id.toString()] = restaurant.attributes.name;
+            });
+            
+            setRestaurants(restaurantMap);
+        };
+
+        fetchRestaurants();
+    }, []);
     
-    // Build breadcrumb items with their full paths
     const breadcrumbItems = pathParts?.map((part, index) => {
         const path = "/" + pathParts.slice(0, index + 1).join("/");
         return {
-            title: breadcrumbMap[part] || part,
+            title: restaurants[part] || part,
             path
         };
     }) || [];
 
-    // Add home as first item
     breadcrumbItems.unshift({
         title: "Главная",
         path: "/"

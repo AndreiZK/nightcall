@@ -19,8 +19,6 @@ export async function getCategories() {
 
         const data = await response.json();
 
-        console.log(data);
-
         return data;
     } catch (error) {
         console.error("Ошибка при получении данных:", error);

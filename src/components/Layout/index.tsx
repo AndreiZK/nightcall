@@ -84,6 +84,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     const [hashId, setHashId] = useState<String>("");
     const promocode = useStore((state: any) => state.promocode);
 
+    const clearOrder = useStore((state: any) => (state.clearOrder));
+
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
     useEffect(() => {
@@ -92,7 +94,6 @@ export default function Layout({ children }: { children: ReactNode }) {
         if (token && token.length > 10) {
             //get user data
             useStore.setState({ jwtToken: token, isAuth: true });
-            console.log("token", token);
         }
     }, []);
 
@@ -100,7 +101,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     // useEffect(() => {
     //     const initializeTelegramWebApp = () => {
     //         if (window.Telegram && window.Telegram.WebApp) {
-    //             console.log("Проверка выполнения в Telegram WebApp");
 
     //             let tg: any = window.Telegram.WebApp;
     //             tg.ready();
@@ -119,13 +119,10 @@ export default function Layout({ children }: { children: ReactNode }) {
     //             const params = new URLSearchParams({ data: safeData });
     //             const fullURL = `${url}?${params}`;
 
-    //             console.log("ссылка полная", fullURL);
-    //             console.log("safeData:", safeData);
 
     //             fetch(fullURL)
     //                 .then((response) => response.json())
     //                 .then((data) =>
-    //                     console.log("Отправили дату в страпи", data)
     //                 )
     //                 .catch((error) => console.error("Error:", error));
 
@@ -176,8 +173,6 @@ export default function Layout({ children }: { children: ReactNode }) {
                 if (link && hashId) {
                     setPaymentLink(link);
                     setHashId(hashId);
-                    // console.log('link', link)
-                    // console.log('paymentData', JSON.parse(result).hashId)
                     // setPaymentLink(link);
                 } else {
                     // toast.error(
@@ -202,14 +197,11 @@ export default function Layout({ children }: { children: ReactNode }) {
                 }
             }
 
-            console.log("Layout order", finalOrder);
 
             const orderData = JSON.stringify({
                 comment: "none",
                 cart: finalOrder,
             });
-
-            console.log(orderData);
 
             // order
             fetch(
@@ -218,14 +210,10 @@ export default function Layout({ children }: { children: ReactNode }) {
             )
                 .then((response) => response.text())
                 .then((result) => {
-                    console.log("результат", JSON.parse(result));
-
                     const orderId = JSON.parse(result).data.id;
 
                     if (orderId) {
-                        console.log(JSON.parse(result));
                         setOrderId(orderId);
-                        console.log("orderId", orderId);
                         getPaymentLink(orderId);
                     }
                 })
@@ -245,16 +233,10 @@ export default function Layout({ children }: { children: ReactNode }) {
                 hashId: hashId,
             };
 
-            console.log("tgData", tgData);
-
             tg.sendData(JSON.stringify(tgData));
 
             useStore.setState({ paymentLink: paymentLink });
-
-            // toast.success("Заказ успешно создан");
-
-            console.log("Ссылка перед перекидыванием", paymentLink);
-
+            
             const aElem = document.createElement("a");
             aElem.href = paymentLink;
             aElem.target = "_blank";

@@ -11,7 +11,6 @@ export async function getDiscountedPrice(order: Array<Product>, promocode: strin
     promocode
   });
 
-  console.log(raw)
 
   try {
     const response = await fetch(url, {
@@ -29,7 +28,6 @@ export async function getDiscountedPrice(order: Array<Product>, promocode: strin
 
     const data = await response.json();
 
-    console.log("Цена с дискаунтом:", data);
 
     if (!data.discountedPrice.error) {
       toast.success("Промокод применен");

@@ -33,7 +33,6 @@ export default function Home() {
         const getData = async () => {
             const { data } = await getStrapiData("merchants");
 
-            console.log(data);
             setRestaurantsData(data.slice(0, 3));
         };
 
