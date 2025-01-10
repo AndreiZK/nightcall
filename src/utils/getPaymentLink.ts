@@ -34,7 +34,7 @@ export async function getPaymentLink(orderId: any, promocode: string, jwt: strin
             return {
                 paymentLink: null,
                 hashIds: null,
-                error: "В данный момент свободных курьеров нет, повторите немного позже. Мы работаем с пятницы по воскресенье с 22.00-4.00"
+                error: "Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00"
             };
         }
     } catch (error) {
