@@ -157,7 +157,7 @@ const ProductModal = (props: ProductModalProps) => {
         }
 
         if (inst != letter) {
-            //   toast.error("Вы уже выбрали товары в другом заведении");
+              toast.error("Вы уже выбрали товары в другом заведении");
             return;
         }
         let type: Array<number> = [];
@@ -194,9 +194,9 @@ const ProductModal = (props: ProductModalProps) => {
                 (i: any) => JSON.stringify(i) === JSON.stringify(product)
             )
         ) {
-            //   toast.error(
-            //     "Вы уже добавили этот товар, количество можно изменить в корзине"
-            //   );
+              toast.error(
+                "Вы уже добавили этот товар, количество можно изменить в корзине"
+              );
             return;
         }
         for (let i = 0; i < count; i++) {
