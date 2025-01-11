@@ -14,6 +14,8 @@ import { createOrder } from "@/utils/createOrder";
 import { getPaymentLink } from "@/utils/getPaymentLink";
 import { useRouter } from 'next/navigation';
 import { toast } from "react-toastify";
+import { checkSchedule } from "@/utils/checkSchedule";
+import { isOpen } from "@/utils/isOpen";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -157,7 +159,18 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         setOrderPrice(price.totalPrice);
     };
 
+
+    
     const handlePay = async () => {
+        const schedule = await checkSchedule();
+
+        const isNightcallOpen = isOpen(schedule.data.attributes.nightcall_schedule)
+
+        if(!isNightcallOpen) {
+            toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
+            return;
+        }
+
         const finalOrder: any = [];
 
         for (const [key, value] of amounts.entries()) {
@@ -179,7 +192,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
             jwt
         );
 
-        
         // if(!error){
         //     let tg: any = window.Telegram.WebApp;
 
