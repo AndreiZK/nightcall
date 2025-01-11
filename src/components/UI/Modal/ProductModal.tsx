@@ -137,72 +137,69 @@ const ProductModal = (props: ProductModalProps) => {
     const jwt = useStore((state: any) => (state.jwtToken));
 
     const institution = useStore((state: any) => state.institution);
+    const setInstitution = useStore((state: any) => state.setInstitution);
     const order = useStore((state: any) => state.order);
     const addToOrder = useStore((state: any) => state.addToOrder);
     const updateAmount = useStore((state: any) => state.updateAmount);
 
     const handleAdd = () => {
         if(jwt?.length > 7) {
+            const letter = props.productData.merchant.unique_prefix;
+            let inst = institution;
 
-        
-        let inst;
+            if (institution === null) {
+                setInstitution(letter);
+                inst = letter;
+            }
 
-        const letter = props.productData.merchant.unique_prefix;
+            if (inst !== letter) {
+                toast.error("Вы уже выбрали товары в другом заведении");
+                return;
+            }
 
-        if (institution === null) {
-            useStore.setState({ institution: letter });
-            inst = letter;
-        } else {
-            inst = institution;
-        }
-
-        if (inst != letter) {
-              toast.error("Вы уже выбрали товары в другом заведении");
-            return;
-        }
-        let type: Array<number> = [];
-        let extra: Array<number> = [];
-        if (
-            selectedType
-                ? props.productData.product_types[selectedType]?.id
-                : props.productData.product_types[0]?.id
-        ) {
-            type = [
+            let type: Array<number> = [];
+            let extra: Array<number> = [];
+            if (
                 selectedType
-                    ? props.productData.product_types[selectedType].id
-                    : props.productData.product_types[0].id,
-            ];
-        }
-        if (
-            selectedExtra
-                ? props.productData.product_extras[selectedExtra]?.id
-                : props.productData.product_extras[0]?.id
-        ) {
-            extra = [
+                    ? props.productData.product_types[selectedType]?.id
+                    : props.productData.product_types[0]?.id
+            ) {
+                type = [
+                    selectedType
+                        ? props.productData.product_types[selectedType].id
+                        : props.productData.product_types[0].id,
+                ];
+            }
+            if (
                 selectedExtra
-                    ? props.productData.product_extras[selectedExtra].id
-                    : props.productData.product_extras[0].id,
-            ];
-        }
-        const product = {
-            id: props.productData.id,
-            type,
-            extra,
-        };
-        if (
-            order.some(
-                (i: any) => JSON.stringify(i) === JSON.stringify(product)
-            )
-        ) {
-              toast.error(
-                "Вы уже добавили этот товар, количество можно изменить в корзине"
-              );
-            return;
-        }
-        for (let i = 0; i < count; i++) {
-            addToOrder(product);
-        }
-        updateAmount(product, count);
+                    ? props.productData.product_extras[selectedExtra]?.id
+                    : props.productData.product_extras[0]?.id
+            ) {
+                extra = [
+                    selectedExtra
+                        ? props.productData.product_extras[selectedExtra].id
+                        : props.productData.product_extras[0].id,
+                ];
+            }
+            const product = {
+                id: props.productData.id,
+                type,
+                extra,
+            };
+            if (
+                order.some(
+                    (i: any) => JSON.stringify(i) === JSON.stringify(product)
+                )
+            ) {
+                toast.error(
+                    "Вы уже добавили этот товар, количество можно изменить в корзине"
+                );
+                return;
+            }
+            for (let i = 0; i < count; i++) {
+                addToOrder(product);
+            }
+            updateAmount(product, count);
         } else {
             toast.error("Для добавления товара необходимо авторизоваться");
             return;

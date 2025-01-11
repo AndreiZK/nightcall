@@ -95,8 +95,13 @@ const useStore = create((set, get) => ({
             localStorage.removeItem('order');
             localStorage.removeItem('loadedIds');
             localStorage.removeItem('amounts');
+            localStorage.removeItem('institution');
 
-            return { order: [], loadedIds: new Set() };
+            return { 
+                order: [], 
+                loadedIds: new Set(),
+                institution: null 
+            };
         });
     },
     addDuplicateItem: (product: Product) => {
@@ -159,6 +164,14 @@ const useStore = create((set, get) => ({
     setProfileModal: (value: boolean) => set({ isProfileModalOpen: value }),
     setOrderModal: (value: boolean) => set({ isOrderModalOpen: value }),
     setTrackOpen: (value: boolean) => set({ isTrackOpen: value }),
+    setInstitution: (letter) => {
+        localStorage.setItem('institution', letter);
+        set({ institution: letter });
+    },
+    clearInstitution: () => {
+        localStorage.removeItem('institution');
+        set({ institution: null });
+    }
 }));
 
 export default useStore;

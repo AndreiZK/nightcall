@@ -122,6 +122,13 @@ const Cart = () => {
         getPrice();
     }, [amounts, order]);
 
+    useEffect(() => {
+        const savedInstitution = localStorage.getItem('institution');
+        if (savedInstitution) {
+            useStore.setState({ institution: savedInstitution });
+        }
+    }, []);
+
     return (
         <StyledCart className="">
             <div className="mainContainer">
