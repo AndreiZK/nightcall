@@ -4,29 +4,27 @@ export const initializeTelegramWebApp = () => {
   try {
     if (typeof window === 'undefined') return;
 
-    // Wait for Telegram WebApp to be available
-    if (!window.Telegram?.WebApp) {
-      console.warn("Telegram WebApp is not available");
+    const tg: any = window.Telegram.WebApp;
+    if (!tg) {
+      console.warn("Telegram WebApp is not available yet fdfd");
       return;
     }
 
-    const tg: any = window.Telegram.WebApp;
-
-    // Log the raw data for debugging
-    console.log("Raw WebApp data:", {
-      initData: tg.initData,
-      initDataUnsafe: tg.initDataUnsafe
-    });
-
-    // Initialize the WebApp
+    // Initialize the WebApp first
     tg.ready();
 
     // Get user data after WebApp is ready
     const initDataUnsafe = tg.initDataUnsafe || {};
     const safeData = tg.initData;
 
+    // Log the raw data for debugging
+    console.log("Telegram WebApp initialized with data:", {
+      initData: safeData,
+      initDataUnsafe: initDataUnsafe
+    });
+
     if (!initDataUnsafe.user) {
-      console.warn("No user data available");
+      console.warn("No user data available in Telegram WebApp");
       return;
     }
 
@@ -39,6 +37,7 @@ export const initializeTelegramWebApp = () => {
       parsedData = safeData;
     }
 
+    // Send data to your backend
     const url = `${BASE_API_URL}api/validateTelegramUser`;
     const params = new URLSearchParams({ 
       data: typeof parsedData === 'string' ? parsedData : JSON.stringify(parsedData) 
@@ -47,8 +46,8 @@ export const initializeTelegramWebApp = () => {
 
     fetch(fullURL)
       .then((response) => response.json())
-      .then((data) => console.log("Sent data to Strapi:", data))
-      .catch((error) => console.error("Error:", error));
+      .then((data) => console.log("Successfully validated Telegram user:", data))
+      .catch((error) => console.error("Error validating Telegram user:", error));
 
   } catch (error) {
     console.error("Error initializing Telegram WebApp:", error);

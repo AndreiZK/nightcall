@@ -57,16 +57,29 @@ export default function App({ Component, pageProps }: AppProps) {
     });
 
     useEffect(() => {
-    if (document.readyState === "complete") {
-        initializeTelegramWebApp();
-      } else {
-        window.addEventListener("load", initializeTelegramWebApp);
-      }
-  
-      return () => {
-        window.removeEventListener("load", initializeTelegramWebApp);
-      };
-    }, []);
+        const initApp = () => {
+          // Wait a short moment to ensure Telegram script is fully loaded
+          setTimeout(() => {
+            if (window.Telegram?.WebApp) {
+              initializeTelegramWebApp();
+            } else {
+              console.warn("Waiting for Telegram WebApp to be available...");
+              // Try again in 500ms if not available
+              setTimeout(initApp, 500);
+            }
+          }, 100);
+        };
+      
+        if (document.readyState === "complete") {
+          initApp();
+        } else {
+          window.addEventListener("load", initApp);
+        }
+      
+        return () => {
+          window.removeEventListener("load", initApp);
+        };
+      }, []);
 
     return (
         <>
@@ -89,11 +102,11 @@ export default function App({ Component, pageProps }: AppProps) {
                     onError={(e) => {
                         console.error("Error loading Telegram WebApp script:", e);
                     }}
-                    onLoad={() => {
-                        setTimeout(() => {
-                            initializeTelegramWebApp();
-                        }, 1000);
-                    }}
+                    // onLoad={() => {
+                    //     setTimeout(() => {
+                    //         initializeTelegramWebApp();
+                    //     }, 1000);
+                    // }}
                 />
             </Head>
             <ScrollLayout>
