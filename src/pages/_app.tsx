@@ -57,29 +57,35 @@ export default function App({ Component, pageProps }: AppProps) {
     });
 
     useEffect(() => {
+        let retryCount = 0;
+        const maxRetries = 10;
+        
         const initApp = () => {
-          // Wait a short moment to ensure Telegram script is fully loaded
-          setTimeout(() => {
-            if (window.Telegram?.WebApp) {
-              initializeTelegramWebApp();
-            } else {
-              console.warn("Waiting for Telegram WebApp to be available...");
-              // Try again in 500ms if not available
-              setTimeout(initApp, 500);
+            if (retryCount >= maxRetries) {
+                console.error("Failed to initialize Telegram WebApp after maximum retries");
+                return;
             }
-          }, 100);
+
+            console.log(`Debug: Initialization attempt ${retryCount + 1}`);
+            initializeTelegramWebApp();
+            
+            // If we didn't get the WebApp object, retry
+            if (!window.Telegram?.WebApp) {
+                retryCount++;
+                setTimeout(initApp, 1000);
+            }
         };
-      
+
         if (document.readyState === "complete") {
-          initApp();
+            initApp();
         } else {
-          window.addEventListener("load", initApp);
+            window.addEventListener("load", initApp);
         }
-      
+
         return () => {
-          window.removeEventListener("load", initApp);
+            window.removeEventListener("load", initApp);
         };
-      }, []);
+    }, []);
 
     return (
         <>
@@ -99,15 +105,14 @@ export default function App({ Component, pageProps }: AppProps) {
                 <Script 
                     src="https://telegram.org/js/telegram-web-app.js"
                     strategy="beforeInteractive"
+                    async={false}
+                    onLoad={() => {
+                        console.log("Telegram WebApp script loaded");
+                        initializeTelegramWebApp();
+                    }}
                     onError={(e) => {
                         console.error("Error loading Telegram WebApp script:", e);
                     }}
-                    async
-                    // onLoad={() => {
-                    //     setTimeout(() => {
-                    //         initializeTelegramWebApp();
-                    //     }, 1000);
-                    // }}
                 />
             </Head>
             <ScrollLayout>
