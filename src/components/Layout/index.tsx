@@ -17,9 +17,22 @@ import { ReactNode } from "react";
 import Footer from "../Footer";
 
 interface TelegramWebApp {
+    ready: () => void;
     close: () => void;
-    sendData: (data: string) => void;
-    ready: (data: string) => void;
+    expand: () => void;
+    MainButton: any;
+    BackButton: any;
+    initData: string;
+    initDataUnsafe: {
+        user?: {
+            id: number;
+            first_name: string;
+            last_name?: string;
+            username?: string;
+            language_code?: string;
+        };
+        start_param?: string;
+    };
 }
 
 declare global {

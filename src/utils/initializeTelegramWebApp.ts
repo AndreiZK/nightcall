@@ -4,26 +4,30 @@ export const initializeTelegramWebApp = () => {
   try {
     if (typeof window === 'undefined') return;
 
-    const tg: any = window.Telegram.WebApp;
-    if (!tg) {
-      console.warn("Telegram WebApp is not available yet fdfd");
+    // Check if Telegram object exists
+    if (!window.Telegram) {
+      console.warn("Telegram object not found. Make sure you're running this in Telegram WebApp");
       return;
     }
+
+    // Check if WebApp exists
+    if (!window.Telegram.WebApp) {
+      console.warn("WebApp not found. Make sure you're running this in Telegram WebApp");
+      return;
+    }
+
+    const tg: any = window.Telegram.WebApp;
 
     // Initialize the WebApp first
     tg.ready();
 
-    // Get user data after WebApp is ready
-    const initDataUnsafe = tg.initDataUnsafe || {};
-    const safeData = tg.initData;
-
     // Log the raw data for debugging
     console.log("Telegram WebApp initialized with data:", {
-      initData: safeData,
-      initDataUnsafe: initDataUnsafe
+      initData: tg.initData,
+      initDataUnsafe: tg.initDataUnsafe
     });
 
-    if (!initDataUnsafe.user) {
+    if (!tg.initDataUnsafe.user) {
       console.warn("No user data available in Telegram WebApp");
       return;
     }
@@ -31,10 +35,10 @@ export const initializeTelegramWebApp = () => {
     // Parse the init data if it's a string
     let parsedData;
     try {
-      parsedData = typeof safeData === 'string' ? JSON.parse(safeData) : safeData;
+      parsedData = typeof tg.initData === 'string' ? JSON.parse(tg.initData) : tg.initData;
     } catch (e) {
       console.warn("Failed to parse initData:", e);
-      parsedData = safeData;
+      parsedData = tg.initData;
     }
 
     // Send data to your backend
@@ -48,6 +52,10 @@ export const initializeTelegramWebApp = () => {
       .then((response) => response.json())
       .then((data) => console.log("Successfully validated Telegram user:", data))
       .catch((error) => console.error("Error validating Telegram user:", error));
+
+    console.log('Window Telegram object:', window.Telegram);
+    console.log('User Agent:', navigator.userAgent);
+    console.log('Is in Telegram:', window.Telegram?.WebApp ? 'Yes' : 'No');
 
   } catch (error) {
     console.error("Error initializing Telegram WebApp:", error);

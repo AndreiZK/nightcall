@@ -102,6 +102,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     onError={(e) => {
                         console.error("Error loading Telegram WebApp script:", e);
                     }}
+                    async
                     // onLoad={() => {
                     //     setTimeout(() => {
                     //         initializeTelegramWebApp();
