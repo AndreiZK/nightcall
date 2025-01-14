@@ -192,20 +192,19 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
             jwt
         );
 
-        // if(!error){
-        //     let tg: any = window.Telegram.WebApp;
+        if(!error){
+            let tg: any = window.Telegram.WebApp;
 
-        //     const tgData = {
-        //       orderId: orderId,
-        //       paymentLink: paymentLink,
-        //       hashId: hashIds,
-        //     };
+            if(tg){
+                const tgData = {
+                    orderId: orderId,
+                    paymentLink: paymentLink,
+                    hashId: hashIds,
+                };
 
-        //     // useStore.setState({ paymentLink: paymentLink, hashId: hashIds });
-
-        //     tg.sendData(JSON.stringify(tgData));
-        // } else {
-        // }
+                tg.sendData(JSON.stringify(tgData));
+            }
+        }
 
         if(!error && paymentLink && hashIds){
             router.push(paymentLink);
