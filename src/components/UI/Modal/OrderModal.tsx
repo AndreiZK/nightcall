@@ -202,9 +202,13 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                     hashId: hashIds,
                 };
 
+                console.log('tgData', tgData);
+
                 tg.sendData(JSON.stringify(tgData));
             }
         }
+
+        console.log(paymentLink, hashIds, error);
 
         if(!error && paymentLink && hashIds){
             router.push(paymentLink);
