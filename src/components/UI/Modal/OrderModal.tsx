@@ -162,60 +162,69 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
     
     const handlePay = async () => {
-        const schedule = await checkSchedule();
+        try {
+            const schedule = await checkSchedule();
 
-        const isNightcallOpen = isOpen(schedule.data.attributes.nightcall_schedule)
+            const isNightcallOpen = isOpen(schedule.data.attributes.nightcall_schedule)
 
-        if(!isNightcallOpen) {
-            toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
-            return;
-        }
-
-        const finalOrder: any = [];
-
-        for (const [key, value] of amounts.entries()) {
-            for (let i = 0; i < value; i++) {
-                finalOrder.push(key);
+            if(!isNightcallOpen) {
+                toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
+                return;
             }
-        }
 
-        const orderData = JSON.stringify({
-            comment: "none",
-            cart: finalOrder,
-        });
+            const finalOrder: any = [];
 
-        const orderId = await createOrder(orderData, jwt);
-
-        const { paymentLink, hashIds, error } = await getPaymentLink(
-            orderId,
-            promocode,
-            jwt
-        );
-
-        if(!error){
-            let tg: any = window.Telegram.WebApp;
-
-            if(tg){
-                const tgData = {
-                    orderId: orderId,
-                    paymentLink: paymentLink,
-                    hashId: hashIds,
-                };
-
-                console.log('tgData', tgData);
-
-                tg.sendData(JSON.stringify(tgData));
+            for (const [key, value] of amounts.entries()) {
+                for (let i = 0; i < value; i++) {
+                    finalOrder.push(key);
+                }
             }
+
+            const orderData = JSON.stringify({
+                comment: "none",
+                cart: finalOrder,
+            });
+
+            const orderId = await createOrder(orderData, jwt);
+
+            const { paymentLink, hashIds, error } = await getPaymentLink(
+                orderId,
+                promocode,
+                jwt
+            );
+
+            if(!error){
+                let tg: any = window.Telegram?.WebApp;
+
+                if(tg){
+                    const tgData = {
+                        orderId: orderId,
+                        paymentLink: paymentLink,
+                        hashId: hashIds,
+                    };
+
+                    try {
+                        const serializedData = JSON.stringify(tgData);
+                        console.log('Sending to Telegram:', serializedData);
+                        tg.sendData(serializedData);
+                    } catch (e) {
+                        console.error('Failed to send data to Telegram:', e);
+                        toast.error('Ошибка при отправке данных в Telegram');
+                    }
+                }
+            }
+
+            console.log(paymentLink, hashIds, error);
+
+            if(!error && paymentLink && hashIds){
+                router.push(paymentLink);
+            } else {
+                toast.error(error);
+            }
+        } catch (e) {
+            console.error('Payment error:', e);
+            toast.error('Произошла ошибка при оформлении заказа');
         }
-
-        console.log(paymentLink, hashIds, error);
-
-        if(!error && paymentLink && hashIds){
-            router.push(paymentLink);
-        } else {
-            toast.error(error);
-        }
-
     };
 
     const handleDiscount = async () => {

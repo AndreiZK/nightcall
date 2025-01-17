@@ -8,6 +8,28 @@ export type Product = {
     extra: number[];
 };
 
+const saveToStorage = (key: string, value: any) => {
+    try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+    } catch (e) {
+        console.warn('Failed to save to localStorage:', e);
+    }
+};
+
+const loadFromStorage = (key: string) => {
+    try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : null;
+        }
+    } catch (e) {
+        console.warn('Failed to load from localStorage:', e);
+        return null;
+    }
+};
+
 const useStore = create((set, get) => ({
     order: [],
     loadedIds: new Set(),
