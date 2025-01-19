@@ -11,7 +11,11 @@ export type Product = {
 const saveToStorage = (key: string, value: any) => {
     try {
         if (typeof window !== 'undefined' && window.localStorage) {
-            localStorage.setItem(key, JSON.stringify(value));
+            const dataWithTimestamp = {
+                data: value,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(key, JSON.stringify(dataWithTimestamp));
         }
     } catch (e) {
         console.warn('Failed to save to localStorage:', e);
@@ -30,10 +34,39 @@ const loadFromStorage = (key: string) => {
     }
 };
 
+const checkAndCleanStorage = (key: string) => {
+    try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const item = localStorage.getItem(key);
+            if (!item) return null;
+
+            const parsed = JSON.parse(item);
+            const now = Date.now();
+            const tenSeconds = 10 * 1000;
+
+            console.log(`Checking ${key}:`, {
+                stored: parsed,
+                timePassed: now - parsed.timestamp,
+                shouldClean: now - parsed.timestamp > tenSeconds
+            });
+
+            if (now - parsed.timestamp > tenSeconds) {
+                localStorage.removeItem(key);
+                return null;
+            }
+            return parsed.data;
+        }
+    } catch (e) {
+        console.warn('Failed to check/clean localStorage:', e);
+        return null;
+    }
+};
+
 const useStore = create((set, get) => ({
-    order: [],
-    loadedIds: new Set(),
-    amounts: new Map(),
+    order: checkAndCleanStorage('order') || [],
+    loadedIds: new Set(checkAndCleanStorage('loadedIds') || []),
+    amounts: new Map(checkAndCleanStorage('amounts') || []),
+    institution: checkAndCleanStorage('institution'),
     phone: null,
     fio: null,
     street: null,
@@ -65,9 +98,8 @@ const useStore = create((set, get) => ({
 
                 updatedIds.add(product);
                 
-                // Save to localStorage
-                localStorage.setItem('order', JSON.stringify(updatedOrder));
-                localStorage.setItem('loadedIds', JSON.stringify(Array.from(updatedIds)));
+                saveToStorage('order', updatedOrder);
+                saveToStorage('loadedIds', Array.from(updatedIds));
 
                 return {
                     order: updatedOrder,
