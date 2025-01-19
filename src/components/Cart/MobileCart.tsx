@@ -111,19 +111,20 @@ const MobileCart = ({
     const orderContentRef = useRef<HTMLDivElement>(null);
     const scrollYRef = useRef(0);
 
+    const checkAndCleanStorage = useStore((state: any) => state.checkAndCleanStorage);
     const setOrderModal = useStore((state: any) => state.setOrderModal);
     const token = useStore((state: any) => state.jwtToken);
 
     useEffect(() => {
-        const savedOrder = localStorage.getItem('order');
-        const savedLoadedIds = localStorage.getItem('loadedIds');
-        const savedAmounts = localStorage.getItem('amounts');
+        const savedOrder = checkAndCleanStorage('order');
+        const savedLoadedIds = checkAndCleanStorage('loadedIds');
+        const savedAmounts = checkAndCleanStorage('amounts');
 
         if (savedOrder && savedLoadedIds && savedAmounts) {
             useStore.setState({
-                order: JSON.parse(savedOrder),
-                loadedIds: new Set(JSON.parse(savedLoadedIds)),
-                amounts: new Map(JSON.parse(savedAmounts))
+                order: savedOrder,
+                loadedIds: new Set(savedLoadedIds),
+                amounts: new Map(Array.isArray(savedAmounts) ? savedAmounts : [])
             });
         }
     }, []);

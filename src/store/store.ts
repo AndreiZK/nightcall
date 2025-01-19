@@ -41,17 +41,23 @@ const checkAndCleanStorage = (key: string) => {
             if (!item) return null;
 
             const parsed = JSON.parse(item);
+            if (!parsed || !parsed.timestamp) {
+                console.warn(`Invalid data structure for ${key}:`, parsed);
+                return parsed;
+            }
+
             const now = Date.now();
-            const tenSeconds = 10 * 1000;
+            const tenMinutes = 10 * 60 * 1000;
 
             console.log(`Checking ${key}:`, {
                 stored: parsed,
                 timePassed: now - parsed.timestamp,
-                shouldClean: now - parsed.timestamp > tenSeconds
+                shouldClean: now - parsed.timestamp > tenMinutes
             });
 
-            if (now - parsed.timestamp > tenSeconds) {
+            if (now - parsed.timestamp > tenMinutes) {
                 localStorage.removeItem(key);
+                console.log(`Cleared ${key}`);
                 return null;
             }
             return parsed.data;
@@ -63,9 +69,10 @@ const checkAndCleanStorage = (key: string) => {
 };
 
 const useStore = create((set, get) => ({
+    checkAndCleanStorage: checkAndCleanStorage,
     order: checkAndCleanStorage('order') || [],
     loadedIds: new Set(checkAndCleanStorage('loadedIds') || []),
-    amounts: new Map(checkAndCleanStorage('amounts') || []),
+    amounts: new Map(Array.isArray(checkAndCleanStorage('amounts')) ? checkAndCleanStorage('amounts') : []),
     institution: checkAndCleanStorage('institution'),
     phone: null,
     fio: null,
@@ -82,7 +89,6 @@ const useStore = create((set, get) => ({
     orderId: null,
     isPaymentOver: false,
     isPayed: false,
-    institution: null,
     jwtToken:
         // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsImlhdCI6MTczMTUyMDA1NiwiZXhwIjoxNzM0MTEyMDU2fQ.EFeyUxIzdPRC_skHDAghMxwI6RkF4OU37ZbnJQs1JG0", //null
         null,
@@ -119,8 +125,8 @@ const useStore = create((set, get) => ({
         if (productKey) amounts.set(productKey, amount);
         else amounts.set(product, amount);
 
-        // Save to localStorage
-        localStorage.setItem('amounts', JSON.stringify(Array.from(amounts)));
+        // Заменяем прямое сохранение на использование saveToStorage
+        saveToStorage('amounts', Array.from(amounts));
 
         set({ amounts });
     },
@@ -136,9 +142,9 @@ const useStore = create((set, get) => ({
             const updatedIds = new Set(state.loadedIds);
             updatedIds.delete(product);
 
-            // Save to localStorage
-            localStorage.setItem('order', JSON.stringify(newOrder));
-            localStorage.setItem('loadedIds', JSON.stringify(Array.from(updatedIds)));
+            // Заменяем прямое сохранение на saveToStorage
+            saveToStorage('order', newOrder);
+            saveToStorage('loadedIds', Array.from(updatedIds));
 
             return { order: newOrder, loadedIds: updatedIds };
         });
@@ -219,7 +225,7 @@ const useStore = create((set, get) => ({
     setOrderModal: (value: boolean) => set({ isOrderModalOpen: value }),
     setTrackOpen: (value: boolean) => set({ isTrackOpen: value }),
     setInstitution: (letter) => {
-        localStorage.setItem('institution', letter);
+        saveToStorage('institution', letter);
         set({ institution: letter });
     },
     clearInstitution: () => {
