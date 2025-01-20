@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from "react-toastify";
 import { checkSchedule } from "@/utils/checkSchedule";
 import { isOpen } from "@/utils/isOpen";
+import { createGuestAccount } from "@/utils/createGuestAccount";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -159,9 +160,31 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         setOrderPrice(price.totalPrice);
     };
 
+    const handleGuestAccount = async () => {
+        const guestAccount = await createGuestAccount();
+        if (guestAccount?.jwt) {
+            // Store in both Zustand and localStorage
+            useStore.setState({ jwtToken: guestAccount.jwt });
+            localStorage.setItem('jwt', guestAccount.jwt);
+            return guestAccount;
+        }
+        return null;
+    };
 
-    
     const handlePay = async () => {
+        let guestAccount: any = {};
+
+        if(jwt?.length > 10){
+            guestAccount.jwt = jwt;
+            console.log(guestAccount);
+        } else {
+            guestAccount = await handleGuestAccount();
+            if(!guestAccount?.jwt){ 
+                toast.error('Что-то пошло не так😢. Попробуйте позже');
+                return;
+            }
+        }
+
         try {
             const schedule = await checkSchedule();
 
@@ -185,12 +208,12 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                 cart: finalOrder,
             });
 
-            const orderId = await createOrder(orderData, jwt);
+            const orderId = await createOrder(orderData, guestAccount.jwt);
 
             const { paymentLink, hashIds, error } = await getPaymentLink(
                 orderId,
                 promocode,
-                jwt
+                guestAccount.jwt
             );
 
             if(!error){

@@ -208,6 +208,7 @@ const Header = () => {
 
     const handleLogOut = () => {
         useStore.setState({ jwtToken: null });
+        localStorage.removeItem('jwt');
     };
 
     useEffect(() => {
