@@ -12,11 +12,12 @@ import { getProductsByIds } from "@/requests/getProductsByIds";
 import { getDiscountedPrice } from "@/utils/getDiscountedPrice";
 import { createOrder } from "@/utils/createOrder";
 import { getPaymentLink } from "@/utils/getPaymentLink";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { checkSchedule } from "@/utils/checkSchedule";
 import { isOpen } from "@/utils/isOpen";
 import { createGuestAccount } from "@/utils/createGuestAccount";
+import { BASE_API_URL } from "../../../../constants";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -28,6 +29,18 @@ const StyledContainer = styled.div`
         gap: ${rm(24)};
     `}
 
+    .textfields {
+        display: flex;
+        flex-direction: column;
+        gap: ${rm(12)};
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: ${rm(12)};
+        }
+    }
+
     .left {
         display: flex;
         flex-direction: column;
@@ -35,7 +48,7 @@ const StyledContainer = styled.div`
         justify-content: space-between;
         gap: ${rm(24)};
 
-        p{
+        p {
             font-size: ${rm(22)};
             font-weight: 600;
             line-height: 100%;
@@ -109,18 +122,18 @@ const StyledTitle = styled.p`
     `}
 `;
 
+const phoneRegex = /^\+375\s*(17|25|29|33|44)\s*\d{7}$/;
+
 const OrderModal = (props: Omit<ModalProps, "children">) => {
     const setOrderModal = useStore((state: any) => state.setOrderModal);
     const isOrderModalOpen = useStore((state: any) => state.isOrderModalOpen);
 
     const [home, setHome] = useState<string>("");
     const [entrance, setEntrance] = useState<string>("");
-    const [street, setStreet] = useState<string>("");
     const [flat, setFlat] = useState<string>("");
     const [name, setName] = useState<string>("");
-    const [phone, setPhone] = useState<string>("");
-    const [mail, setMail] = useState<string>("");
-    const [pass, setPass] = useState<string>("");
+    const [phone, setPhone] = useState<string>("+375");
+    const [street, setStreet] = useState<string>("");
     const [promocode, setPromocode] = useState<string>("");
     const [orderPrice, setOrderPrice] = useState<number>(0);
     const [deliveryPrice, setDeliveryPrice] = useState<number>(0);
@@ -129,7 +142,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
     const jwt = useStore((state: any) => state.jwtToken);
 
-    const paymentLink = useStore((state: any) => state.paymentLink);
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
@@ -156,7 +168,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
         setPrice(price.totalPrice + deliveryPrice);
 
-        
         setOrderPrice(price.totalPrice);
     };
 
@@ -165,34 +176,76 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         if (guestAccount?.jwt) {
             // Store in both Zustand and localStorage
             useStore.setState({ jwtToken: guestAccount.jwt });
-            localStorage.setItem('jwt', guestAccount.jwt);
+            localStorage.setItem("jwt", guestAccount.jwt);
             return guestAccount;
         }
         return null;
     };
 
-    const handlePay = async () => {
-        let guestAccount: any = {};
+    const getAuthHeaders = (token: string) => {
+        const headers = new Headers();
+        headers.append("Authorization", `Bearer ${token}`);
+        return headers;
+    };
 
-        if(jwt?.length > 10){
-            guestAccount.jwt = jwt;
-            console.log(guestAccount);
-        } else {
-            guestAccount = await handleGuestAccount();
-            if(!guestAccount?.jwt){ 
-                toast.error('Что-то пошло не так😢. Попробуйте позже');
+    const handlePay = async () => {
+        try {
+            // Input validation
+            const validationErrors = {
+                street: !street.trim() && "Укажите улицу",
+                home: !home.trim() && "Укажите номер дома",
+                name: !name.trim() && "Укажите ваше имя",
+                phone: !phone.trim() && "Укажите номер телефона",
+                phoneFormat:
+                    phone.trim() &&
+                    !phoneRegex.test(phone) &&
+                    "Неверный формат номера телефона",
+            };
+
+            const error = Object.values(validationErrors).find(
+                (error) => error
+            );
+            if (error) {
+                toast.error(error);
                 return;
             }
-        }
 
-        try {
-            const schedule = await checkSchedule();
+            // Handle authentication
+            let authToken =
+                jwt?.length > 10 ? jwt : (await handleGuestAccount())?.jwt;
 
-            const isNightcallOpen = isOpen(schedule.data.attributes.nightcall_schedule)
-
-            if(!isNightcallOpen) {
-                toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
+            if (!authToken) {
+                toast.error("Что-то пошло не так😢. Попробуйте позже");
                 return;
+            }
+
+            // If guest account, save address
+            if (authToken !== jwt) {
+                const addressData = {
+                    phone,
+                    street,
+                    entrance: entrance || "-",
+                    flat_number: flat || "-",
+                    house_number: home,
+                    name,
+                };
+
+                try {
+                    const response = await fetch(
+                        `${BASE_API_URL}api/addAdress`,
+                        {
+                            method: "POST",
+                            headers: getAuthHeaders(authToken),
+                            body: JSON.stringify(addressData),
+                        }
+                    );
+                    const result = await response.json();
+                    toast.success("Данные успешно добавлены");
+                } catch (error) {
+                    console.error("Failed to save address:", error);
+                    toast.error("Ошибка при сохранении адреса");
+                    return;
+                }
             }
 
             const finalOrder: any = [];
@@ -203,50 +256,52 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                 }
             }
 
+            // Create and process order
             const orderData = JSON.stringify({
                 comment: "none",
                 cart: finalOrder,
             });
 
-            const orderId = await createOrder(orderData, guestAccount.jwt);
+            const orderId = await createOrder(orderData, authToken);
+            const {
+                paymentLink,
+                hashIds,
+                error: paymentError,
+            } = await getPaymentLink(orderId, promocode, authToken);
 
-            const { paymentLink, hashIds, error } = await getPaymentLink(
-                orderId,
-                promocode,
-                guestAccount.jwt
-            );
+            if (paymentError) {
+                toast.error(paymentError);
+                return;
+            }
 
-            if(!error){
-                let tg: any = window.Telegram?.WebApp;
-
-                if(tg){
-                    const tgData = {
-                        orderId: orderId,
-                        paymentLink: paymentLink,
-                        hashId: hashIds,
-                    };
-
-                    try {
-                        const serializedData = JSON.stringify(tgData);
-                        console.log('Sending to Telegram:', serializedData);
-                        tg.sendData(serializedData);
-                    } catch (e) {
-                        console.error('Failed to send data to Telegram:', e);
-                        toast.error('Ошибка при отправке данных в Telegram');
-                    }
+            // Handle Telegram integration
+            const tg: any = window.Telegram?.WebApp;
+            if (tg && paymentLink && hashIds) {
+                try {
+                    const tgData = { orderId, paymentLink, hashId: hashIds };
+                    tg.sendData(JSON.stringify(tgData));
+                } catch (error) {
+                    console.error("Failed to send data to Telegram:", error);
+                    toast.error("Ошибка при отправке данных в Telegram");
                 }
             }
 
-            console.log(paymentLink, hashIds, error);
-
-            if(!error && paymentLink && hashIds){
+            // Redirect to payment
+            if (paymentLink && hashIds) {
                 router.push(paymentLink);
-            } else {
-                toast.error(error);
             }
-        } catch (e) {
-            console.error('Payment error:', e);
-            toast.error('Произошла ошибка при оформлении заказа');
+        } catch (error) {
+            console.error("Payment error:", error);
+            toast.error("Произошла ошибка при оформлении заказа");
+        }
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value.startsWith("+375")) {
+            setPhone(value);
+        } else {
+            setPhone("+375");
         }
     };
 
@@ -261,7 +316,10 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
         const discountedPrice = await getDiscountedPrice(finalOrder, promocode);
 
-        if(discountedPrice?.discountedPrice?.discountedPrice != undefined && discountedPrice?.discountedPrice?.discountedPrice != null){
+        if (
+            discountedPrice?.discountedPrice?.discountedPrice != undefined &&
+            discountedPrice?.discountedPrice?.discountedPrice != null
+        ) {
             setPrice(discountedPrice.discountedPrice.discountedPrice);
             setDiscountPrice(discountedPrice.discountedPrice.discountAmount);
         }
@@ -278,7 +336,9 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
             <StyledContainer>
                 <div className="left">
                     <OrderView />
-                    <Button onClick={handlePay}><p>Перейти к оплате</p></Button>
+                    <Button onClick={handlePay}>
+                        <p>Перейти к оплате</p>
+                    </Button>
                 </div>
                 <StyledBottomContainer>
                     <div className="promo">
@@ -289,27 +349,75 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                         />
                         <Button onClick={handleDiscount}>Подтвердить</Button>
                     </div>
-                    {orderPrice && <div className="price">
-                        {!discountPrice && <div className="priceContainer">
-                            <p>Сумма заказа</p>
-                            <p>{orderPrice.toFixed(2)}BYN</p>
-                        </div>}
-
-                        {!discountPrice && <div className="priceContainer">
-                            <p>Стоимость доставки</p>
-                            <p>{deliveryPrice}BYN</p>
-                        </div>}
-                        {discountPrice > 0 && (
-                            <div className="priceContainer">
-                                <p>Сумма скидки</p>
-                                <p>{discountPrice}BYN</p>
+                    {!jwt?.length && (
+                        <div className="textfields">
+                            <Textfield
+                                value={street}
+                                onChange={(e) => setStreet(e.target.value)}
+                                required
+                                label="Улица"
+                            />
+                            <div className="info">
+                                <Textfield
+                                    value={home}
+                                    onChange={(e) => setHome(e.target.value)}
+                                    required
+                                    label="Дом"
+                                />
+                                <Textfield
+                                    value={flat}
+                                    onChange={(e) => setFlat(e.target.value)}
+                                    label="Квартира"
+                                />
+                                <Textfield
+                                    value={entrance}
+                                    onChange={(e) =>
+                                        setEntrance(e.target.value)
+                                    }
+                                    label="Подьезд"
+                                />
                             </div>
-                        )}
-                        <div className="priceContainer">
-                            <p>Итоговая стоимость</p>
-                            <p>{price}BYN</p>
+                            <Textfield
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                                label="имя"
+                            />
+                            <Textfield
+                                value={phone}
+                                onChange={handlePhoneChange}
+                                required
+                                label="Телефонный номер"
+                            />
                         </div>
-                    </div>}
+                    )}
+                    {orderPrice && (
+                        <div className="price">
+                            {!discountPrice && (
+                                <div className="priceContainer">
+                                    <p>Сумма заказа</p>
+                                    <p>{orderPrice.toFixed(2)}BYN</p>
+                                </div>
+                            )}
+
+                            {!discountPrice && (
+                                <div className="priceContainer">
+                                    <p>Стоимость доставки</p>
+                                    <p>{deliveryPrice}BYN</p>
+                                </div>
+                            )}
+                            {discountPrice > 0 && (
+                                <div className="priceContainer">
+                                    <p>Сумма скидки</p>
+                                    <p>{discountPrice}BYN</p>
+                                </div>
+                            )}
+                            <div className="priceContainer">
+                                <p>Итоговая стоимость</p>
+                                <p>{price}BYN</p>
+                            </div>
+                        </div>
+                    )}
                 </StyledBottomContainer>
             </StyledContainer>
         </Modal>

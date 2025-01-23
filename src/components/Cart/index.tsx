@@ -110,11 +110,11 @@ const Cart = () => {
     };
 
     const handleOrder = () => {
-        if (token?.length > 7) {
-            setOrderModal(true);
-        } else {
-            // toast.error('Авторизуйтесь')
-        }
+        // if (token?.length > 7) {
+        setOrderModal(true);
+        // } else {
+        //     // toast.error('Авторизуйтесь')
+        // }
     };
 
     useEffect(() => {
@@ -123,7 +123,7 @@ const Cart = () => {
     }, [amounts, order]);
 
     useEffect(() => {
-        const savedInstitution = localStorage.getItem('institution');
+        const savedInstitution = localStorage.getItem("institution");
         if (savedInstitution) {
             useStore.setState({ institution: savedInstitution });
         }

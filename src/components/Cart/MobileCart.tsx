@@ -10,7 +10,7 @@ import { getDeliveryPrice } from "@/utils/getDeliveryPrice";
 import Button from "../UI/Button";
 import { heightLvh } from "@/styles/utils";
 import { toast } from "react-toastify";
-import { useDrag } from '@use-gesture/react';
+import { useDrag } from "@use-gesture/react";
 
 const StyledCart = styled.div`
     position: relative;
@@ -111,20 +111,24 @@ const MobileCart = ({
     const orderContentRef = useRef<HTMLDivElement>(null);
     const scrollYRef = useRef(0);
 
-    const checkAndCleanStorage = useStore((state: any) => state.checkAndCleanStorage);
+    const checkAndCleanStorage = useStore(
+        (state: any) => state.checkAndCleanStorage
+    );
     const setOrderModal = useStore((state: any) => state.setOrderModal);
     const token = useStore((state: any) => state.jwtToken);
 
     useEffect(() => {
-        const savedOrder = checkAndCleanStorage('order');
-        const savedLoadedIds = checkAndCleanStorage('loadedIds');
-        const savedAmounts = checkAndCleanStorage('amounts');
+        const savedOrder = checkAndCleanStorage("order");
+        const savedLoadedIds = checkAndCleanStorage("loadedIds");
+        const savedAmounts = checkAndCleanStorage("amounts");
 
         if (savedOrder && savedLoadedIds && savedAmounts) {
             useStore.setState({
                 order: savedOrder,
                 loadedIds: new Set(savedLoadedIds),
-                amounts: new Map(Array.isArray(savedAmounts) ? savedAmounts : [])
+                amounts: new Map(
+                    Array.isArray(savedAmounts) ? savedAmounts : []
+                ),
             });
         }
     }, []);
@@ -154,12 +158,12 @@ const MobileCart = ({
     };
 
     const handleOrder = () => {
-        if (token?.length > 7) {
-            setOrderModal(true);
-            onClose();
-        } else {
-            toast.error('Авторизуйтесь')
-        }
+        // if (token?.length > 7) {
+        setOrderModal(true);
+        onClose();
+        // } else {
+        //     toast.error('Авторизуйтесь')
+        // }
     };
 
     useEffect(() => {
@@ -169,27 +173,30 @@ const MobileCart = ({
 
     const handleClose = () => onClose();
 
-    const bindDrag = useDrag(({ movement: [mx, y], direction: [dx, dy] }) => {
-        const newY = (y * 0.6) + scrollYRef.current;
-        const containerHeight = 340;
-        const contentHeight = dataToRender.length * 100;
-        const maxScroll = Math.min(0, containerHeight - contentHeight);
-        
-        scrollYRef.current = Math.max(maxScroll, Math.min(0, newY));
-        
-        if (orderContentRef.current) {
-            orderContentRef.current.style.transform = `translateY(${scrollYRef.current}px)`;
-        }
-    }, {
-        from: () => [0, scrollYRef.current],
-        bounds: {
-            top: Math.min(0, 340 - dataToRender.length * 100),
-            bottom: 0
+    const bindDrag = useDrag(
+        ({ movement: [mx, y], direction: [dx, dy] }) => {
+            const newY = y * 0.6 + scrollYRef.current;
+            const containerHeight = 340;
+            const contentHeight = dataToRender.length * 100;
+            const maxScroll = Math.min(0, containerHeight - contentHeight);
+
+            scrollYRef.current = Math.max(maxScroll, Math.min(0, newY));
+
+            if (orderContentRef.current) {
+                orderContentRef.current.style.transform = `translateY(${scrollYRef.current}px)`;
+            }
         },
-        rubberband: true,
-        filterTaps: true,
-        pointer: { touch: true },
-    });
+        {
+            from: () => [0, scrollYRef.current],
+            bounds: {
+                top: Math.min(0, 340 - dataToRender.length * 100),
+                bottom: 0,
+            },
+            rubberband: true,
+            filterTaps: true,
+            pointer: { touch: true },
+        }
+    );
 
     return (
         <StyledCart className={open ? "open" : ""}>
@@ -198,7 +205,7 @@ const MobileCart = ({
                 <span className="cart-title">Ваш заказ</span>
                 {!order.length && <Icons.cartDesktop className="bag" />}
                 <div className="order">
-                    <div 
+                    <div
                         ref={orderContentRef}
                         className="order-content"
                         {...bindDrag()}

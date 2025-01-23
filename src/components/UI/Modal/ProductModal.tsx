@@ -38,7 +38,7 @@ const StyledContainer = styled.div`
             height: ${rm(180)};
             width: ${rm(180)};
             object-fit: cover;
-            
+
             ${media.md`
                 width: 100%;
                 order: 2;
@@ -105,7 +105,7 @@ const StyledContainer = styled.div`
 
                 color: rgba(130, 93, 217, 1);
 
-                span{
+                span {
                     position: absolute;
                     top: 50%;
                     left: 50%;
@@ -134,7 +134,7 @@ const ProductModal = (props: ProductModalProps) => {
     const [selectedExtra, setSelectedExtra] = useState(0);
     const [selectedType, setSelectedType] = useState(0);
 
-    const jwt = useStore((state: any) => (state.jwtToken));
+    const jwt = useStore((state: any) => state.jwtToken);
 
     const institution = useStore((state: any) => state.institution);
     const setInstitution = useStore((state: any) => state.setInstitution);
@@ -143,67 +143,67 @@ const ProductModal = (props: ProductModalProps) => {
     const updateAmount = useStore((state: any) => state.updateAmount);
 
     const handleAdd = () => {
-        if(jwt?.length > 7) {
-            const letter = props.productData.merchant.unique_prefix;
-            let inst = institution;
+        // if(jwt?.length > 7) {
+        const letter = props.productData.merchant.unique_prefix;
+        let inst = institution;
 
-            if (institution === null) {
-                setInstitution(letter);
-                inst = letter;
-            }
+        if (institution === null) {
+            setInstitution(letter);
+            inst = letter;
+        }
 
-            if (inst !== letter) {
-                toast.error("Вы уже выбрали товары в другом заведении");
-                return;
-            }
-
-            let type: Array<number> = [];
-            let extra: Array<number> = [];
-            if (
-                selectedType
-                    ? props.productData.product_types[selectedType]?.id
-                    : props.productData.product_types[0]?.id
-            ) {
-                type = [
-                    selectedType
-                        ? props.productData.product_types[selectedType].id
-                        : props.productData.product_types[0].id,
-                ];
-            }
-            if (
-                selectedExtra
-                    ? props.productData.product_extras[selectedExtra]?.id
-                    : props.productData.product_extras[0]?.id
-            ) {
-                extra = [
-                    selectedExtra
-                        ? props.productData.product_extras[selectedExtra].id
-                        : props.productData.product_extras[0].id,
-                ];
-            }
-            const product = {
-                id: props.productData.id,
-                type,
-                extra,
-            };
-            if (
-                order.some(
-                    (i: any) => JSON.stringify(i) === JSON.stringify(product)
-                )
-            ) {
-                toast.error(
-                    "Вы уже добавили этот товар, количество можно изменить в корзине"
-                );
-                return;
-            }
-            for (let i = 0; i < count; i++) {
-                addToOrder(product);
-            }
-            updateAmount(product, count);
-        } else {
-            toast.error("Для добавления товара необходимо авторизоваться");
+        if (inst !== letter) {
+            toast.error("Вы уже выбрали товары в другом заведении");
             return;
         }
+
+        let type: Array<number> = [];
+        let extra: Array<number> = [];
+        if (
+            selectedType
+                ? props.productData.product_types[selectedType]?.id
+                : props.productData.product_types[0]?.id
+        ) {
+            type = [
+                selectedType
+                    ? props.productData.product_types[selectedType].id
+                    : props.productData.product_types[0].id,
+            ];
+        }
+        if (
+            selectedExtra
+                ? props.productData.product_extras[selectedExtra]?.id
+                : props.productData.product_extras[0]?.id
+        ) {
+            extra = [
+                selectedExtra
+                    ? props.productData.product_extras[selectedExtra].id
+                    : props.productData.product_extras[0].id,
+            ];
+        }
+        const product = {
+            id: props.productData.id,
+            type,
+            extra,
+        };
+        if (
+            order.some(
+                (i: any) => JSON.stringify(i) === JSON.stringify(product)
+            )
+        ) {
+            toast.error(
+                "Вы уже добавили этот товар, количество можно изменить в корзине"
+            );
+            return;
+        }
+        for (let i = 0; i < count; i++) {
+            addToOrder(product);
+        }
+        updateAmount(product, count);
+        // } else {
+        //     toast.error("Для добавления товара необходимо авторизоваться");
+        //     return;
+        // }
 
         props.onClose();
     };
@@ -230,7 +230,7 @@ const ProductModal = (props: ProductModalProps) => {
             <StyledContainer>
                 <div className="description">
                     <img
-                    //@ts-expect-error
+                        //@ts-expect-error
                         src={BASE_IMAGE_URL + props?.productData?.image[0]?.url}
                         alt=""
                     />
@@ -285,9 +285,7 @@ const ProductModal = (props: ProductModalProps) => {
                                 count === 1 ? "disabled" : ""
                             }`}
                         >
-                            <span>
-                                -
-                            </span>
+                            <span>-</span>
                         </span>
                         <span className="count">{count}</span>
                         <span

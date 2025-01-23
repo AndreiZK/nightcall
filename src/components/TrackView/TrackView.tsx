@@ -9,7 +9,6 @@ import useStore from "@/store/store";
 import { OrderSection } from "./components/OrderSection";
 
 export default function TrackView() {
-
     const [dataToRender, setDataToRender] = useState<any>([]);
 
     const jwt = useStore((state: any) => state.jwtToken);
@@ -75,7 +74,7 @@ const StyledTrackViewHeader = styled.div`
 const StyledTitle = styled.h1`
     font-size: ${rm(48)};
     ${fontOnest(400)};
-`
+`;
 
 const StyledMainDivider = styled.div`
     width: 100%;
@@ -83,4 +82,4 @@ const StyledMainDivider = styled.div`
     border: ${rm(0.5)} solid ${colors.white100};
     margin-top: ${rm(50)};
     border-radius: ${rm(10)};
-`
+`;
