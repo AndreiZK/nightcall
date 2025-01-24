@@ -12,6 +12,7 @@ import { useState } from "react";
 import { fontNotoSans } from "@/styles/fonts";
 import { useSpring } from "@react-spring/web";
 import { toast } from "react-toastify";
+import { setCookie } from '@/utils/cookieUtils';
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -87,18 +88,12 @@ const LoginModal = (props: Omit<ModalProps, "children">) => {
             const token = JSON.parse(result).jwt;
     
             if (token) {
-              document.cookie = `jwt=${token}; max-age=86400`;
-              //86400 - 24 hours
-    
-              validateTelegramId(token)
-    
+              setCookie('jwt', token);
+              validateTelegramId(token);
               useStore.setState({ jwtToken: token, isAuth: true });
               toast.success("Вход выполнен успешно");
-            // props.onClose()
-              setProfileModal(true)
-
-              setLoginModal(false)
-    
+              setProfileModal(true);
+              setLoginModal(false);
             } else {
               toast.error("Проверьте введённые данные");
             }

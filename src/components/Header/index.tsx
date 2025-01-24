@@ -9,6 +9,7 @@ import MobileCart from "../Cart/MobileCart";
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
 import router from "next/router";
+import { removeCookie } from '@/utils/cookieUtils';
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -200,6 +201,8 @@ const Header = () => {
     const [cartOpen, setCartOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
+    const clearOrder = useStore((state: any) => state.clearOrder);
+
     const isMobile = window.innerWidth <= 768;
 
     const handleLoginOpen = () => {
@@ -209,8 +212,9 @@ const Header = () => {
     const handleLogOut = () => {
         useStore.setState({ jwtToken: null });
         localStorage.removeItem("jwt");
-        document.cookie =
-            "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        removeCookie("jwt");
+        setUserMenuOpen(false);
+        clearOrder();
     };
 
     useEffect(() => {
@@ -351,9 +355,7 @@ const Header = () => {
                                 </div>
                             </Button>
                         )}
-                        {!isAuth ? (
-                            <></>
-                        ) : isMobile ? (
+                        {isMobile ? (
                             <button
                                 onClick={() => setCartOpen(true)}
                                 className="mobile-button"

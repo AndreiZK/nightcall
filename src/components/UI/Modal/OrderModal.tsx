@@ -18,6 +18,7 @@ import { checkSchedule } from "@/utils/checkSchedule";
 import { isOpen } from "@/utils/isOpen";
 import { createGuestAccount } from "@/utils/createGuestAccount";
 import { BASE_API_URL } from "../../../../constants";
+import { setCookie } from "@/utils/cookieUtils";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -145,6 +146,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
+    const clearOrder = useStore((state: any) => state.clearOrder);
+
     const router = useRouter();
 
     const getProductsForCart = async () => {
@@ -171,12 +174,14 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         setOrderPrice(price.totalPrice);
     };
 
+
     const handleGuestAccount = async () => {
         const guestAccount = await createGuestAccount();
         if (guestAccount?.jwt) {
             // Store in both Zustand and localStorage
-            useStore.setState({ jwtToken: guestAccount.jwt });
             localStorage.setItem("jwt", guestAccount.jwt);
+            setCookie('guestJwt', guestAccount.jwt);
+            useStore.setState({ jwtToken: guestAccount.jwt });
             return guestAccount;
         }
         return null;
@@ -188,57 +193,47 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         return headers;
     };
 
+
     const handlePay = async () => {
         try {
-            // Input validation
-            const validationErrors = {
-                street: !street.trim() && "Укажите улицу",
-                home: !home.trim() && "Укажите номер дома",
-                name: !name.trim() && "Укажите ваше имя",
-                phone: !phone.trim() && "Укажите номер телефона",
-                phoneFormat:
-                    phone.trim() &&
-                    !phoneRegex.test(phone) &&
-                    "Неверный формат номера телефона",
-            };
-
-            const error = Object.values(validationErrors).find(
-                (error) => error
-            );
-            if (error) {
-                toast.error(error);
-                return;
-            }
-
             // Handle authentication
-            let authToken =
-                jwt?.length > 10 ? jwt : (await handleGuestAccount())?.jwt;
+            let authToken = jwt?.length > 10 ? jwt : (await handleGuestAccount())?.jwt;
 
             if (!authToken) {
                 toast.error("Что-то пошло не так😢. Попробуйте позже");
                 return;
             }
 
-            // If guest account, save address
-            if (authToken !== jwt) {
-                const addressData = {
-                    phone,
-                    street,
-                    entrance: entrance || "-",
-                    flat_number: flat || "-",
-                    house_number: home,
-                    name,
+            const isGuestAccount = authToken !== jwt;
+
+            if (isGuestAccount) {
+                const validationErrors = {
+                    street: !street.trim() && "Укажите улицу",
+                    home: !home.trim() && "Укажите номер дома",
+                    name: !name.trim() && "Укажите ваше имя",
+                    phone: !phone.trim() && "Укажите номер телефона",
+                    phoneFormat: phone.trim() && !phoneRegex.test(phone) && "Неверный формат номера телефона",
                 };
 
+                const error = Object.values(validationErrors).find((error) => error);
+                if (error) {
+                    toast.error(error);
+                    return;
+                }
+
                 try {
-                    const response = await fetch(
-                        `${BASE_API_URL}api/addAdress`,
-                        {
-                            method: "POST",
-                            headers: getAuthHeaders(authToken),
-                            body: JSON.stringify(addressData),
-                        }
-                    );
+                    const response = await fetch(`${BASE_API_URL}api/addAdress`, {
+                        method: "POST",
+                        headers: getAuthHeaders(authToken),
+                        body: JSON.stringify({
+                            phone,
+                            street,
+                            entrance: entrance || "-",
+                            flat_number: flat || "-",
+                            house_number: home,
+                            name,
+                        }),
+                    });
                     const result = await response.json();
                     toast.success("Данные успешно добавлены");
                 } catch (error) {
@@ -288,6 +283,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
             // Redirect to payment
             if (paymentLink && hashIds) {
+                clearOrder();
                 router.push(paymentLink);
             }
         } catch (error) {

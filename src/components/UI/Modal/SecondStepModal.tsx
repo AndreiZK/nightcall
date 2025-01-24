@@ -10,6 +10,7 @@ import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from '../../../store/store'
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { setCookie } from '@/utils/cookieUtils';
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -146,17 +147,12 @@ const SecondStepModal = (props: Omit<ModalProps, "children">) => {
           const token = JSON.parse(result).jwt
 
           if (token) {
-            toast.success("Пользователь успешно создан");
-
-            document.cookie = `jwt=${token}; max-age=86400`;
-
-            validateTelegramId(token)
-
+            setCookie('jwt', token);
+            validateTelegramId(token);
             useStore.setState({
               jwtToken: token,
               isAuth: true,
             });
-
             setValidation(true);
           }
         })

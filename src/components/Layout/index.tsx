@@ -15,6 +15,7 @@ import { media, rm } from "@/styles";
 import Header from "../Header";
 import { ReactNode } from "react";
 import Footer from "../Footer";
+import { removeCookie } from "@/utils/cookieUtils";
 
 interface TelegramWebApp {
     ready: () => void;
@@ -96,10 +97,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     const jwt = useStore((state: any) => state.jwtToken);
     const [hashId, setHashId] = useState<String>("");
     const promocode = useStore((state: any) => state.promocode);
-
-    const clearOrder = useStore((state: any) => (state.clearOrder));
-
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
     useEffect(() => {
         const token = parseCookie(document.cookie).jwt;
