@@ -101,6 +101,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     useEffect(() => {
         const token = parseCookie(document.cookie).jwt;
 
+        console.log(token)
+
         if (token && token.length > 10) {
             //get user data
             useStore.setState({ jwtToken: token, isAuth: true });
