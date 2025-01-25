@@ -101,6 +101,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     useEffect(() => {
         const token = parseCookie(document.cookie).jwt;
 
+        console.log('fdsjghnsdjfgndfsjgndsfgj;afjnagnfjjad;;dfjgnn;')
+
         console.log(token)
 
         if (token && token.length > 10) {
