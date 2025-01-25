@@ -84,6 +84,8 @@ const Cart = () => {
 
     const token = useStore((state: any) => state.jwtToken);
 
+    const clearInstitution = useStore((state: any) => state.clearInstitution);
+
     const getProductsForCart = async () => {
         const products = await getProductsByIds(order);
 
@@ -120,6 +122,10 @@ const Cart = () => {
     useEffect(() => {
         getProductsForCart();
         getPrice();
+
+        if(order.length === 0) {
+            clearInstitution()
+        }
     }, [amounts, order]);
 
     useEffect(() => {

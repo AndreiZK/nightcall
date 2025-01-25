@@ -11,6 +11,7 @@ import Button from "../UI/Button";
 import { heightLvh } from "@/styles/utils";
 import { toast } from "react-toastify";
 import { useDrag } from "@use-gesture/react";
+import { useRouter } from "next/navigation";
 
 const StyledCart = styled.div`
     position: relative;
@@ -62,8 +63,9 @@ const StyledCart = styled.div`
     }
 
     .cart-empty {
-        margin-top: 300px;
+        margin-top: 30%;
         font-size: ${rm(16)};
+        text-align: center;
     }
 
     .orderBlock {
@@ -110,6 +112,8 @@ const MobileCart = ({
     const [dataToRender, setDataToRender] = useState([]);
     const orderContentRef = useRef<HTMLDivElement>(null);
     const scrollYRef = useRef(0);
+    const router = useRouter()
+    const clearInstitution = useStore((state: any) => state.clearInstitution);
 
     const checkAndCleanStorage = useStore(
         (state: any) => state.checkAndCleanStorage
@@ -159,8 +163,9 @@ const MobileCart = ({
 
     const handleOrder = () => {
         // if (token?.length > 7) {
-        setOrderModal(true);
+        // setOrderModal(true);
         onClose();
+        router.push('/order')
         // } else {
         //     toast.error('Авторизуйтесь')
         // }
@@ -169,6 +174,10 @@ const MobileCart = ({
     useEffect(() => {
         getProductsForCart();
         getPrice();
+
+        if(order.length === 0) {
+            clearInstitution()
+        }
     }, [amounts, order]);
 
     const handleClose = () => onClose();
