@@ -178,9 +178,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const handleGuestAccount = async () => {
         const guestAccount = await createGuestAccount();
         if (guestAccount?.jwt) {
-            // Store in both Zustand and localStorage
-            localStorage.setItem("jwt", guestAccount.jwt);
-            setCookie('guestJwt', guestAccount.jwt);
+            setCookie('jwt', guestAccount.jwt);
             useStore.setState({ jwtToken: guestAccount.jwt });
             return guestAccount;
         }
@@ -196,17 +194,9 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
     const handlePay = async () => {
         try {
-            // Handle authentication
-            let authToken = jwt?.length > 10 ? jwt : (await handleGuestAccount())?.jwt;
+            if(jwt?.length > 10){
 
-            if (!authToken) {
-                toast.error("Что-то пошло не так😢. Попробуйте позже");
-                return;
-            }
-
-            const isGuestAccount = authToken !== jwt;
-
-            if (isGuestAccount) {
+            } else {
                 const validationErrors = {
                     street: !street.trim() && "Укажите улицу",
                     home: !home.trim() && "Укажите номер дома",
@@ -220,7 +210,19 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                     toast.error(error);
                     return;
                 }
+            }
 
+            // Handle authentication
+            let authToken = jwt?.length > 10 ? jwt : (await handleGuestAccount())?.jwt;
+
+            if (!authToken) {
+                toast.error("Что-то пошло не так😢. Попробуйте позже");
+                return;
+            }
+
+            const isGuestAccount = authToken !== jwt;
+
+            if (isGuestAccount) {
                 try {
                     const response = await fetch(`${BASE_API_URL}api/addAdress`, {
                         method: "POST",

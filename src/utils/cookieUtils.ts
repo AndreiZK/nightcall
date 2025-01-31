@@ -1,15 +1,20 @@
 const setCookie = (name: string, value: string, days: number = 1) => {
     document.cookie = `${name}=${value};`;
-
-    console.log('settedCookies' ,document.cookie)
 };
 
 const removeCookie = (name: string) => {
     document.cookie = `${name}=;`;
-
-    console.log('removedCookies' ,document.cookie)
-    // Also try without domain for local development
-    // document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; samesite=strict`;
 };
 
-export { setCookie, removeCookie };
+const getCookie = (name: string): string | null => {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.trim().split('=');
+        if (cookieName === name) {
+            return cookieValue || null;
+        }
+    }
+    return null;
+};
+
+export { setCookie, removeCookie, getCookie };

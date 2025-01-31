@@ -182,7 +182,7 @@ const OrderViewPayment = () => {
         if (guestAccount?.jwt) {
             // Store in both Zustand and localStorage
             localStorage.setItem("jwt", guestAccount.jwt);
-            setCookie('guestJwt', guestAccount.jwt);
+            setCookie('jwt', guestAccount.jwt);
             useStore.setState({ jwtToken: guestAccount.jwt });
             return guestAccount;
         }
@@ -198,6 +198,23 @@ const OrderViewPayment = () => {
 
     const handlePay = async () => {
         try {
+            if(jwt?.length > 10){
+            } else {
+                const validationErrors = {
+                    street: !street.trim() && "Укажите улицу",
+                    home: !home.trim() && "Укажите номер дома",
+                    name: !name.trim() && "Укажите ваше имя",
+                    phone: !phone.trim() && "Укажите номер телефона",
+                    phoneFormat: phone.trim() && !phoneRegex.test(phone) && "Неверный формат номера телефона",
+                };
+    
+                const error = Object.values(validationErrors).find((error) => error);
+                if (error) {
+                    toast.error(error);
+                    return;
+                }
+            }
+
             // Handle authentication
             let authToken = jwt?.length > 10 ? jwt : (await handleGuestAccount())?.jwt;
 
@@ -209,20 +226,6 @@ const OrderViewPayment = () => {
             const isGuestAccount = authToken !== jwt;
 
             if (isGuestAccount) {
-                const validationErrors = {
-                    street: !street.trim() && "Укажите улицу",
-                    home: !home.trim() && "Укажите номер дома",
-                    name: !name.trim() && "Укажите ваше имя",
-                    phone: !phone.trim() && "Укажите номер телефона",
-                    phoneFormat: phone.trim() && !phoneRegex.test(phone) && "Неверный формат номера телефона",
-                };
-
-                const error = Object.values(validationErrors).find((error) => error);
-                if (error) {
-                    toast.error(error);
-                    return;
-                }
-
                 try {
                     const response = await fetch(`${BASE_API_URL}api/addAdress`, {
                         method: "POST",

@@ -15,7 +15,7 @@ import { media, rm } from "@/styles";
 import Header from "../Header";
 import { ReactNode } from "react";
 import Footer from "../Footer";
-import { removeCookie } from "@/utils/cookieUtils";
+import { getCookie, removeCookie } from "@/utils/cookieUtils";
 
 interface TelegramWebApp {
     ready: () => void;
@@ -87,178 +87,17 @@ const Gradient2 = styled.img`
 `;
 
 export default function Layout({ children }: { children: ReactNode }) {
-    const isOver = useStore((state: any) => state.isOver);
-    const [paymentLink, setPaymentLink] = useState<string>("");
-    // const orderId = useStore((state: any) => (state.orderId))
-    // const orderId = localStorage.getItem("orderId")
-    const [orderId, setOrderId] = useState<String>("");
-    const amounts = useStore((state: any) => state.amounts);
-    const order = useStore((state: any) => state.order);
-    const jwt = useStore((state: any) => state.jwtToken);
-    const [hashId, setHashId] = useState<String>("");
-    const promocode = useStore((state: any) => state.promocode);
+    const tockenForCheck = useStore((state: any) => state.jwtToken)
 
     useEffect(() => {
-        const token = parseCookie(document.cookie).jwt;
+        const token = getCookie('jwt')
 
-        console.log('fdsjghnsdjfgndfsjgndsfgj;afjnagnfjjad;;dfjgnn;')
-
-        console.log(token)
+        console.log('getCookieJwt' ,token)
 
         if (token && token.length > 10) {
-            //get user data
             useStore.setState({ jwtToken: token, isAuth: true });
         }
-    }, []);
-
-    //tg data
-    // useEffect(() => {
-    //     const initializeTelegramWebApp = () => {
-    //         if (window.Telegram && window.Telegram.WebApp) {
-
-    //             let tg: any = window.Telegram.WebApp;
-    //             tg.ready();
-
-    //             const safeData = tg.initData || "";
-    //             const initDataUnsafe = tg.initDataUnsafe || {};
-
-    //             if (!safeData || !initDataUnsafe.user) {
-    //                 console.warn(
-    //                     "Не удалось получить данные пользователя Telegram"
-    //                 );
-    //                 return;
-    //             }
-
-    //             const url = `${BASE_API_URL}api/validateTelegramUser`;
-    //             const params = new URLSearchParams({ data: safeData });
-    //             const fullURL = `${url}?${params}`;
-
-
-    //             fetch(fullURL)
-    //                 .then((response) => response.json())
-    //                 .then((data) =>
-    //                 )
-    //                 .catch((error) => console.error("Error:", error));
-
-    //             //fetch к бэку с safeData на получение пользователя
-    //             //Варианты ответа - user: null, user: User, error - если appData не прошла валидацию
-    //         }
-    //     };
-
-    //     if (document.readyState === "complete") {
-    //         initializeTelegramWebApp();
-    //     } else {
-    //         window.addEventListener("load", initializeTelegramWebApp);
-    //     }
-
-    //     return () => {
-    //         window.removeEventListener("load", initializeTelegramWebApp);
-    //     };
-    // }, []);
-
-    /////
-
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${jwt}`);
-
-    const requestOptions: any = (raw: any) => {
-        return {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow",
-        };
-    };
-
-    function getPaymentLink(orderId: any) {
-        const paymentData = JSON.stringify({
-            orderId: orderId,
-            promocode: promocode,
-        });
-
-        fetch(
-            `${BASE_API_URL}api/payment/getPaymentUrl`,
-            requestOptions(paymentData)
-        )
-            .then((response) => response.text())
-            .then((result) => {
-                const link = JSON.parse(result).paymentUrl;
-                const hashId = JSON.parse(result).hashId;
-                if (link && hashId) {
-                    setPaymentLink(link);
-                    setHashId(hashId);
-                    // setPaymentLink(link);
-                } else {
-                    // toast.error(
-                    //     "В данный момент свободных курьеров нет, повторите немного позже. Мы работаем с пятницы по воскресенье с 22.00-4.30"
-                    // );
-                }
-            })
-            .catch((error) => console.error(error));
-    }
-
-    useEffect(() => {
-        if (isOver) {
-            // let tg: any = window.Telegram.WebApp
-
-            useStore.setState({ isOver: false });
-
-            const finalOrder: any = [];
-
-            for (const [key, value] of amounts.entries()) {
-                for (let i = 0; i < value; i++) {
-                    finalOrder.push(key);
-                }
-            }
-
-
-            const orderData = JSON.stringify({
-                comment: "none",
-                cart: finalOrder,
-            });
-
-            // order
-            fetch(
-                `${BASE_API_URL}api/order/createOrder`,
-                requestOptions(orderData)
-            )
-                .then((response) => response.text())
-                .then((result) => {
-                    const orderId = JSON.parse(result).data.id;
-
-                    if (orderId) {
-                        setOrderId(orderId);
-                        getPaymentLink(orderId);
-                    }
-                })
-                .catch((error) => console.error(error));
-        }
-    }, [isOver]);
-
-    useEffect(() => {
-        if (paymentLink != "" && orderId != "") {
-            let tg: any = window.Telegram.WebApp;
-
-            useStore.setState({ isPayed: true });
-
-            const tgData = {
-                orderId: orderId,
-                paymentLink: paymentLink,
-                hashId: hashId,
-            };
-
-            tg.sendData(JSON.stringify(tgData));
-
-            useStore.setState({ paymentLink: paymentLink });
-            
-            const aElem = document.createElement("a");
-            aElem.href = paymentLink;
-            aElem.target = "_blank";
-            document.body.append(aElem);
-            aElem.click();
-            aElem.remove();
-        }
-    }, [paymentLink]);
+    }, [tockenForCheck]);
 
     return (
         <StyledWrapperWithFooter>
