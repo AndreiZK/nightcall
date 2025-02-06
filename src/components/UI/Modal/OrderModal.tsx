@@ -19,6 +19,7 @@ import { isOpen } from "@/utils/isOpen";
 import { createGuestAccount } from "@/utils/createGuestAccount";
 import { BASE_API_URL } from "../../../../constants";
 import { setCookie } from "@/utils/cookieUtils";
+import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -193,6 +194,13 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
 
 
     const handlePay = async () => {
+        const isCourierAvailable = await checkCourierAvailability();
+
+        if(!isCourierAvailable) {
+            toast.error("В данный момент нет свободных курьеров");
+            return;
+        }
+
         try {
             if(jwt?.length > 10){
 

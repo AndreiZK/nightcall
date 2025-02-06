@@ -17,6 +17,7 @@ import { BASE_API_URL } from "../../../constants";
 import { setCookie } from "@/utils/cookieUtils";
 import { heightLvh } from "@/styles/utils";
 import OrderView from "../UI/Modal/components/OrderView";
+import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
 
 const StyledContainer = styled.div`
     display: flex;
@@ -197,6 +198,14 @@ const OrderViewPayment = () => {
 
 
     const handlePay = async () => {
+
+        const isCourierAvailable = await checkCourierAvailability();
+
+        if(!isCourierAvailable) {
+            toast.error("В данный момент нет свободных курьеров");
+            return;
+        }
+
         try {
             if(jwt?.length > 10){
             } else {
