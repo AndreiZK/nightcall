@@ -194,8 +194,6 @@ const Header = () => {
     const setProfileModal = useStore((state: any) => state.setProfileModal);
     const setTrackOpen = useStore((state: any) => state.setTrackOpen);
 
-    const isLoginModalOpen = useStore((state: any) => state.isLoginModalOpen);
-
     const [isAuth, setIsAuth] = useState<boolean>(false);
     const [cartCounter, setCartCounter] = useState(0);
     const [cartOpen, setCartOpen] = useState(false);
@@ -210,7 +208,8 @@ const Header = () => {
     };
 
     const handleLogOut = () => {
-        useStore.setState({ jwtToken: null });
+        useStore.setState({ jwtToken: null});
+        setIsAuth(false);
         localStorage.removeItem("jwt");
         removeCookie("jwt");
         setUserMenuOpen(false);
@@ -230,6 +229,7 @@ const Header = () => {
     }, [amounts, order]);
 
     useEffect(() => {
+        console.log('headerJwt' ,jwt);
         if (jwt?.length > 7) {
             setIsAuth(true);
         } else {

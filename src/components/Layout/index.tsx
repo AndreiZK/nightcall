@@ -88,6 +88,7 @@ const Gradient2 = styled.img`
 
 export default function Layout({ children }: { children: ReactNode }) {
     const tockenForCheck = useStore((state: any) => state.jwtToken)
+    const isAuth = useStore((state: any) => state.isAuth)
 
     useEffect(() => {
         const token = getCookie('jwt')
