@@ -142,6 +142,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const [price, setPrice] = useState<number>(0);
     const [discountPrice, setDiscountPrice] = useState<any>(undefined);
 
+    const [isDiscountAcitvated, setIsDiscountAcitvated] = useState<boolean>(false);
+
     const jwt = useStore((state: any) => state.jwtToken);
 
     const order = useStore((state: any) => state.order);
@@ -314,6 +316,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const handleDiscount = async () => {
         const finalOrder: any = [];
 
+        setIsDiscountAcitvated(true);
+
         for (const [key, value] of amounts.entries()) {
             for (let i = 0; i < value; i++) {
                 finalOrder.push(key);
@@ -418,10 +422,10 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                                     <p>{discountPrice}BYN</p>
                                 </div>
                             )}
-                            <div className="priceContainer">
+                            {!isDiscountAcitvated && <div className="priceContainer">
                                 <p>Итоговая стоимость</p>
                                 <p>{price}BYN</p>
-                            </div>
+                            </div>}
                         </div>
                     )}
                 </StyledBottomContainer>

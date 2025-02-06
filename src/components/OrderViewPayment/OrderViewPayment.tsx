@@ -144,6 +144,8 @@ const OrderViewPayment = () => {
     const [price, setPrice] = useState<number>(0);
     const [discountPrice, setDiscountPrice] = useState<any>(undefined);
 
+    const [isDiscountAcitvated, setIsDiscountAcitvated] = useState<boolean>(false);
+
     const jwt = useStore((state: any) => state.jwtToken);
 
     const order = useStore((state: any) => state.order);
@@ -330,6 +332,7 @@ const OrderViewPayment = () => {
             discountedPrice?.discountedPrice?.discountedPrice != undefined &&
             discountedPrice?.discountedPrice?.discountedPrice != null
         ) {
+            setIsDiscountAcitvated(true);
             setPrice(discountedPrice.discountedPrice.discountedPrice);
             setDiscountPrice(discountedPrice.discountedPrice.discountAmount);
         }
@@ -422,10 +425,10 @@ const OrderViewPayment = () => {
                                     <p>{discountPrice}BYN</p>
                                 </div>
                             )}
-                            <div className="priceContainer">
+                            {!isDiscountAcitvated && <div className="priceContainer">
                                 <p>Итоговая стоимость</p>
                                 <p>{price}BYN</p>
-                            </div>
+                            </div>}
                         </div>
                     )}
                 </StyledBottomContainer>
