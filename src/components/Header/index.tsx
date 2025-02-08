@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
 import router from "next/router";
 import { removeCookie } from '@/utils/cookieUtils';
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const HeaderContainer = styled.div`
     position: fixed;
@@ -191,6 +192,8 @@ const Header = () => {
     const amounts = useStore((state: any) => state.amounts);
     const jwt = useStore((state: any) => state.jwtToken);
 
+    const isMobile = useIsMobile();
+
     const setProfileModal = useStore((state: any) => state.setProfileModal);
     const setTrackOpen = useStore((state: any) => state.setTrackOpen);
 
@@ -199,21 +202,16 @@ const Header = () => {
     const [cartOpen, setCartOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-    const clearOrder = useStore((state: any) => state.clearOrder);
-
-    const isMobile = window.innerWidth <= 768;
-
+    const logout = useStore((state: any) => state.logout);
+    const checkAuth = useStore((state: any) => state.checkAuth);
     const handleLoginOpen = () => {
         setLoginModal(true);
     };
 
     const handleLogOut = () => {
-        useStore.setState({ jwtToken: null});
-        setIsAuth(false);
-        localStorage.removeItem("jwt");
-        removeCookie("jwt");
+        logout();
         setUserMenuOpen(false);
-        clearOrder();
+        router.push('/');
     };
 
     useEffect(() => {
@@ -229,12 +227,8 @@ const Header = () => {
     }, [amounts, order]);
 
     useEffect(() => {
-        console.log('headerJwt' ,jwt);
-        if (jwt?.length > 7) {
-            setIsAuth(true);
-        } else {
-            setIsAuth(false);
-        }
+        const isAuthenticated = checkAuth();
+        setIsAuth(isAuthenticated);
     }, [jwt]);
 
     const handleTrackRedirect = () => {
@@ -277,8 +271,8 @@ const Header = () => {
                                     fill="white"
                                 />
                                 <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
                                     d="M15.0491 17.5592L21.1395 11.487C22.0167 10.6125 22.4552 10.1753 22.6862 9.61924C22.9172 9.06328 22.9172 8.44491 22.9172 7.20821V6.61739C22.9172 4.71568 22.9172 3.76482 22.3246 3.17403C21.7321 2.58325 20.7783 2.58325 18.8709 2.58325H18.2783C17.0379 2.58325 16.4177 2.58325 15.86 2.81357C15.3023 3.04388 14.8637 3.48112 13.9867 4.35561L7.89618 10.4278C6.87126 11.4496 6.23576 12.0833 5.98967 12.6952C5.91192 12.8886 5.87305 13.0798 5.87305 13.2804C5.87305 14.1159 6.54742 14.7883 7.89618 16.133L8.07746 16.3137L10.2009 14.1586C10.5037 13.8512 10.9983 13.8475 11.3058 14.1504C11.613 14.4531 11.6167 14.9479 11.3139 15.2552L9.18399 17.4169L9.32673 17.5592C10.6755 18.904 11.35 19.5763 12.1879 19.5763C12.373 19.5763 12.5502 19.5434 12.7284 19.4779C13.3569 19.2463 13.9983 18.6068 15.0491 17.5592ZM17.9104 10.4283C17.1202 11.2159 15.8393 11.2159 15.0492 10.4283C14.2591 9.64053 14.2591 8.36341 15.0492 7.5757C15.8393 6.78797 17.1202 6.78797 17.9104 7.5757C18.7004 8.36341 18.7004 9.64053 17.9104 10.4283Z"
                                     fill="white"
                                 />
@@ -373,7 +367,7 @@ const Header = () => {
                     </div>
                 </div>
             </HeaderContainer>
-            <MobileCart open={cartOpen} onClose={() => setCartOpen(false)} />
+            {isMobile && <MobileCart open={cartOpen} onClose={() => setCartOpen(false)} />}
         </>
     );
 };

@@ -1,11 +1,11 @@
+import { useEffect, useState } from "react";
+import BaseModal from "./BaseModal";
 import styled from "styled-components";
-import Modal, { ModalProps } from ".";
+import { colors, media, rm } from "@/styles";
 import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
-import { colors, media, rm } from "@/styles";
-import useStore from '../../../store/store'
-import { useEffect, useState } from "react";
+import useStore from '../../../store/store';
 import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
@@ -35,80 +35,72 @@ const StyledBottomContainer = styled.div`
     button {
         font-size: ${rm(20)};
     }
+`;
 
-    .registration{
-        display: flex;
-        align-items: center;
+const RegistrationModal = () => {
+    const isRegistrationModal = useStore((state: any) => state.isRegistrationModalOpen);
+    const setRegistrationModal = useStore((state: any) => state.setRegistrationModal);
+    const setSecondStepModal = useStore((state: any) => state.setSecondStepModal);
 
-        p{
-            font-size: ${rm(16)};
-            color: ${colors.white100};
-        }
-
-        span{
-            font-size: ${rm(16)};
-            color: ${colors.purple};
-            cursor: pointer;
-        }
-    }
-`
-
-const RegistrationModal = (props: Omit<ModalProps, "children">) => {
-
-    const isRegistrationModal = useStore((state: any) => (state.isRegistrationModalOpen))
-    const setRegistrationModal = useStore((state: any) => (state.setRegistrationModal))
-
-    const setSecondStepModal = useStore((state: any) => (state.setSecondStepModal))
-
-    const [mail, setMail] = useState<string>('')
-    const [pass, setPass] = useState<string>('')
-
-    const [isValid, setIsValid] = useState<boolean>(false)
+    const [mail, setMail] = useState<string>('');
+    const [pass, setPass] = useState<string>('');
+    const [isValid, setIsValid] = useState<boolean>(false);
 
     function validateEmail(email: string) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
-      }
-    
-      const registrationHandler = () => {
+    }
+
+    const registrationHandler = () => {
         if (!validateEmail(mail)) {
-          toast.error("Проверьте почту на ошибки");
-          return;
+            toast.error("Проверьте почту на ошибки");
+            return;
         }
-    
+
         if (pass.length < 8) {
-          toast.error("Минимальная длина пароля - 8 символов");
-          return;
+            toast.error("Минимальная длина пароля - 8 символов");
+            return;
         }
 
-        setIsValid(true)
-
+        setIsValid(true);
         useStore.setState({ mail: mail, pass: pass, username: mail });
-      };
+    };
 
-      useEffect(() => {
+    useEffect(() => {
         if (isValid === true) {
-          setIsValid(false);
-            setRegistrationModal(false)
-
-            setSecondStepModal(true)
+            setIsValid(false);
+            setRegistrationModal(false);
+            setSecondStepModal(true);
         }
-      }, [isValid]);
+    }, [isValid]);
 
     return (
-        <Modal isOpen={isRegistrationModal} onClose={() => setRegistrationModal(false)}>
+        <BaseModal 
+            isOpen={isRegistrationModal} 
+            onClose={() => setRegistrationModal(false)}
+        >
             <StyledContainer>
                 <ModalTitle>Создайте учётную запись!</ModalTitle>
                 <div className="textfields">
-                    <Textfield value={mail} onChange={(e) => setMail(e.target.value)} required label="email" />
-                    <Textfield value={pass} onChange={(e) => setPass(e.target.value)} required label="пароль" />
+                    <Textfield 
+                        value={mail} 
+                        onChange={(e) => setMail(e.target.value)} 
+                        required 
+                        label="email" 
+                    />
+                    <Textfield 
+                        value={pass} 
+                        onChange={(e) => setPass(e.target.value)} 
+                        required 
+                        label="пароль" 
+                    />
                 </div>
 
                 <StyledBottomContainer>
                     <Button onClick={registrationHandler}>Далее</Button>
                 </StyledBottomContainer>
             </StyledContainer>
-        </Modal>
+        </BaseModal>
     );
 };
 

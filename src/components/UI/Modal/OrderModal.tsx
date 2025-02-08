@@ -1,10 +1,11 @@
+import { useEffect, useState } from "react";
+import BaseModal from "./BaseModal";
 import styled from "styled-components";
-import Modal, { ModalProps } from ".";
+import { colors, media, rm } from "@/styles";
+import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
-import { colors, media, rm } from "@/styles";
 import useStore from "../../../store/store";
-import { useEffect, useState } from "react";
 import OrderView from "./components/OrderView";
 import { getOrderPrice } from "@/utils/getOrderPrice";
 import { getDeliveryPrice } from "@/utils/getDeliveryPrice";
@@ -108,11 +109,6 @@ const StyledBottomContainer = styled.div`
     }
 `;
 
-const StyledSubTitle = styled.p`
-    font-size: ${rm(24)};
-    color: ${colors.white100};
-`;
-
 const StyledTitle = styled.p`
     font-size: ${rm(48)};
     color: ${colors.purple};
@@ -126,7 +122,9 @@ const StyledTitle = styled.p`
 
 const phoneRegex = /^\+375\s*(17|25|29|33|44)\s*\d{7}$/;
 
-const OrderModal = (props: Omit<ModalProps, "children">) => {
+const OrderModal = () => {
+    // Состояния и хуки из старого компонента остаются теми же
+    // Ссылка на старый код:
     const setOrderModal = useStore((state: any) => state.setOrderModal);
     const isOrderModalOpen = useStore((state: any) => state.isOrderModalOpen);
 
@@ -141,6 +139,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
     const [deliveryPrice, setDeliveryPrice] = useState<number>(0);
     const [price, setPrice] = useState<number>(0);
     const [discountPrice, setDiscountPrice] = useState<any>(undefined);
+
+    const checkAuth = useStore((state: any) => state.checkAuth);
 
     const [isDiscountAcitvated, setIsDiscountAcitvated] = useState<boolean>(false);
 
@@ -204,8 +204,8 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         }
 
         try {
-            if(jwt?.length > 10){
-
+            if (checkAuth()) {
+                // Пользователь авторизован
             } else {
                 const validationErrors = {
                     street: !street.trim() && "Укажите улицу",
@@ -340,8 +340,9 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
         getPrice();
     }, [amounts, order]);
 
+    
     return (
-        <Modal isOpen={isOrderModalOpen} onClose={() => setOrderModal(false)}>
+        <BaseModal isOpen={isOrderModalOpen} onClose={() => setOrderModal(false)}>
             <StyledTitle>Оформление заказа</StyledTitle>
             <StyledContainer>
                 <div className="left">
@@ -381,9 +382,7 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                                 />
                                 <Textfield
                                     value={entrance}
-                                    onChange={(e) =>
-                                        setEntrance(e.target.value)
-                                    }
+                                    onChange={(e) => setEntrance(e.target.value)}
                                     label="Подьезд"
                                 />
                             </div>
@@ -409,7 +408,6 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                                     <p>{orderPrice.toFixed(2)}BYN</p>
                                 </div>
                             )}
-
                             {!discountPrice && (
                                 <div className="priceContainer">
                                     <p>Стоимость доставки</p>
@@ -422,15 +420,17 @@ const OrderModal = (props: Omit<ModalProps, "children">) => {
                                     <p>{discountPrice}BYN</p>
                                 </div>
                             )}
-                            {!isDiscountAcitvated && <div className="priceContainer">
-                                <p>Итоговая стоимость</p>
-                                <p>{price}BYN</p>
-                            </div>}
+                            {!isDiscountAcitvated && (
+                                <div className="priceContainer">
+                                    <p>Итоговая стоимость</p>
+                                    <p>{price}BYN</p>
+                                </div>
+                            )}
                         </div>
                     )}
                 </StyledBottomContainer>
             </StyledContainer>
-        </Modal>
+        </BaseModal>
     );
 };
 

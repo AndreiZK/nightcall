@@ -12,6 +12,8 @@ import { heightLvh } from "@/styles/utils";
 import { toast } from "react-toastify";
 import { useDrag } from "@use-gesture/react";
 import { useRouter } from "next/navigation";
+import { useIsMobile } from '@/hooks/useIsMobile';
+import Loader from '../UI/Loader';
 
 const StyledCart = styled.div`
     position: relative;
@@ -104,6 +106,8 @@ const MobileCart = ({
     open: boolean;
     onClose: () => void;
 }) => {
+    const isMobile = useIsMobile();
+    const [isInitialized, setIsInitialized] = useState(false);
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
@@ -112,53 +116,86 @@ const MobileCart = ({
     const [dataToRender, setDataToRender] = useState([]);
     const orderContentRef = useRef<HTMLDivElement>(null);
     const scrollYRef = useRef(0);
-    const router = useRouter()
+    const router = useRouter();
     const clearInstitution = useStore((state: any) => state.clearInstitution);
-
-    const checkAndCleanStorage = useStore(
-        (state: any) => state.checkAndCleanStorage
-    );
+    const checkAndCleanStorage = useStore((state: any) => state.checkAndCleanStorage);
     const setOrderModal = useStore((state: any) => state.setOrderModal);
     const token = useStore((state: any) => state.jwtToken);
+    const [isProductsLoading, setIsProductsLoading] = useState(false);
+    const [isPriceLoading, setIsPriceLoading] = useState(false);
 
     useEffect(() => {
-        const savedOrder = checkAndCleanStorage("order");
-        const savedLoadedIds = checkAndCleanStorage("loadedIds");
-        const savedAmounts = checkAndCleanStorage("amounts");
+        const initializeData = async () => {
+            const savedOrder = checkAndCleanStorage("order");
+            const savedLoadedIds = checkAndCleanStorage("loadedIds");
+            const savedAmounts = checkAndCleanStorage("amounts");
 
-        if (savedOrder && savedLoadedIds && savedAmounts) {
-            useStore.setState({
-                order: savedOrder,
-                loadedIds: new Set(savedLoadedIds),
-                amounts: new Map(
-                    Array.isArray(savedAmounts) ? savedAmounts : []
-                ),
-            });
+            if (savedOrder && savedLoadedIds && savedAmounts) {
+                useStore.setState({
+                    order: savedOrder,
+                    loadedIds: new Set(savedLoadedIds),
+                    amounts: new Map(Array.isArray(savedAmounts) ? savedAmounts : []),
+                });
+            }
+            setIsInitialized(true);
+        };
+
+        if (isMobile) {
+            initializeData();
         }
-    }, []);
+    }, [isMobile]);
 
     const getProductsForCart = async () => {
-        const products = await getProductsByIds(order);
-        setDataToRender(products);
+        if (!isInitialized || !isMobile || !open) return;
+        if (!order || order.length === 0) return;
+
+        setIsProductsLoading(true);
+        try {
+            const products = await getProductsByIds(order);
+            if (products) {
+                setDataToRender(products);
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        } finally {
+            setIsProductsLoading(false);
+        }
     };
 
     const getPrice = async () => {
-        const finalOrder: any = [];
-
-        for (const [key, value] of amounts.entries()) {
-            for (let i = 0; i < value; i++) {
-                finalOrder.push(key);
+        if (!isInitialized || !isMobile || !open) return;
+        if (!amounts || amounts.size === 0 || !order || order.length === 0) return;
+        
+        setIsPriceLoading(true);
+        try {
+            const finalOrder: any = [];
+            for (const [key, value] of amounts.entries()) {
+                for (let i = 0; i < value; i++) {
+                    finalOrder.push(key);
+                }
             }
+
+            if (finalOrder.length === 0) return;
+
+            const [priceResponse, deliveryPriceResponse] = await Promise.all([
+                getOrderPrice(finalOrder),
+                getDeliveryPrice(finalOrder)
+            ]);
+
+            if (priceResponse?.totalPrice !== undefined) {
+                const roundedPrice = Number(priceResponse.totalPrice.toFixed(2));
+                useStore.setState({ price: roundedPrice });
+                setPrice(roundedPrice);
+            }
+
+            if (deliveryPriceResponse !== undefined) {
+                setDeliveryPrice(deliveryPriceResponse);
+            }
+        } catch (error) {
+            console.error('Error calculating prices:', error);
+        } finally {
+            setIsPriceLoading(false);
         }
-
-        const price = await getOrderPrice(finalOrder);
-        const deliveryPrice = await getDeliveryPrice(finalOrder);
-
-        const roundedPrice = Number(price.totalPrice.toFixed(2));
-
-        useStore.setState({ price: roundedPrice });
-        setPrice(roundedPrice);
-        setDeliveryPrice(deliveryPrice);
     };
 
     const handleOrder = () => {
@@ -172,13 +209,19 @@ const MobileCart = ({
     };
 
     useEffect(() => {
-        getProductsForCart();
-        getPrice();
+        if (isInitialized && isMobile && open) {
+            if (order.length === 0) {
+                clearInstitution();
+                setDataToRender([]);
+                setPrice(0);
+                setDeliveryPrice(8);
+                return;
+            }
 
-        if(order.length === 0) {
-            clearInstitution()
+            getProductsForCart();
+            getPrice();
         }
-    }, [amounts, order]);
+    }, [isInitialized, isMobile, open, amounts, order]);
 
     const handleClose = () => onClose();
 
@@ -207,6 +250,8 @@ const MobileCart = ({
         }
     );
 
+    if (!isMobile) return null;
+
     return (
         <StyledCart className={open ? "open" : ""}>
             <Icons.cross onClick={handleClose} className="cross" />
@@ -214,22 +259,28 @@ const MobileCart = ({
                 <span className="cart-title">Ваш заказ</span>
                 {!order.length && <Icons.cartDesktop className="bag" />}
                 <div className="order">
-                    <div
-                        ref={orderContentRef}
-                        className="order-content"
-                        {...bindDrag()}
-                    >
-                        {dataToRender.length > 0 &&
-                            dataToRender.map((element: any, index: number) => (
-                                <CartItem
-                                    key={index}
-                                    calculatedPrice={element.calculatedPrice}
-                                    extra={element.extra}
-                                    type={element.type}
-                                    product={element.product}
-                                />
-                            ))}
-                    </div>
+                    {isProductsLoading ? (
+                        <div className="loader-container">
+                            <Loader size={60} />
+                        </div>
+                    ) : (
+                        <div
+                            ref={orderContentRef}
+                            className="order-content"
+                            {...bindDrag()}
+                        >
+                            {dataToRender.length > 0 &&
+                                dataToRender.map((element: any, index: number) => (
+                                    <CartItem
+                                        key={index}
+                                        calculatedPrice={element.calculatedPrice}
+                                        extra={element.extra}
+                                        type={element.type}
+                                        product={element.product}
+                                    />
+                                ))}
+                        </div>
+                    )}
                 </div>
             </div>
             {!order.length ? (
@@ -241,10 +292,22 @@ const MobileCart = ({
                 <div className="orderBlock">
                     <div className="deliveryPrice">
                         <p>Стоимость доставки:</p>
-                        <p>{deliveryPrice} BYN</p>
+                        {isPriceLoading ? (
+                            <Loader size={20} />
+                        ) : (
+                            <p>{deliveryPrice} BYN</p>
+                        )}
                     </div>
-                    <Button className="order-button" onClick={handleOrder}>
-                        Заказать за {price.toFixed(2)} BYN
+                    <Button 
+                        className="order-button" 
+                        onClick={handleOrder}
+                        disabled={isProductsLoading || isPriceLoading}
+                    >
+                        {isPriceLoading ? (
+                            <Loader size={24} />
+                        ) : (
+                            `Заказать за ${price.toFixed(2)} BYN`
+                        )}
                     </Button>
                 </div>
             )}

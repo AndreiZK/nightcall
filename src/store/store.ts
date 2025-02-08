@@ -231,6 +231,74 @@ const useStore = create((set, get) => ({
     clearInstitution: () => {
         localStorage.removeItem('institution');
         set({ institution: null });
+    },
+    logout: () => {
+        // Удаляем все связанные с аутентификацией данные
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('jwt');
+        sessionStorage.removeItem('user');
+        document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        
+        set({ 
+            jwtToken: null,
+            isAuth: false,
+            user: null
+        });
+    },
+    login: (token) => {
+        if (!token) return;
+        
+        // Сохраняем токен во всех местах
+        localStorage.setItem('jwt', token);
+        document.cookie = `jwt=${token}; path=/; max-age=2592000`; // 30 дней
+        
+        set({ 
+            jwtToken: token,
+            isAuth: true
+        });
+    },
+    checkAuth: () => {
+        const state = get();
+        // Проверяем токен в разных местах
+        const localToken = localStorage.getItem('jwt');
+        const cookieToken = document.cookie.split('; ').find(row => row.startsWith('jwt='))?.split('=')[1];
+        
+        // Если есть действующий токен в store, проверяем его валидность
+        if (state.jwtToken) {
+            return true;
+        }
+        
+        // Если нашли токен в localStorage или cookie, восстанавливаем сессию
+        if (localToken || cookieToken) {
+            const token = localToken || cookieToken;
+            set({ 
+                jwtToken: token,
+                isAuth: true
+            });
+            return true;
+        }
+        
+        return false;
+    },
+    // Метод для очистки всех данных пользователя
+    clearUserData: () => {
+        const clearOrder = get().clearOrder;
+        const logout = get().logout;
+        
+        // Очищаем корзину
+        clearOrder();
+        // Выходим из аккаунта
+        logout();
+        
+        // Очищаем все остальные пользовательские данные
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Очищаем все куки
+        document.cookie.split(";").forEach(function(c) { 
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
     }
 }));
 

@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import Breadcrumb from "@/components/UI/Breadcrumb";
 import { colors, media, rm } from "@/styles";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import styled from "styled-components";
 import ProductCard from "@/components/UI/ProductCard";
 import { Icons } from "@/components/UI/Icons";
@@ -17,6 +17,7 @@ import { BASE_IMAGE_URL } from "../../../constants";
 import { getStrapiData } from "@/requests/getStrapiData";
 import Cart from "@/components/Cart";
 import { isOpen } from "@/utils/isOpen";
+import { useWindowWidth } from "@react-hook/window-size";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -158,6 +159,8 @@ export default function RestaurantPage() {
     const [loaded, setLoaded] = useState<boolean>(false);
     const [isOpened, setIsOpen] = useState<boolean>(false);
 
+    const isMobile = useWindowWidth() < 1024;
+
     const router = useRouter();
     const { id } = router.query;
 
@@ -211,7 +214,7 @@ export default function RestaurantPage() {
                         />
                         <h2>{merchantData?.attributes.name}</h2>
                     </div>
-                    <Cart />
+                    {!isMobile && <Cart />}
                     <div className="categories">
                         {merchantData?.attributes.categories.categories.map(
                             (i, index) => (

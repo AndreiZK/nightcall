@@ -1,26 +1,24 @@
-import styled from "styled-components";
-import Modal, { ModalProps } from ".";
-import ModalTitle from "./ModalTitle";
-import Textfield from "../Textfield";
-import Button from "../Button";
-import { colors, media, rm } from "@/styles";
-import { IProduct, IProductExtra, IProductType } from "../../../../types";
-import { BASE_IMAGE_URL } from "../../../../constants";
 import { useState } from "react";
-import useStore from "@/store/store";
+import BaseModal from "./BaseModal";
+import styled from "styled-components";
+import { colors, media, rm } from "@/styles";
+import ModalTitle from "./ModalTitle";
+import Button from "../Button";
 import Select from "../Select";
+import useStore from "@/store/store";
+import { IProduct } from "../../../../types";
+import { BASE_IMAGE_URL } from "../../../../constants";
 import { toast } from "react-toastify";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(50)};
-
     display: flex;
     flex-direction: column;
     gap: ${rm(32)};
 
     ${media.md`
-           padding-block: ${rm(20)};
-           `}
+        padding-block: ${rm(20)};
+    `}
 
     .description {
         width: 40vw;
@@ -33,6 +31,7 @@ const StyledContainer = styled.div`
             width: 100%;
             margin-left: 0;
         `}
+
         img {
             border-radius: ${rm(16)};
             height: ${rm(180)};
@@ -62,30 +61,30 @@ const StyledContainer = styled.div`
                     font-size: ${rm(22)};
                 `}
             }
-            .info,
-            .weight {
+
+            .info, .weight {
                 font-size: ${rm(20)};
 
                 ${media.xsm`
                     font-size: ${rm(14)};
                 `}
             }
+
             .weight {
                 opacity: 0.7;
             }
         }
     }
-    button {
-        font-size: ${rm(20)};
-    }
 
     .bottom {
         display: flex;
         gap: ${rm(40)};
+
         ${media.md`
             gap: ${rm(16)};
-           flex-direction: column-reverse;
-           `}
+            flex-direction: column-reverse;
+        `}
+
         .counter {
             display: flex;
             align-items: center;
@@ -102,7 +101,6 @@ const StyledContainer = styled.div`
                 background-color: rgba(164, 63, 253, 0.3);
                 font-size: ${rm(46)};
                 position: relative;
-
                 color: rgba(130, 93, 217, 1);
 
                 span {
@@ -125,16 +123,16 @@ const StyledContainer = styled.div`
     }
 `;
 
-interface ProductModalProps extends Omit<ModalProps, "children"> {
+interface ProductModalProps {
+    isOpen: boolean;
+    onClose: () => void;
     productData: IProduct;
 }
 
-const ProductModal = (props: ProductModalProps) => {
+const ProductModal = ({ isOpen, onClose, productData }: ProductModalProps) => {
     const [count, setCount] = useState(1);
     const [selectedExtra, setSelectedExtra] = useState(0);
     const [selectedType, setSelectedType] = useState(0);
-
-    const jwt = useStore((state: any) => state.jwtToken);
 
     const institution = useStore((state: any) => state.institution);
     const setInstitution = useStore((state: any) => state.setInstitution);
@@ -143,8 +141,7 @@ const ProductModal = (props: ProductModalProps) => {
     const updateAmount = useStore((state: any) => state.updateAmount);
 
     const handleAdd = () => {
-        // if(jwt?.length > 7) {
-        const letter = props.productData.merchant.unique_prefix;
+        const letter = productData.merchant.unique_prefix;
         let inst = institution;
 
         if (institution === null) {
@@ -159,53 +156,31 @@ const ProductModal = (props: ProductModalProps) => {
 
         let type: Array<number> = [];
         let extra: Array<number> = [];
-        if (
-            selectedType
-                ? props.productData.product_types[selectedType]?.id
-                : props.productData.product_types[0]?.id
-        ) {
-            type = [
-                selectedType
-                    ? props.productData.product_types[selectedType].id
-                    : props.productData.product_types[0].id,
-            ];
+
+        if (selectedType ? productData.product_types[selectedType]?.id : productData.product_types[0]?.id) {
+            type = [selectedType ? productData.product_types[selectedType].id : productData.product_types[0].id];
         }
-        if (
-            selectedExtra
-                ? props.productData.product_extras[selectedExtra]?.id
-                : props.productData.product_extras[0]?.id
-        ) {
-            extra = [
-                selectedExtra
-                    ? props.productData.product_extras[selectedExtra].id
-                    : props.productData.product_extras[0].id,
-            ];
+        
+        if (selectedExtra ? productData.product_extras[selectedExtra]?.id : productData.product_extras[0]?.id) {
+            extra = [selectedExtra ? productData.product_extras[selectedExtra].id : productData.product_extras[0].id];
         }
+
         const product = {
-            id: props.productData.id,
+            id: productData.id,
             type,
             extra,
         };
-        if (
-            order.some(
-                (i: any) => JSON.stringify(i) === JSON.stringify(product)
-            )
-        ) {
-            toast.error(
-                "Вы уже добавили этот товар, количество можно изменить в корзине"
-            );
+
+        if (order.some((i: any) => JSON.stringify(i) === JSON.stringify(product))) {
+            toast.error("Вы уже добавили этот товар, количество можно изменить в корзине");
             return;
         }
+
         for (let i = 0; i < count; i++) {
             addToOrder(product);
         }
         updateAmount(product, count);
-        // } else {
-        //     toast.error("Для добавления товара необходимо авторизоваться");
-        //     return;
-        // }
-
-        props.onClose();
+        onClose();
     };
 
     const handleExtraSelect = (val: string) => {
@@ -216,42 +191,43 @@ const ProductModal = (props: ProductModalProps) => {
         setSelectedType(Number(val));
     };
 
-    const extrasOptions = props.productData?.product_extras.map((i, index) => ({
+    const extrasOptions = productData?.product_extras.map((i, index) => ({
         value: String(index),
         label: i.extraName,
     }));
-    const typesOptions = props.productData?.product_types.map((i, index) => ({
+
+    const typesOptions = productData?.product_types.map((i, index) => ({
         value: String(index),
         label: i.description,
     }));
 
     return (
-        <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <BaseModal isOpen={isOpen} onClose={onClose}>
             <StyledContainer>
                 <div className="description">
                     <img
                         //@ts-expect-error
-                        src={BASE_IMAGE_URL + props?.productData?.image[0]?.url}
-                        alt=""
+                        src={BASE_IMAGE_URL + productData?.image[0]?.url}
+                        alt={productData.title}
                     />
                     <div className="text">
-                        <p className="title">{props.productData.title}</p>
-                        <p className="info">{props.productData.discription}</p>
-                        {props.productData.weight && (
-                            <p className="weight">
-                                {props.productData.weight} г
-                            </p>
+                        <p className="title">{productData.title}</p>
+                        <p className="info">{productData.discription}</p>
+                        {productData.weight && (
+                            <p className="weight">{productData.weight} г</p>
                         )}
                     </div>
                 </div>
-                {props.productData?.product_types?.length > 0 && (
+
+                {productData?.product_types?.length > 0 && (
                     <Select
                         placeholder="Размер"
                         onChange={handleTypeSelect}
                         options={typesOptions}
                     />
                 )}
-                {props.productData?.product_extras?.length > 0 && (
+
+                {productData?.product_extras?.length > 0 && (
                     <Select
                         placeholder="Соус на выбор"
                         onChange={handleExtraSelect}
@@ -260,44 +236,34 @@ const ProductModal = (props: ProductModalProps) => {
                 )}
 
                 <div className="bottom">
+                    <div className="counter">
+                        <div
+                            className={`counter-button ${count === 1 ? 'disabled' : ''}`}
+                            onClick={() => count > 1 && setCount(count - 1)}
+                        >
+                            <span>-</span>
+                        </div>
+                        <span className="count">{count}</span>
+                        <div
+                            className="counter-button"
+                            onClick={() => setCount(count + 1)}
+                        >
+                            <span>+</span>
+                        </div>
+                    </div>
                     <Button onClick={handleAdd}>
                         Добавить {count} за{" "}
-                        {(props.productData.product_types.length > 0
-                            ? props.productData?.product_types[
-                                  Number(selectedType)
-                              ]?.newPrice * count
-                            : Math.round(
-                                  props.productData.price * count * 100
-                              ) / 100) +
-                            (props.productData.product_extras.length > 0
-                                ? props.productData?.product_extras[
-                                      Number(selectedExtra)
-                                  ]?.additionalPrice * count
+                        {(productData.product_types.length > 0
+                            ? productData?.product_types[Number(selectedType)]?.newPrice * count
+                            : Math.round(productData.price * count * 100) / 100) +
+                            (productData.product_extras.length > 0
+                                ? productData?.product_extras[Number(selectedExtra)]?.additionalPrice * count
                                 : 0)}{" "}
                         BYN
                     </Button>
-                    <div className="counter">
-                        <span
-                            onClick={() =>
-                                setCount((prev) => (prev > 1 ? prev - 1 : 1))
-                            }
-                            className={`counter-button ${
-                                count === 1 ? "disabled" : ""
-                            }`}
-                        >
-                            <span>-</span>
-                        </span>
-                        <span className="count">{count}</span>
-                        <span
-                            onClick={() => setCount((prev) => prev + 1)}
-                            className="counter-button"
-                        >
-                            +
-                        </span>
-                    </div>
                 </div>
             </StyledContainer>
-        </Modal>
+        </BaseModal>
     );
 };
 

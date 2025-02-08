@@ -1,18 +1,15 @@
+import { useEffect, useState } from "react";
+import BaseModal from "./BaseModal";
 import styled from "styled-components";
-import Modal, { ModalProps } from ".";
+import { colors, media, rm } from "@/styles";
 import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
-import { colors, media, rm } from "@/styles";
-import { BASE_API_URL } from "../../../../constants";
-import { requestOptions } from "../../../../constants";
-import { validateTelegramId } from "@/utils/validateTelegramId";
 import useStore from "../../../store/store";
-import { useEffect, useState } from "react";
-import { fontNotoSans } from "@/styles/fonts";
 import { toast } from "react-toastify";
 import emailJs from "@emailjs/browser";
-import { serviceId, templateId, userId } from '../../../../constants'
+import { serviceId, templateId, userId } from '../../../../constants';
+
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
 
@@ -40,45 +37,25 @@ const StyledBottomContainer = styled.div`
     button {
         font-size: ${rm(20)};
     }
-
-    .registration {
-        display: flex;
-        align-items: center;
-
-        p {
-            font-size: ${rm(16)};
-            color: ${colors.white100};
-        }
-
-        span {
-            font-size: ${rm(16)};
-            color: ${colors.purple};
-            cursor: pointer;
-        }
-    }
 `;
 
-const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
+const BecomePartnerModal = () => {
     const [mail, setMail] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
     const [restaurant, setRestaurant] = useState<string>("");
 
-    const isPartnershipModalOpen = useStore(
-        (state: any) => state.isPartnershipModalOpen
-    );
-    const setPartnershipModal = useStore(
-        (state: any) => state.setPartnershipModal
-    );
+    const isPartnershipModalOpen = useStore((state: any) => state.isPartnershipModalOpen);
+    const setPartnershipModal = useStore((state: any) => state.setPartnershipModal);
 
     const templateParams = {
         from_name: name,
         email: mail,
         phone: phone,
         address: restaurant,
-      };
+    };
     
-      useEffect(() => {
+    useEffect(() => {
         emailJs.init({
             publicKey: userId,
             blockHeadless: true,
@@ -90,7 +67,7 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
     }, []);
     
     const handleSubmit = () => {
-        if(name != '' && mail != '' && phone != '' && restaurant != ''){
+        if(name && mail && phone && restaurant) {
             emailJs.send(serviceId, 'template_0zjaapd', templateParams).then(
                 (response) => {
                     toast.success("Заявка отправлена!");
@@ -106,7 +83,7 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
     };
 
     return (
-        <Modal
+        <BaseModal
             isOpen={isPartnershipModalOpen}
             onClose={() => setPartnershipModal(false)}
         >
@@ -141,15 +118,9 @@ const BecomePartnerModal = (props: Omit<ModalProps, "children">) => {
 
                 <StyledBottomContainer>
                     <Button onClick={handleSubmit}>Отправить</Button>
-                    {/* <div className="registration">
-                        <p>Нет учётной записи?</p>
-                        <span onClick={handleRegisterChange}>
-                            Зарегистрируйтесь!
-                        </span>
-                    </div> */}
                 </StyledBottomContainer>
             </StyledContainer>
-        </Modal>
+        </BaseModal>
     );
 };
 

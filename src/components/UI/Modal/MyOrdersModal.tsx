@@ -1,15 +1,14 @@
-import styled from "styled-components";
-import Modal, { ModalProps } from ".";
-import ModalTitle from "./ModalTitle";
-import { colors, media, rm } from "@/styles";
-import { BASE_API_URL } from "../../../../constants";
-import useStore from "../../../store/store";
 import { useEffect, useState } from "react";
+import BaseModal from "./BaseModal";
+import styled from "styled-components";
+import { colors, media, rm } from "@/styles";
+import ModalTitle from "./ModalTitle";
+import useStore from "../../../store/store";
+import { BASE_API_URL } from "../../../../constants";
 import { Accordion } from "@/components/Modals/Accordion";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(40)};
-
     display: flex;
     flex-direction: column;
     gap: ${rm(32)};
@@ -52,15 +51,13 @@ const StyledContainer = styled.div`
     }
 `;
 
-const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
+const MyOrdersModal = () => {
     const setTrackOpen = useStore((state: any) => state.setTrackOpen);
     const isTrackOpen = useStore((state: any) => state.isTrackOpen);
+    const jwt = useStore((state: any) => state.jwtToken);
 
     const [activeIndex, setActiveIndex] = useState<number>(-1);
-
     const [dataToRender, setDataToRender] = useState<any>([]);
-
-    const jwt = useStore((state: any) => state.jwtToken);
 
     const findActiveOrders = () => {
         if (jwt?.length < 7) {
@@ -78,7 +75,7 @@ const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
             .then((result) => {
                 const reversedArray = result
                     .slice()
-                    .sort((a: any, b: any) => b.id - a.id); // Создаем копию и сортируем по id в обратном порядке
+                    .sort((a: any, b: any) => b.id - a.id);
                 setDataToRender(reversedArray);
             })
             .catch((error) => console.error(error));
@@ -89,7 +86,7 @@ const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
     }, [jwt]);
 
     return (
-        <Modal isOpen={isTrackOpen} onClose={() => setTrackOpen(false)}>
+        <BaseModal isOpen={isTrackOpen} onClose={() => setTrackOpen(false)}>
             <StyledContainer>
                 <ModalTitle>История заказов</ModalTitle>
                 <div className="orders">
@@ -103,12 +100,8 @@ const MyOrdersModal = (props: Omit<ModalProps, "children">) => {
                         />
                     ))}
                 </div>
-
-                {/* <StyledBottomContainer>
-                    <Button onClick={updateUserData}>Сохранить</Button>
-                </StyledBottomContainer> */}
             </StyledContainer>
-        </Modal>
+        </BaseModal>
     );
 };
 

@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
+import BaseModal from "./BaseModal";
 import styled from "styled-components";
-import Modal, { ModalProps } from ".";
+import { colors, media, rm } from "@/styles";
 import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
-import { colors, media, rm } from "@/styles";
+import useStore from '../../../store/store';
 import { BASE_API_URL } from "../../../../constants";
-import useStore from '../../../store/store'
-import { useEffect, useState } from "react";
 import { getUser } from "@/utils/getUser";
 import { getAdress } from "@/utils/getAdress";
 import { toast } from "react-toastify";
@@ -14,12 +14,12 @@ import { toast } from "react-toastify";
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
 
-    .info{
+    .info {
         margin-top: ${rm(10)};
         display: flex;
         gap: ${rm(12)};
 
-        >div{
+        > div {
             width: 33%;
         }
     }
@@ -30,7 +30,7 @@ const StyledContainer = styled.div`
         gap: ${rm(10)};
         margin-block: ${rm(60)};
 
-        .extraText{
+        .extraText {
             font-size: ${rm(24)};
         }
     }
@@ -52,107 +52,69 @@ const StyledBottomContainer = styled.div`
     button {
         font-size: ${rm(20)};
     }
+`;
 
-    .registration{
-        display: flex;
-        align-items: center;
-
-        p{
-            font-size: ${rm(16)};
-            color: ${colors.white100};
-        }
-
-        span{
-            font-size: ${rm(16)};
-            color: ${colors.purple};
-            cursor: pointer;
-        }
-    }
-`
-
-const ProfileModal = (props: Omit<ModalProps, "children">) => {
-
-    const setProfileModal = useStore((state: any) => (state.setProfileModal))
-    const isProfileModalOpen = useStore((state: any) => (state.isProfileModalOpen))
-
-    const [home, setHome] = useState<string>("");
-    const [entrance, setEntrance] = useState<string>("");
-    const [street, setStreet] = useState<string>("");
-    const [flat, setFlat] = useState<string>("");
-    const [name, setName] = useState<string>("");
-    const [phone, setPhone] = useState<string>("");
-    const [mail, setMail] = useState<string>("");
-    const [pass, setPass] = useState<string>("");
-  
-    const [isValid, setIsValid] = useState<boolean>(false)
-  
+const ProfileModal = () => {
+    const isProfileModalOpen = useStore((state: any) => state.isProfileModalOpen);
+    const setProfileModal = useStore((state: any) => state.setProfileModal);
     const jwt = useStore((state: any) => state.jwtToken);
-  
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${jwt}`); //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzE4MjkyOTg4LCJleHAiOjE3MjA4ODQ5ODh9.v-hBVCOiCAPM0TDa3_uoEEIHj6PycCHJH9CZHr9esEg
-  
-    const requestAdressOptions: any = (raw: any) => {
-      return {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-    };
-  
-    const getUserInfo = async (token: string) => {
-      const user = await getUser(token);
-      const adress = await getAdress(token);
-  
-      if (adress) {
-        setName(adress.name);
-        setPhone(adress.phone);
-        setEntrance(adress.entrance);
-        setHome(adress.house_number);
-        setFlat(adress.flat_number);
-        setStreet(adress.street);
-      }
-  
-      setMail(user.email);
-    };
-  
+
+    const [mail, setMail] = useState<string>('');
+    const [street, setStreet] = useState<string>('');
+    const [home, setHome] = useState<string>('');
+    const [flat, setFlat] = useState<string>('');
+    const [entrance, setEntrance] = useState<string>('');
+    const [name, setName] = useState<string>('');
+    const [phone, setPhone] = useState<string>('');
+
     useEffect(() => {
-      if (jwt) {
-        getUserInfo(jwt);
-      } else {
-        useStore.setState({ isAuth: false });
-      }
-    }, [jwt]); //nothing
-  
+        if (jwt?.length > 7) {
+            getUser(jwt).then((userData: any) => {
+                setMail(userData.email);
+                setName(userData.name);
+                setPhone(userData.phone);
+            });
+
+            getAdress(jwt).then((adressData: any) => {
+                setStreet(adressData.street);
+                setHome(adressData.house_number);
+                setFlat(adressData.flat_number);
+                setEntrance(adressData.entrance);
+            });
+        }
+    }, [jwt]);
+
     const updateUserData = () => {
-        if (jwt.length > 10) {
-          const raw = JSON.stringify({
+        const raw = JSON.stringify({
             phone: phone,
             street: street,
-            entrance: entrance,
-            flat_number: flat,
+            entrance: entrance === "" ? "-" : entrance,
+            flat_number: flat === "" ? "-" : flat,
             house_number: home,
             name: name,
-          });
-    
-          fetch(`${BASE_API_URL}api/addAdress`, requestAdressOptions(raw))
+        });
+
+        fetch(`${BASE_API_URL}api/addAdress`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
+            },
+            body: raw,
+            redirect: "follow",
+        })
             .then((response) => response.text())
             .then((result) => {
-            toast.success("Данные успешно обновлены");
-              setIsValid(true)
-              setProfileModal(false)
+                toast.success("Данные успешно обновлены");
+                setProfileModal(false);
             })
-            .catch((error) => toast.error('Не удалось обновить данные'));
-        } else {
-        //   toast.error("Авторизуйтесь");
-        }
-      };
+            .catch((error) => console.error(error));
+    };
 
     return (
-        <Modal isOpen={isProfileModalOpen} onClose={() => setProfileModal(false)}>
+        <BaseModal isOpen={isProfileModalOpen} onClose={() => setProfileModal(false)}>
             <StyledContainer>
                 <ModalTitle>Мой профиль</ModalTitle>
-
                 <div className="textfields">
                     <p className="extraText">Email</p>
                     <Textfield value={mail} onChange={(e) => setMail(e.target.value)} required label="email" />
@@ -174,7 +136,7 @@ const ProfileModal = (props: Omit<ModalProps, "children">) => {
                     <Button onClick={updateUserData}>Сохранить</Button>
                 </StyledBottomContainer>
             </StyledContainer>
-        </Modal>
+        </BaseModal>
     );
 };
 

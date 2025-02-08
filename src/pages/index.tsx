@@ -51,7 +51,6 @@ export default function Home() {
                     <Collaboration />
                 </ContentContainer>
             </Layout>
-            {/* <Modal /> */}
         </>
     );
 }

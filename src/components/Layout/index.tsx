@@ -90,15 +90,21 @@ export default function Layout({ children }: { children: ReactNode }) {
     const tockenForCheck = useStore((state: any) => state.jwtToken)
     const isAuth = useStore((state: any) => state.isAuth)
 
+    const checkAuth = useStore((state: any) => state.checkAuth)
+
+    // useEffect(() => {
+    //     const token = getCookie('jwt')
+
+    //     console.log('getCookieJwt' ,token)
+
+    //     if (token && token.length > 10) {
+    //         useStore.setState({ jwtToken: token, isAuth: true });
+    //     }
+    // }, [tockenForCheck]);
+
     useEffect(() => {
-        const token = getCookie('jwt')
-
-        console.log('getCookieJwt' ,token)
-
-        if (token && token.length > 10) {
-            useStore.setState({ jwtToken: token, isAuth: true });
-        }
-    }, [tockenForCheck]);
+        checkAuth();
+    }, []);
 
     return (
         <StyledWrapperWithFooter>
