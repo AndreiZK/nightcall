@@ -14,7 +14,7 @@ import styled from "styled-components";
 import { IRestaurant } from "../../../types";
 import { getSearchResult } from "@/requests/getSearchResult";
 import { getCategories } from "@/requests/getCategories";
-
+import { useLoadingReady } from "@/hooks/useLoadingReady";
 const TopContainer = styled.div`
     display: flex;
     width: 100%;
@@ -76,16 +76,6 @@ const RestaurantsGrid = styled.div`
     `}
 `;
 
-// export const categories = [
-//     {
-//         title: "все",
-//         name: "all",
-//     },
-//     {
-//         title: "рестораны",
-//         name: "restrant",
-//     },
-// ];
 
 export default function Restaurants() {
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -121,6 +111,8 @@ export default function Restaurants() {
         if (!restaurantsData) return;
         searchRests();
     }, [search, selectedCategory]);
+
+    useLoadingReady(restaurantsData, categories);
 
     return (
         <>

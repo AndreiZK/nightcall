@@ -89,6 +89,7 @@ const useStore = create((set, get) => ({
     orderId: null,
     isPaymentOver: false,
     isPayed: false,
+    isContentLoaded: false,
     jwtToken:
         // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsImlhdCI6MTczMTUyMDA1NiwiZXhwIjoxNzM0MTEyMDU2fQ.EFeyUxIzdPRC_skHDAghMxwI6RkF4OU37ZbnJQs1JG0", //null
         null,

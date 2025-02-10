@@ -11,6 +11,7 @@ import { useSpring, animated, easings, config } from "@react-spring/web";
 import { SquareLoader } from "@/components/Animated/SquareLoader"; 
 import { rm } from "@/styles";
 import { colors } from "@/styles";
+import useStore from "@/store/store";
 
 interface Props {
     loading: true,
@@ -76,16 +77,11 @@ export const AssetsLoaderLayout = ({
 }: {
     children: React.ReactNode;
 }) => {
-    const [delayedLoading, setDelayedLoading] = useState(true)
-    const [fullyLoaded, setFullyLoaded] = useState(false)
+    const [delayedLoading, setDelayedLoading] = useState(false)
+
+    const isContentLoaded = useStore((state: any) => state.isContentLoaded);
+
     const [loading, progress, currentFile] = useLoadAssets({ 
-        // path: '/furniture-offer/',
-        // images: [
-        //     ...framesForLoadingLayout
-        // ], 
-        // videos: [
-        //     'videos/main_background.mp4'
-        // ] 
     })
     useEffect(() => { !loading && setDelayedLoading(false) }, [loading])
 
@@ -112,20 +108,29 @@ export const AssetsLoaderLayout = ({
     })) 
 
     useEffect(() => {
-        
-        if (!delayedLoading) {
+        setTimeout(() => {
             textApi.start({ x: '2rem', y: '-4.15rem', config: config.slow })
             logoApi.start({ scale: '0.3', x: '-3.13rem', config: config.slow })
+        }, 1000)
+            // setTimeout(() => {
+            //     logoBlockApi.start({ y: '-45vh' })
+            //     backgroundApi.start({ y: '-100%' })
+            //     setTimeout(() => logoBlockApi.start({ opacity: '0' }), 500)
+            //     setTimeout(() => {
+            //         setFullyLoaded(true)
+            //     }, 1500)
+            // }, 500)
+    }, [])
+
+    useEffect(() => {
+        if (isContentLoaded) {
             setTimeout(() => {
                 logoBlockApi.start({ y: '-45vh' })
                 backgroundApi.start({ y: '-100%' })
                 setTimeout(() => logoBlockApi.start({ opacity: '0' }), 500)
-                setTimeout(() => {
-                    setFullyLoaded(true)
-                }, 1500)
-            }, 500)
+            }, 1000)
         }
-    }, [delayedLoading])
+    }, [isContentLoaded])
 
     return (
         <>
@@ -144,7 +149,7 @@ export const AssetsLoaderLayout = ({
                         loading,
                         progress,
                         currentFile,
-                        fullyLoaded,
+                        fullyLoaded: isContentLoaded,
                     } as Props}
                 >
                     {children}

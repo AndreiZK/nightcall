@@ -4,6 +4,7 @@ import { media, rm } from "@/styles";
 import RestaurantCard from "../RestaurantCard";
 import { Icons } from "../UI/Icons";
 import { IRestaurant } from "../../../types";
+import { useLoadingReady } from "@/hooks/useLoadingReady";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -51,6 +52,9 @@ interface PopularRestaurantsProps {
 }
 
 const PopularRestaurants = ({ data }: PopularRestaurantsProps) => {
+
+    useLoadingReady(data);
+    
     return (
         <StyledContainer>
             <SectionTitle>Популярные рестораны</SectionTitle>

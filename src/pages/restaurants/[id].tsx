@@ -18,6 +18,7 @@ import { getStrapiData } from "@/requests/getStrapiData";
 import Cart from "@/components/Cart";
 import { isOpen } from "@/utils/isOpen";
 import { useWindowWidth } from "@react-hook/window-size";
+import { useLoadingReady } from "@/hooks/useLoadingReady";
 
 const StyledContainer = styled.div`
     width: 100%;
@@ -197,6 +198,8 @@ export default function RestaurantPage() {
             setIsOpen(isOpenNow);
         }
     }, [merchantData]);
+
+    useLoadingReady(merchantData, products)
 
     return (
         <Layout>

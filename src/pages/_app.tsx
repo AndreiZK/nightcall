@@ -8,15 +8,15 @@ import { SmartCSSGrid } from "@/styles";
 
 import type { AppProps } from "next/app";
 
-import { Onest } from "next/font/google";
-import { Noto_Sans } from "next/font/google";
+import { Onest, Noto_Sans } from "next/font/google";
 import { AnimatedRouterLayout } from "@/layouts/AnimatedRouterLayout/AnimatedRouterLayout";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { Modals } from "@/components/Modals/Modals";
 import { initializeTelegramWebApp } from "@/utils/initializeTelegramWebApp";
-import Script from "next/script";
+import useStore from "@/store/store";
 
 export const onest = Onest({
     weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -43,6 +43,20 @@ export const author = "Textura Agency";
 export const twitter = "textura.agency";
 
 export default function App({ Component, pageProps }: AppProps) {
+    const router = useRouter();
+
+    useEffect(() => {
+        const handleRouteChangeStart = () => {
+            useStore.setState({ isContentLoaded: false });
+        };
+
+        router.events.on('routeChangeStart', handleRouteChangeStart);
+
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChangeStart);
+        };
+    }, [router]);
+
     useEffect(() => {
         void document.body.style.removeProperty("opacity");
     }, []);
