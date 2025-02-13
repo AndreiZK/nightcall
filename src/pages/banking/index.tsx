@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { useLoadingReady } from "@/hooks/useLoadingReady";
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
 
@@ -32,6 +33,10 @@ const StyledContainer = styled.div`
 `;
 
 export default function page() {
+
+    useLoadingReady(true)
+
+
     return (
         <Layout>
         <StyledContainer>

@@ -12,53 +12,20 @@ import BecomePartnerModal from "../UI/Modal/BecomePartnerModal"
 import { useTransition } from "@react-spring/web"
 
 export const Modals = () => {
-    const {
-        isLoginModalOpen,
-        isRegistrationModalOpen,
-        isSecondStepModalOpen,
-        isProfileModalOpen,
-        isOrderModalOpen,
-        isTrackOpen,
-        isCourierModalOpen,
-        isPartnershipModalOpen
-    } = useStore((state: any) => ({
-        isLoginModalOpen: state.isLoginModalOpen,
-        isRegistrationModalOpen: state.isRegistrationModalOpen,
-        isSecondStepModalOpen: state.isSecondStepModalOpen,
-        isProfileModalOpen: state.isProfileModalOpen,
-        isOrderModalOpen: state.isOrderModalOpen,
-        isTrackOpen: state.isTrackOpen,
-        isCourierModalOpen: state.isCourierModalOpen,
-        isPartnershipModalOpen: state.isPartnershipModalOpen
-    }));
-
+    const activeModal = useStore((state) => state.activeModal);
+    
     const modals = [
-        { isOpen: isLoginModalOpen, component: LoginModal },
-        { isOpen: isRegistrationModalOpen, component: RegistrationModal },
-        { isOpen: isSecondStepModalOpen, component: SecondStepModal },
-        { isOpen: isProfileModalOpen, component: ProfileModal },
-        { isOpen: isOrderModalOpen, component: OrderModal },
-        { isOpen: isTrackOpen, component: MyOrdersModal },
-        { isOpen: isCourierModalOpen, component: BecomeCourierModal },
-        { isOpen: isPartnershipModalOpen, component: BecomePartnerModal }
+        { name: 'login', component: LoginModal },
+        { name: 'registration', component: RegistrationModal },
+        { name: 'order', component: OrderModal },
+        { name: 'track', component: MyOrdersModal },
+        { name: 'courier', component: BecomeCourierModal },
+        { name: 'partnership', component: BecomePartnerModal },
+        { name: 'profile', component: ProfileModal },
+        { name: 'secondStep', component: SecondStepModal },
     ];
 
-    const transitions = useTransition(
-        modals.filter(modal => modal.isOpen),
-        {
-            from: { opacity: 0 },
-            enter: { opacity: 1 },
-            leave: { opacity: 0 },
-            config: { duration: 1000 }
-        }
-    );
+    const ActiveModal = modals.find(modal => modal.name === activeModal)?.component;
 
-    return (
-        <>
-            {transitions((styles, modal) => {
-                const ModalComponent = modal.component;
-                return <ModalComponent key={ModalComponent.name} />;
-            })}
-        </>
-    )
-}
+    return ActiveModal ? <ActiveModal /> : null;
+};

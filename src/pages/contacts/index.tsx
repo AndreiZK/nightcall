@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import styled from "styled-components";
 import {colors, rm} from '@/styles/index'
+import { useLoadingReady } from "@/hooks/useLoadingReady";
 
 const StyledContainer = styled.div`
     display: flex;
@@ -16,6 +17,9 @@ const StyledContainer = styled.div`
 `;
 
 export default function page() {
+
+  useLoadingReady(true)
+
   return (
     <Layout>
       <div className="contacts-container">

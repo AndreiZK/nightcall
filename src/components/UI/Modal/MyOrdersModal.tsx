@@ -52,12 +52,18 @@ const StyledContainer = styled.div`
 `;
 
 const MyOrdersModal = () => {
+    const setModal = useStore((state: any) => state.setModal);
+    const activeModal = useStore((state: any) => state.activeModal);
     const setTrackOpen = useStore((state: any) => state.setTrackOpen);
     const isTrackOpen = useStore((state: any) => state.isTrackOpen);
     const jwt = useStore((state: any) => state.jwtToken);
 
     const [activeIndex, setActiveIndex] = useState<number>(-1);
     const [dataToRender, setDataToRender] = useState<any>([]);
+
+    const handleClose = () => {
+        setModal(null);
+    };
 
     const findActiveOrders = () => {
         if (jwt?.length < 7) {
@@ -85,23 +91,31 @@ const MyOrdersModal = () => {
         findActiveOrders();
     }, [jwt]);
 
+    useEffect(() => {
+        if (activeModal === 'track') {
+            // Logic to execute when the modal is opened
+        }
+    }, [activeModal]);
+
     return (
-        <BaseModal isOpen={isTrackOpen} onClose={() => setTrackOpen(false)}>
-            <StyledContainer>
-                <ModalTitle>История заказов</ModalTitle>
-                <div className="orders">
-                    {dataToRender.map((item: any, index: number) => (
-                        <Accordion
-                            data={item}
-                            key={item.id}
-                            index={index}
-                            activeIndex={activeIndex}
-                            setActiveIndex={setActiveIndex}
-                        />
-                    ))}
-                </div>
-            </StyledContainer>
-        </BaseModal>
+        isTrackOpen && (
+            <BaseModal isOpen={isTrackOpen} onClose={handleClose}>
+                <StyledContainer>
+                    <ModalTitle>История заказов</ModalTitle>
+                    <div className="orders">
+                        {dataToRender.map((item: any, index: number) => (
+                            <Accordion
+                                data={item}
+                                key={item.id}
+                                index={index}
+                                activeIndex={activeIndex}
+                                setActiveIndex={setActiveIndex}
+                            />
+                        ))}
+                    </div>
+                </StyledContainer>
+            </BaseModal>
+        )
     );
 };
 

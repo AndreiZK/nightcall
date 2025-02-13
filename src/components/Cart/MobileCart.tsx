@@ -119,11 +119,10 @@ const MobileCart = ({
     const router = useRouter();
     const clearInstitution = useStore((state: any) => state.clearInstitution);
     const checkAndCleanStorage = useStore((state: any) => state.checkAndCleanStorage);
-    const setOrderModal = useStore((state: any) => state.setOrderModal);
-    const token = useStore((state: any) => state.jwtToken);
     const [isProductsLoading, setIsProductsLoading] = useState(false);
     const [isPriceLoading, setIsPriceLoading] = useState(false);
 
+    const setModal = useStore((state: any) => state.setModal);
     useEffect(() => {
         const initializeData = async () => {
             const savedOrder = checkAndCleanStorage("order");
@@ -199,13 +198,9 @@ const MobileCart = ({
     };
 
     const handleOrder = () => {
-        // if (token?.length > 7) {
-        // setOrderModal(true);
+        // setModal('order');
         onClose();
         router.push('/order')
-        // } else {
-        //     toast.error('Авторизуйтесь')
-        // }
     };
 
     useEffect(() => {

@@ -69,6 +69,7 @@ const checkAndCleanStorage = (key: string) => {
 };
 
 const useStore = create((set, get) => ({
+    isModalClosing: false,
     checkAndCleanStorage: checkAndCleanStorage,
     order: checkAndCleanStorage('order') || [],
     loadedIds: new Set(checkAndCleanStorage('loadedIds') || []),
@@ -118,7 +119,11 @@ const useStore = create((set, get) => ({
         });
     },
     updateAmount: (product: Product, amount) => {
-        const amounts = new Map(get().amounts);
+        const state = get();
+        // Устанавливаем флаг, что изменение происходит из модального окна
+        set({ modalAction: true });
+        
+        const amounts = new Map(state.amounts);
         const productKey = Array.from(amounts.keys()).find(
             (i) => JSON.stringify(i) === JSON.stringify(product)
         );
@@ -126,10 +131,13 @@ const useStore = create((set, get) => ({
         if (productKey) amounts.set(productKey, amount);
         else amounts.set(product, amount);
 
-        // Заменяем прямое сохранение на использование saveToStorage
         saveToStorage('amounts', Array.from(amounts));
-
+        
         set({ amounts });
+        // Сбрасываем флаг после обновления
+        setTimeout(() => {
+            set({ modalAction: false });
+        }, 0);
     },
     addItem: (product: Product) => {
         set((state) => ({ order: [...state.order, product] }));
@@ -205,26 +213,50 @@ const useStore = create((set, get) => ({
     toastIndicator: 0,
     isCliced: false,
     isLocal: false,
-    isLoginModalOpen: false,
-    isRegistrationModalOpen: false,
-    isSecondStepModalOpen: false,
-    isProfileModalOpen: false,
-    isOrderModalOpen: false,
-    isCourierModalOpen: false,
-    isPartnershipModalOpen: false,
-    isTrackOpen: false,
 
-    setLoginModal: (value: boolean) => set({ isLoginModalOpen: value }),
-    setCourierModal: (value: boolean) => set({ isCourierModalOpen: value }),
-    setPartnershipModal: (value: boolean) =>
-        set({ isPartnershipModalOpen: value }),
-    setRegistrationModal: (value: boolean) =>
-        set({ isRegistrationModalOpen: value }),
-    setSecondStepModal: (value: boolean) =>
-        set({ isSecondStepModalOpen: value }),
-    setProfileModal: (value: boolean) => set({ isProfileModalOpen: value }),
-    setOrderModal: (value: boolean) => set({ isOrderModalOpen: value }),
-    setTrackOpen: (value: boolean) => set({ isTrackOpen: value }),
+    // Добавим новое состояние для отслеживания источника изменений
+    modalAction: false,
+
+    // Добавим новые состояния
+    activeModal: null, // Хранит имя активного модального окна
+    isModalTransitioning: false, // Флаг для отслеживания переходного состояния
+
+    // Общая функция для управления модальными окнами
+    setModal: (modalName: string | null) => {
+        const state = get();
+        
+        if (state.isModalTransitioning) return;
+        
+        if (!modalName) {
+            // Закрытие модального окна
+            set({ isModalTransitioning: true });
+            setTimeout(() => {
+                set({ 
+                    activeModal: null,
+                    isModalTransitioning: false,
+                    isOrderModalOpen: false,
+                    isLoginModalOpen: false,
+                    isRegistrationModalOpen: false,
+                    isProfileModalOpen: false,
+                    isTrackOpen: false,
+                    isCourierModalOpen: false,
+                    isPartnershipModalOpen: false
+                });
+            }, 300);
+        } else {
+            // Открытие модального окна
+            set({ 
+                activeModal: modalName,
+                isOrderModalOpen: modalName === 'order',
+                isLoginModalOpen: modalName === 'login',
+                isRegistrationModalOpen: modalName === 'registration',
+                isProfileModalOpen: modalName === 'profile',
+                isTrackOpen: modalName === 'track',
+                isCourierModalOpen: modalName === 'courier',
+                isPartnershipModalOpen: modalName === 'partnership'
+            });
+        }
+    },
     setInstitution: (letter) => {
         saveToStorage('institution', letter);
         set({ institution: letter });

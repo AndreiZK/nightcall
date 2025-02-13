@@ -123,11 +123,11 @@ const StyledTitle = styled.p`
 const phoneRegex = /^\+375\s*(17|25|29|33|44)\s*\d{7}$/;
 
 const OrderModal = () => {
-    // Состояния и хуки из старого компонента остаются теми же
-    // Ссылка на старый код:
-    const setOrderModal = useStore((state: any) => state.setOrderModal);
+    const setModal = useStore((state: any) => state.setModal);
     const isOrderModalOpen = useStore((state: any) => state.isOrderModalOpen);
-
+    const activeModal = useStore((state: any) => state.activeModal);
+    const storePrice = useStore((state: any) => state.price);
+    
     const [home, setHome] = useState<string>("");
     const [entrance, setEntrance] = useState<string>("");
     const [flat, setFlat] = useState<string>("");
@@ -169,14 +169,28 @@ const OrderModal = () => {
         const price = await getOrderPrice(finalOrder);
         const deliveryPrice = await getDeliveryPrice(finalOrder);
 
-        useStore.setState({ price: price.totalPrice });
         setDeliveryPrice(deliveryPrice);
-
         setPrice(price.totalPrice + deliveryPrice);
-
         setOrderPrice(price.totalPrice);
     };
 
+    const handleClose = () => {
+        setModal(null);
+    };
+
+    useEffect(() => {
+        if (activeModal === 'order') {
+            getProductsForCart();
+            getPrice();
+        }
+    }, [activeModal]);
+
+    useEffect(() => {
+        if (storePrice) {
+            setOrderPrice(storePrice);
+            setPrice(storePrice);
+        }
+    }, [storePrice]);
 
     const handleGuestAccount = async () => {
         const guestAccount = await createGuestAccount();
@@ -335,14 +349,8 @@ const OrderModal = () => {
         }
     };
 
-    useEffect(() => {
-        getProductsForCart();
-        getPrice();
-    }, [amounts, order]);
-
-    
     return (
-        <BaseModal isOpen={isOrderModalOpen} onClose={() => setOrderModal(false)}>
+        <BaseModal isOpen={isOrderModalOpen} onClose={handleClose}>
             <StyledTitle>Оформление заказа</StyledTitle>
             <StyledContainer>
                 <div className="left">

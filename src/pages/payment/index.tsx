@@ -1,6 +1,9 @@
 import Layout from "@/components/Layout";
+import { useLoadingReady } from "@/hooks/useLoadingReady";
 
 export default function page() {
+
+    useLoadingReady(true)
 
     return (
         <Layout>

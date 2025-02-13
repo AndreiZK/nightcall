@@ -82,9 +82,9 @@ const Hero = () => {
                     src="/images/vadim.jpg"
                     alt=""
                 />
-                <Link href='/restaurants' className="button-container">
+                <a href='/restaurants' className="button-container">
                     <Button>Заказать</Button>
-                </Link>
+                </a>
             </div>
             <img className="hero-img-desktop" src="/images/vadim.jpg" alt="" />
         </HeroContainer>

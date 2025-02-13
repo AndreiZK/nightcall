@@ -159,7 +159,7 @@ const Logo = styled.img`
      `}
 `;
 
-const StyledTrackIcon = styled.div`
+const StyledTrackIcon = styled.a`
     height: ${rm(36)} !important;
     width: ${rm(36)} !important;
     position: relative;
@@ -187,15 +187,13 @@ const StyledTrackIcon = styled.div`
 `;
 
 const Header = () => {
-    const setLoginModal = useStore((state: any) => state.setLoginModal);
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
     const jwt = useStore((state: any) => state.jwtToken);
 
     const isMobile = useIsMobile();
 
-    const setProfileModal = useStore((state: any) => state.setProfileModal);
-    const setTrackOpen = useStore((state: any) => state.setTrackOpen);
+    const setModal = useStore((state: any) => state.setModal);
 
     const [isAuth, setIsAuth] = useState<boolean>(false);
     const [cartCounter, setCartCounter] = useState(0);
@@ -205,7 +203,7 @@ const Header = () => {
     const logout = useStore((state: any) => state.logout);
     const checkAuth = useStore((state: any) => state.checkAuth);
     const handleLoginOpen = () => {
-        setLoginModal(true);
+        setModal('login');
     };
 
     const handleLogOut = () => {
@@ -231,13 +229,6 @@ const Header = () => {
         setIsAuth(isAuthenticated);
     }, [jwt]);
 
-    const handleTrackRedirect = () => {
-        // if (jwt?.length > 7) {
-        router.push("/track");
-        // } else {
-        //     toast.error("Для просмотра заказов необходимо авторизоваться");
-        // }
-    };
 
     return (
         <>
@@ -247,15 +238,8 @@ const Header = () => {
                         <Icons.logo />
                     </a>
                     <div className="button-container">
-                        <StyledTrackIcon
-                            onClick={() => {
-                                handleTrackRedirect();
-                            }}
-                        >
+                        <StyledTrackIcon href="/track">
                             <svg
-                                onClick={() => {
-                                    handleTrackRedirect;
-                                }}
                                 width="25"
                                 height="26"
                                 viewBox="0 0 25 26"
@@ -292,13 +276,13 @@ const Header = () => {
                                     }`}
                                 >
                                     <span
-                                        onClick={() => setProfileModal(true)}
+                                        onClick={() => setModal('profile')}
                                         className="user-context-menu-item"
                                     >
                                         Профиль
                                     </span>
                                     <span
-                                        onClick={() => setTrackOpen(true)}
+                                        onClick={() => setModal('track')}
                                         className="user-context-menu-item"
                                     >
                                         Мои заказы
@@ -323,23 +307,23 @@ const Header = () => {
                                     }`}
                                 >
                                     <span
-                                        onClick={() => setProfileModal(true)}
+                                        onClick={() => setModal('profile')}
                                         className="user-context-menu-item"
                                     >
                                         Профиль
                                     </span>
                                     <span
-                                        onClick={() => setTrackOpen(true)}
+                                        onClick={() => setModal('track')}
                                         className="user-context-menu-item"
                                     >
                                         Мои заказы
                                     </span>
-                                    <Link
+                                    <a
                                         href="/track"
                                         className="user-context-menu-item"
                                     >
                                         Активные заказы
-                                    </Link>
+                                    </a>
                                     <span
                                         onClick={handleLogOut}
                                         className="user-context-menu-item"

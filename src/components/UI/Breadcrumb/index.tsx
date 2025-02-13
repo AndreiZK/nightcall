@@ -67,9 +67,9 @@ const Breadcrumb = () => {
                     <span key={item.path}>{item.title}</span>
                 ) : (
                     <>
-                        <Link href={item.path} key={item.path}>
+                        <a href={item.path} key={item.path}>
                             {item.title}
-                        </Link>
+                        </a>
                         <Icons.chevroneRight />
                     </>
                 )

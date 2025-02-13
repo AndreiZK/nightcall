@@ -55,8 +55,8 @@ const StyledBottomContainer = styled.div`
 `;
 
 const ProfileModal = () => {
-    const isProfileModalOpen = useStore((state: any) => state.isProfileModalOpen);
-    const setProfileModal = useStore((state: any) => state.setProfileModal);
+    const setModal = useStore((state: any) => state.setModal);
+    const activeModal = useStore((state: any) => state.activeModal);
     const jwt = useStore((state: any) => state.jwtToken);
 
     const [mail, setMail] = useState<string>('');
@@ -71,8 +71,6 @@ const ProfileModal = () => {
         if (jwt?.length > 7) {
             getUser(jwt).then((userData: any) => {
                 setMail(userData.email);
-                setName(userData.name);
-                setPhone(userData.phone);
             });
 
             getAdress(jwt).then((adressData: any) => {
@@ -80,6 +78,8 @@ const ProfileModal = () => {
                 setHome(adressData.house_number);
                 setFlat(adressData.flat_number);
                 setEntrance(adressData.entrance);
+                setPhone(adressData.phone);
+                setName(adressData.name);
             });
         }
     }, [jwt]);
@@ -106,37 +106,39 @@ const ProfileModal = () => {
             .then((response) => response.text())
             .then((result) => {
                 toast.success("Данные успешно обновлены");
-                setProfileModal(false);
+                setModal(null);
             })
             .catch((error) => console.error(error));
     };
 
     return (
-        <BaseModal isOpen={isProfileModalOpen} onClose={() => setProfileModal(false)}>
-            <StyledContainer>
-                <ModalTitle>Мой профиль</ModalTitle>
-                <div className="textfields">
-                    <p className="extraText">Email</p>
-                    <Textfield value={mail} onChange={(e) => setMail(e.target.value)} required label="email" />
-                    <p className="extraText">Адрес</p>
-                    <div className="adress">
-                        <Textfield value={street} onChange={(e) => setStreet(e.target.value)} required label="Улица" />
-                        <div className="info">
-                            <Textfield value={home} onChange={(e) => setHome(e.target.value)} required label="Дом" />
-                            <Textfield value={flat} onChange={(e) => setFlat(e.target.value)} label="Квартира" />
-                            <Textfield value={entrance} onChange={(e) => setEntrance(e.target.value)} label="Подьезд" />
+        activeModal === 'profile' && (
+            <BaseModal isOpen={activeModal === 'profile'} onClose={() => setModal(null)}>
+                <StyledContainer>
+                    <ModalTitle>Мой профиль</ModalTitle>
+                    <div className="textfields">
+                        <p className="extraText">Email</p>
+                        <Textfield value={mail} onChange={(e) => setMail(e.target.value)} required label="email" />
+                        <p className="extraText">Адрес</p>
+                        <div className="adress">
+                            <Textfield value={street} onChange={(e) => setStreet(e.target.value)} required label="Улица" />
+                            <div className="info">
+                                <Textfield value={home} onChange={(e) => setHome(e.target.value)} required label="Дом" />
+                                <Textfield value={flat} onChange={(e) => setFlat(e.target.value)} label="Квартира" />
+                                <Textfield value={entrance} onChange={(e) => setEntrance(e.target.value)} label="Подьезд" />
+                            </div>
                         </div>
+                        <p className="extraText">Персональные данные</p>
+                        <Textfield value={name} onChange={(e) => setName(e.target.value)} required label="имя" />
+                        <Textfield value={phone} onChange={(e) => setPhone(e.target.value)} required label="Телефонный номер" />
                     </div>
-                    <p className="extraText">Персональные данные</p>
-                    <Textfield value={name} onChange={(e) => setName(e.target.value)} required label="имя" />
-                    <Textfield value={phone} onChange={(e) => setPhone(e.target.value)} required label="Телефонный номер" />
-                </div>
 
-                <StyledBottomContainer>
-                    <Button onClick={updateUserData}>Сохранить</Button>
-                </StyledBottomContainer>
-            </StyledContainer>
-        </BaseModal>
+                    <StyledBottomContainer>
+                        <Button onClick={updateUserData}>Сохранить</Button>
+                    </StyledBottomContainer>
+                </StyledContainer>
+            </BaseModal>
+        )
     );
 };
 

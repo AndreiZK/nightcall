@@ -51,8 +51,8 @@ const StyledBottomContainer = styled.div`
 `;
 
 const SecondStepModal = () => {
-    const isSecondStepModal = useStore((state: any) => state.isSecondStepModalOpen);
-    const setSecondStepModal = useStore((state: any) => state.setSecondStepModal);
+    const setModal = useStore((state: any) => state.setModal);
+    const activeModal = useStore((state: any) => state.activeModal);
     const mail = useStore((state: any) => state.mail);
     const pass = useStore((state: any) => state.pass);
     const jwt = useStore((state: any) => state.jwtToken);
@@ -66,16 +66,6 @@ const SecondStepModal = () => {
     const [validation, setValidation] = useState<boolean>(false);
 
     const phoneRegex = /^\+375\s*(17|25|29|33|44)\s*\d{7}$/;
-
-    const requestAdressOptions = (raw: any) => ({
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${jwt}`,
-            "Content-Type": "application/json"
-        },
-        body: raw,
-        redirect: "follow",
-    });
 
     const registrationHandler = () => {
         if (!street.trim()) {
@@ -151,7 +141,7 @@ const SecondStepModal = () => {
                 .catch((error) => console.error(error));
 
             setValidation(false);
-            setSecondStepModal(false);
+            setModal('profile');
         }
     }, [validation]);
 
@@ -165,30 +155,32 @@ const SecondStepModal = () => {
     };
 
     return (
-        <BaseModal isOpen={isSecondStepModal} onClose={() => setSecondStepModal(false)}>
-            <StyledContainer>
-                <ModalTitle>Создайте учётную запись!</ModalTitle>
-                <div className="textfields">
-                    <Textfield value={street} onChange={(e) => setStreet(e.target.value)} required label="Улица" />
-                    <div className="info">
-                        <Textfield value={home} onChange={(e) => setHome(e.target.value)} required label="Дом" />
-                        <Textfield value={flat} onChange={(e) => setFlat(e.target.value)} label="Квартира" />
-                        <Textfield value={entrance} onChange={(e) => setEntrance(e.target.value)} label="Подьезд" />
+        activeModal === 'secondStep' && (
+            <BaseModal isOpen={activeModal === 'secondStep'} onClose={() => setModal(null)}>
+                <StyledContainer>
+                    <ModalTitle>Создайте учётную запись!</ModalTitle>
+                    <div className="textfields">
+                        <Textfield value={street} onChange={(e) => setStreet(e.target.value)} required label="Улица" />
+                        <div className="info">
+                            <Textfield value={home} onChange={(e) => setHome(e.target.value)} required label="Дом" />
+                            <Textfield value={flat} onChange={(e) => setFlat(e.target.value)} label="Квартира" />
+                            <Textfield value={entrance} onChange={(e) => setEntrance(e.target.value)} label="Подьезд" />
+                        </div>
+                        <Textfield value={name} onChange={(e) => setName(e.target.value)} required label="имя" />
+                        <Textfield 
+                            value={phone} 
+                            onChange={handlePhoneChange} 
+                            required 
+                            label="Телефонный номер" 
+                        />
                     </div>
-                    <Textfield value={name} onChange={(e) => setName(e.target.value)} required label="имя" />
-                    <Textfield 
-                        value={phone} 
-                        onChange={handlePhoneChange} 
-                        required 
-                        label="Телефонный номер" 
-                    />
-                </div>
 
-                <StyledBottomContainer>
-                    <Button onClick={registrationHandler}>Зарегистрироваться</Button>
-                </StyledBottomContainer>
-            </StyledContainer>
-        </BaseModal>
+                    <StyledBottomContainer>
+                        <Button onClick={registrationHandler}>Зарегистрироваться</Button>
+                    </StyledBottomContainer>
+                </StyledContainer>
+            </BaseModal>
+        )
     );
 };
 

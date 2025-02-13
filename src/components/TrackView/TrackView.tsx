@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { BASE_API_URL } from "../../../constants";
 import useStore from "@/store/store";
 import { OrderSection } from "./components/OrderSection";
+import { useLoadingReady } from "@/hooks/useLoadingReady";
 
 export default function TrackView() {
     const [dataToRender, setDataToRender] = useState<any>([]);
@@ -44,6 +45,9 @@ export default function TrackView() {
 
         return () => clearInterval(interval);
     }, [jwt]);
+
+    useLoadingReady(dataToRender)
+
 
     return (
         <StyledTrackView>

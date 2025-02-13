@@ -38,13 +38,19 @@ const StyledBottomContainer = styled.div`
 `;
 
 const RegistrationModal = () => {
-    const isRegistrationModal = useStore((state: any) => state.isRegistrationModalOpen);
+    const setModal = useStore((state: any) => state.setModal);
+    const isRegistrationModalOpen = useStore((state: any) => state.isRegistrationModalOpen);
+    const activeModal = useStore((state: any) => state.activeModal);
     const setRegistrationModal = useStore((state: any) => state.setRegistrationModal);
     const setSecondStepModal = useStore((state: any) => state.setSecondStepModal);
 
     const [mail, setMail] = useState<string>('');
     const [pass, setPass] = useState<string>('');
     const [isValid, setIsValid] = useState<boolean>(false);
+
+    const handleClose = () => {
+        setModal(null);
+    };
 
     function validateEmail(email: string) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -67,40 +73,47 @@ const RegistrationModal = () => {
     };
 
     useEffect(() => {
+        if (activeModal === 'registration') {
+            // Логика, которая должна выполняться при открытии модального окна
+        }
+    }, [activeModal]);
+
+    useEffect(() => {
         if (isValid === true) {
             setIsValid(false);
-            setRegistrationModal(false);
-            setSecondStepModal(true);
+            setModal('secondStep');
         }
     }, [isValid]);
 
     return (
-        <BaseModal 
-            isOpen={isRegistrationModal} 
-            onClose={() => setRegistrationModal(false)}
-        >
-            <StyledContainer>
-                <ModalTitle>Создайте учётную запись!</ModalTitle>
-                <div className="textfields">
-                    <Textfield 
-                        value={mail} 
-                        onChange={(e) => setMail(e.target.value)} 
-                        required 
-                        label="email" 
-                    />
-                    <Textfield 
-                        value={pass} 
-                        onChange={(e) => setPass(e.target.value)} 
-                        required 
-                        label="пароль" 
-                    />
-                </div>
+        isRegistrationModalOpen && (
+            <BaseModal 
+                isOpen={isRegistrationModalOpen} 
+                onClose={handleClose}
+            >
+                <StyledContainer>
+                    <ModalTitle>Создайте учётную запись!</ModalTitle>
+                    <div className="textfields">
+                        <Textfield 
+                            value={mail} 
+                            onChange={(e) => setMail(e.target.value)} 
+                            required 
+                            label="email" 
+                        />
+                        <Textfield 
+                            value={pass} 
+                            onChange={(e) => setPass(e.target.value)} 
+                            required 
+                            label="пароль" 
+                        />
+                    </div>
 
-                <StyledBottomContainer>
-                    <Button onClick={registrationHandler}>Далее</Button>
-                </StyledBottomContainer>
-            </StyledContainer>
-        </BaseModal>
+                    <StyledBottomContainer>
+                        <Button onClick={registrationHandler}>Далее</Button>
+                    </StyledBottomContainer>
+                </StyledContainer>
+            </BaseModal>
+        )
     );
 };
 

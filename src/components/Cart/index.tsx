@@ -80,10 +80,7 @@ const Cart = () => {
     const [deliveryPrice, setDeliveryPrice] = useState<number>(8);
     const [dataToRender, setDataToRender] = useState([]);
 
-    const setOrderModal = useStore((state: any) => state.setOrderModal);
-
-    const token = useStore((state: any) => state.jwtToken);
-
+    const setModal = useStore((state: any) => state.setModal);
     const clearInstitution = useStore((state: any) => state.clearInstitution);
 
     const getProductsForCart = async () => {
@@ -112,11 +109,7 @@ const Cart = () => {
     };
 
     const handleOrder = () => {
-        // if (token?.length > 7) {
-        setOrderModal(true);
-        // } else {
-        //     // toast.error('Авторизуйтесь')
-        // }
+        setModal('order');
     };
 
     useEffect(() => {
