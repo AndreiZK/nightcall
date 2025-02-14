@@ -66,7 +66,7 @@ const StyledContainer = styled.div`
 `;
 
 const Collaboration = () => {
-    const setCourierModal = useStore((state: any) => state.setCourierModal);
+    const setModal = useStore((state: any) => state.setModal);
     const setPartnershipModal = useStore(
         (state: any) => state.setPartnershipModal
     );
@@ -86,14 +86,14 @@ const Collaboration = () => {
                 ))} */}
                 <div className="offer">
                     <img
-                        onClick={() => setCourierModal(true)}
+                        onClick={() => setModal('courier')}
                         src="/images/courier.jpg"
                         alt=""
                     />
                 </div>
                 <div className="offer secondOffer">
                     <img
-                        onClick={() => setPartnershipModal(true)}
+                        onClick={() => setModal('partnership')}
                         src="/images/partner.jpg"
                         alt=""
                     />
