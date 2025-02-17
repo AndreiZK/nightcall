@@ -15,8 +15,6 @@ import { createOrder } from "@/utils/createOrder";
 import { getPaymentLink } from "@/utils/getPaymentLink";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { checkSchedule } from "@/utils/checkSchedule";
-import { isOpen } from "@/utils/isOpen";
 import { createGuestAccount } from "@/utils/createGuestAccount";
 import { BASE_API_URL } from "../../../../constants";
 import { setCookie } from "@/utils/cookieUtils";

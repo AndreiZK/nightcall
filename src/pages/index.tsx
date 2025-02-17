@@ -1,9 +1,6 @@
 import Head from "next/head";
 
-import dynamic from "next/dynamic";
-import Layout from "@/components/Layout";
 import Hero from "@/components/Hero";
-import Modal from "@/components/UI/Modal";
 import PopularRestaurants from "@/components/PopularRestaurants";
 import styled from "styled-components";
 import { media, rm } from "@/styles";
@@ -11,7 +8,6 @@ import Collaboration from "@/components/Collaboration";
 import { useEffect, useState } from "react";
 import { getStrapiData } from "@/requests/getStrapiData";
 import { IRestaurant } from "../../types";
-import { Modals } from "@/components/Modals/Modals";
 
 const ContentContainer = styled.div`
     width: 100%;
@@ -44,13 +40,11 @@ export default function Home() {
             <Head>
                 <title key="title">Главная</title>
             </Head>
-            <Layout>
-                <ContentContainer>
-                    <Hero />
-                    <PopularRestaurants data={restaurantsData} />
-                    <Collaboration />
-                </ContentContainer>
-            </Layout>
+            <ContentContainer>
+                <Hero />
+                <PopularRestaurants data={restaurantsData} />
+                <Collaboration />
+            </ContentContainer>
         </>
     );
 }

@@ -10,7 +10,6 @@ import { BASE_API_URL } from "../../../../constants";
 import { requestOptions } from "../../../../constants";
 import { validateTelegramId } from "@/utils/validateTelegramId";
 import { toast } from "react-toastify";
-import { setCookie } from '@/utils/cookieUtils';
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};

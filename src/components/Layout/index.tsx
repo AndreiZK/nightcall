@@ -1,12 +1,9 @@
 "use client";
 
 import useStore from "@/store/store";
-import { useEffect, useState } from "react";
-import { BASE_API_URL } from "../../../constants";
-// import { toast } from "react-toastify";
-import parseCookie from "@/utils/parseCookie";
+import { useEffect } from "react";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import styled from "styled-components";
@@ -15,7 +12,6 @@ import { media, rm } from "@/styles";
 import Header from "../Header";
 import { ReactNode } from "react";
 import Footer from "../Footer";
-import { getCookie, removeCookie } from "@/utils/cookieUtils";
 
 interface TelegramWebApp {
     ready: () => void;
@@ -87,20 +83,7 @@ const Gradient2 = styled.img`
 `;
 
 export default function Layout({ children }: { children: ReactNode }) {
-    const tockenForCheck = useStore((state: any) => state.jwtToken)
-    const isAuth = useStore((state: any) => state.isAuth)
-
     const checkAuth = useStore((state: any) => state.checkAuth)
-
-    // useEffect(() => {
-    //     const token = getCookie('jwt')
-
-    //     console.log('getCookieJwt' ,token)
-
-    //     if (token && token.length > 10) {
-    //         useStore.setState({ jwtToken: token, isAuth: true });
-    //     }
-    // }, [tockenForCheck]);
 
     useEffect(() => {
         checkAuth();

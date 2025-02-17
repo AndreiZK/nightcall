@@ -3,13 +3,9 @@ import styled from "styled-components";
 import Button from "../UI/Button";
 import { useEffect, useState } from "react";
 import useStore from "@/store/store";
-import Link from "next/link";
 import { Icons } from "../UI/Icons";
 import MobileCart from "../Cart/MobileCart";
-import { redirect } from "next/navigation";
-import { toast } from "react-toastify";
 import router from "next/router";
-import { removeCookie } from '@/utils/cookieUtils';
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 const HeaderContainer = styled.div`
@@ -207,6 +203,7 @@ const Header = () => {
     };
 
     const handleLogOut = () => {
+        console.log('handleLogOut')
         logout();
         setUserMenuOpen(false);
         router.push('/');

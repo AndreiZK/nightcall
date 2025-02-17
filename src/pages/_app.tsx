@@ -17,6 +17,7 @@ import Head from "next/head";
 import { Modals } from "@/components/Modals/Modals";
 import { initializeTelegramWebApp } from "@/utils/initializeTelegramWebApp";
 import useStore from "@/store/store";
+import Layout from "@/components/Layout";
 
 export const onest = Onest({
     weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -133,12 +134,14 @@ export default function App({ Component, pageProps }: AppProps) {
             <ScrollLayout>
                 <AssetsLoaderLayout>
                     <AnimatedRouterLayout>
-                        <GlobalStyles />
-                        <ToastStyles />
-                        <SmartCSSGrid />
-                        <Lvh />
-                        <Component {...pageProps} />
-                        <Modals/>
+                        <Layout>
+                            <GlobalStyles />
+                            <ToastStyles />
+                            <SmartCSSGrid />
+                            <Lvh />
+                            <Component {...pageProps} />
+                            <Modals/>
+                        </Layout>
                     </AnimatedRouterLayout>
                 </AssetsLoaderLayout>
             </ScrollLayout>

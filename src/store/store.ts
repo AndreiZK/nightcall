@@ -91,10 +91,9 @@ const useStore = create((set, get) => ({
     isPaymentOver: false,
     isPayed: false,
     isContentLoaded: false,
-    jwtToken:
-        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsImlhdCI6MTczMTUyMDA1NiwiZXhwIjoxNzM0MTEyMDU2fQ.EFeyUxIzdPRC_skHDAghMxwI6RkF4OU37ZbnJQs1JG0", //null
-        null,
+    jwtToken: null,
     isAuth: false,
+    user: null,
     paymentLink: "",
     promocode: null,
     addToOrder: (product: Product) => {
@@ -266,7 +265,6 @@ const useStore = create((set, get) => ({
         set({ institution: null });
     },
     logout: () => {
-        // Удаляем все связанные с аутентификацией данные
         localStorage.removeItem('jwt');
         localStorage.removeItem('user');
         sessionStorage.removeItem('jwt');
@@ -276,7 +274,10 @@ const useStore = create((set, get) => ({
         set({ 
             jwtToken: null,
             isAuth: false,
-            user: null
+            user: null,
+            mail: null,
+            pass: null,
+            username: null,
         });
     },
     login: (token) => {
@@ -284,7 +285,7 @@ const useStore = create((set, get) => ({
         
         // Сохраняем токен во всех местах
         localStorage.setItem('jwt', token);
-        document.cookie = `jwt=${token}; path=/; max-age=2592000`; // 30 дней
+        // document.cookie = `jwt=${token}; path=/; max-age=2592000`; // 30 дней
         
         set({ 
             jwtToken: token,
@@ -295,7 +296,7 @@ const useStore = create((set, get) => ({
         const state = get();
         // Проверяем токен в разных местах
         const localToken = localStorage.getItem('jwt');
-        const cookieToken = document.cookie.split('; ').find(row => row.startsWith('jwt='))?.split('=')[1];
+        // const cookieToken = document.cookie.split('; ').find(row => row.startsWith('jwt='))?.split('=')[1];
         
         // Если есть действующий токен в store, проверяем его валидность
         if (state.jwtToken) {
@@ -303,8 +304,8 @@ const useStore = create((set, get) => ({
         }
         
         // Если нашли токен в localStorage или cookie, восстанавливаем сессию
-        if (localToken || cookieToken) {
-            const token = localToken || cookieToken;
+        if (localToken) {
+            const token = localToken;
             set({ 
                 jwtToken: token,
                 isAuth: true
