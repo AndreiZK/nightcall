@@ -21,7 +21,7 @@ export default function page() {
   useLoadingReady(true)
 
   return (
-    <Layout>
+    <>
       <div className="contacts-container">
       <h2 className="title">Контакты</h2>
       <div className="contacts">
@@ -37,6 +37,6 @@ export default function page() {
         </div>
       </div>
     </div>
-    </Layout>
+    </>
   )
 }

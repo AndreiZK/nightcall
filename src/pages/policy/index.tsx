@@ -21,7 +21,6 @@ export default function page() {
     useLoadingReady(true)
 
     return (
-        <Layout>
             <StyledContainer>
                 <p className="title">
                     Договор публичной оферты на приобретение товаров через
@@ -385,6 +384,5 @@ export default function page() {
                     <span>e-mail: nightcallgrodno@gmail.com</span>
                 </div>
             </StyledContainer>
-        </Layout>
     );
 }

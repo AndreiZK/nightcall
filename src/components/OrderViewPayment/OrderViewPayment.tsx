@@ -18,6 +18,7 @@ import { setCookie } from "@/utils/cookieUtils";
 import { heightLvh } from "@/styles/utils";
 import OrderView from "../UI/Modal/components/OrderView";
 import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
+import { checkSchedule } from "@/utils/checkSchedule";
 
 const StyledContainer = styled.div`
     display: flex;
@@ -200,6 +201,12 @@ const OrderViewPayment = () => {
 
 
     const handlePay = async () => {
+        const schedule = await checkSchedule();
+
+        if(!schedule) {
+            toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
+            return;
+        }   
 
         const isCourierAvailable = await checkCourierAvailability();
 

@@ -1,4 +1,3 @@
-import Layout from "@/components/Layout";
 import { useLoadingReady } from "@/hooks/useLoadingReady";
 import { colors, media, rm } from "@/styles";
 import styled from "styled-components";
@@ -38,7 +37,6 @@ export default function page() {
 
 
     return (
-        <Layout>
         <StyledContainer>
       <h2 className="title">Банковские реквизиты</h2>
       <div className="banking-content">
@@ -48,6 +46,5 @@ export default function page() {
         Регистрации В Торговом Реестре 17.01.2024
       </div>
       </StyledContainer>
-      </Layout>
     )
 }

@@ -1,20 +1,15 @@
-import Collaboration from "@/components/Collaboration";
-import Hero from "@/components/Hero";
-import Layout from "@/components/Layout";
-import PopularRestaurants from "@/components/PopularRestaurants";
 import RestaurantCard from "@/components/RestaurantCard";
 import Breadcrumb from "@/components/UI/Breadcrumb";
 import SectionTitle from "@/components/UI/SectionTitle";
 import Textfield from "@/components/UI/Textfield";
-import { getStrapiData } from "@/requests/getStrapiData";
 import { colors, media, rm } from "@/styles";
-import { Head } from "next/document";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IRestaurant } from "../../../types";
 import { getSearchResult } from "@/requests/getSearchResult";
 import { getCategories } from "@/requests/getCategories";
 import { useLoadingReady } from "@/hooks/useLoadingReady";
+
 const TopContainer = styled.div`
     display: flex;
     width: 100%;
@@ -116,7 +111,6 @@ export default function Restaurants() {
 
     return (
         <>
-            <Layout>
                 <Breadcrumb />
                 <TopContainer>
                     <SectionTitle>Все рестораны</SectionTitle>
@@ -149,7 +143,6 @@ export default function Restaurants() {
                             <RestaurantCard key={index} data={item} />
                         ))}
                 </RestaurantsGrid>
-            </Layout>
         </>
     );
 }

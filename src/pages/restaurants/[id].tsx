@@ -202,7 +202,7 @@ export default function RestaurantPage() {
     useLoadingReady(merchantData, products)
 
     return (
-        <Layout>
+        <>
             <Breadcrumb />
             {(loaded && isOpened) ? (
                 <StyledContainer>
@@ -271,6 +271,6 @@ export default function RestaurantPage() {
             ) : <StyledClosed>
                    В данный момент ресторан закрыт
                 </StyledClosed>}
-        </Layout>
+        </>
     );
 }

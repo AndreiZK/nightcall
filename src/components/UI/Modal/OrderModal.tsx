@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import BaseModal from "./BaseModal";
 import styled from "styled-components";
 import { colors, media, rm } from "@/styles";
-import ModalTitle from "./ModalTitle";
 import Textfield from "../Textfield";
 import Button from "../Button";
 import useStore from "../../../store/store";
@@ -19,6 +18,7 @@ import { createGuestAccount } from "@/utils/createGuestAccount";
 import { BASE_API_URL } from "../../../../constants";
 import { setCookie } from "@/utils/cookieUtils";
 import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
+import { checkSchedule } from "@/utils/checkSchedule";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -208,6 +208,13 @@ const OrderModal = () => {
 
 
     const handlePay = async () => {
+        const schedule = await checkSchedule();
+
+        if(!schedule) {
+            toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
+            return;
+        }   
+
         const isCourierAvailable = await checkCourierAvailability();
 
         if(!isCourierAvailable) {
