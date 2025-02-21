@@ -15,6 +15,7 @@ export async function getAdress(token: string) {
       },
     });
 
+    console.log('результат обновления данных' ,response, token);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);

@@ -55,7 +55,8 @@ const SecondStepModal = () => {
     const activeModal = useStore((state: any) => state.activeModal);
     const mail = useStore((state: any) => state.mail);
     const pass = useStore((state: any) => state.pass);
-    const jwt = useStore((state: any) => state.jwtToken);
+
+    const [jwt, setJwt] = useState<string | null>(null);
 
     const [home, setHome] = useState<string>("");
     const [entrance, setEntrance] = useState<string>("");
@@ -64,6 +65,7 @@ const SecondStepModal = () => {
     const [phone, setPhone] = useState<string>("+375");
     const [street, setStreet] = useState<string>("");
     const [validation, setValidation] = useState<boolean>(false);
+    const login = useStore((state: any) => state.login);
 
     const phoneRegex = /^\+375\s*(17|25|29|33|44)\s*\d{7}$/;
 
@@ -110,12 +112,10 @@ const SecondStepModal = () => {
                 const token = JSON.parse(result).jwt;
 
                 if (token) {
-                    setCookie('jwt', token);
+                    login(token);
+                    setJwt(token);
+                    toast.success("Пользователь успешно зарегистрирован");
                     validateTelegramId(token);
-                    useStore.setState({
-                        jwtToken: token,
-                        isAuth: true,
-                    });
                     setValidation(true);
                 }
             })
@@ -123,27 +123,65 @@ const SecondStepModal = () => {
     };
 
     useEffect(() => {
-        if (validation) {
-            const raw = JSON.stringify({
+        if (validation && jwt != null) {
+            const requestData = {
                 phone: phone,
                 street: street,
-                entrance: entrance === "" ? "-" : entrance,
-                flat_number: flat === "" ? "-" : flat,
+                entrance: entrance || "-",
+                flat_number: flat || "-",
                 house_number: home,
                 name: name,
+            };
+
+            console.log('Sending request with data:', requestData);
+
+            const requestOptions = {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${jwt}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData),
+                redirect: "follow" as RequestRedirect,
+            };
+
+            console.log('Request options:', {
+                url: `${BASE_API_URL}api/addAdress`,
+                headers: requestOptions.headers,
+                body: requestOptions.body
             });
 
-            fetch(`${BASE_API_URL}api/addAdress`, requestOptions(raw))
-                .then((response) => response.text())
-                .then((result) => {
-                    toast.success("Данные успешно добавлены");
+            fetch(`${BASE_API_URL}api/addAdress`, requestOptions)
+                .then(async (response) => {
+                    const data = await response.json();
+                    console.log('Raw response:', data);
+                    
+                    if (!response.ok) {
+                        console.error('Response not OK:', {
+                            status: response.status,
+                            statusText: response.statusText,
+                            data: data
+                        });
+                        throw new Error(data.error?.message || 'Произошла ошибка при добавлении адреса');
+                    }
+                    
+                    return data;
                 })
-                .catch((error) => console.error(error));
-
-            setValidation(false);
-            setModal('profile');
+                .then((result) => {
+                    console.log('Success response:', result);
+                    toast.success("Данные успешно добавлены");
+                    setValidation(false);
+                    setModal('profile');
+                })
+                .catch((error) => {
+                    console.error('Detailed error:', {
+                        message: error.message,
+                        stack: error.stack
+                    });
+                    toast.error(error.message);
+                });
         }
-    }, [validation]);
+    }, [validation, jwt]);
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
