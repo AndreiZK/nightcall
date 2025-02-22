@@ -106,6 +106,7 @@ const ProfileModal = () => {
             .then((response) => response.text())
             .then((result) => {
                 toast.success("Данные успешно обновлены");
+                console.log('result' ,result);
                 setModal(null);
             })
             .catch((error) => console.error(error));

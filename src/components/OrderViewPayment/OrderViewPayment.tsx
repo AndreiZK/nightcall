@@ -19,6 +19,7 @@ import { heightLvh } from "@/styles/utils";
 import OrderView from "../UI/Modal/components/OrderView";
 import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
 import { checkSchedule } from "@/utils/checkSchedule";
+import { isOpen } from "@/utils/isOpen";
 
 const StyledContainer = styled.div`
     display: flex;
@@ -127,7 +128,6 @@ const StyledOrderView = styled.div`
     gap: ${rm(24)};
     align-items: center;
     justify-content: center;
-    ${heightLvh(100)};
 `
 
 const phoneRegex = /^\+375\s*(17|25|29|33|44)\s*\d{7}$/;
@@ -203,10 +203,13 @@ const OrderViewPayment = () => {
     const handlePay = async () => {
         const schedule = await checkSchedule();
 
-        if(!schedule) {
+        const isNightcallOpen = isOpen(schedule.data.attributes.nightcall_schedule)
+
+        if(!isNightcallOpen) {
             toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
             return;
-        }   
+        }
+
 
         const isCourierAvailable = await checkCourierAvailability();
 

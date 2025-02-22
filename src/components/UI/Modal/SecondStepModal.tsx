@@ -133,8 +133,6 @@ const SecondStepModal = () => {
                 name: name,
             };
 
-            console.log('Sending request with data:', requestData);
-
             const requestOptions = {
                 method: "POST",
                 headers: {
@@ -145,16 +143,9 @@ const SecondStepModal = () => {
                 redirect: "follow" as RequestRedirect,
             };
 
-            console.log('Request options:', {
-                url: `${BASE_API_URL}api/addAdress`,
-                headers: requestOptions.headers,
-                body: requestOptions.body
-            });
-
             fetch(`${BASE_API_URL}api/addAdress`, requestOptions)
                 .then(async (response) => {
                     const data = await response.json();
-                    console.log('Raw response:', data);
                     
                     if (!response.ok) {
                         console.error('Response not OK:', {

@@ -19,6 +19,7 @@ import { BASE_API_URL } from "../../../../constants";
 import { setCookie } from "@/utils/cookieUtils";
 import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
 import { checkSchedule } from "@/utils/checkSchedule";
+import { isOpen } from "@/utils/isOpen";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -144,6 +145,8 @@ const OrderModal = () => {
 
     const jwt = useStore((state: any) => state.jwtToken);
 
+    const [createdJwt, setCreatedJwt] = useState<string | null>(null);  
+
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
@@ -195,6 +198,7 @@ const OrderModal = () => {
         if (guestAccount?.jwt) {
             setCookie('jwt', guestAccount.jwt);
             useStore.setState({ jwtToken: guestAccount.jwt });
+            setCreatedJwt(guestAccount.jwt);
             return guestAccount;
         }
         return null;
@@ -210,10 +214,12 @@ const OrderModal = () => {
     const handlePay = async () => {
         const schedule = await checkSchedule();
 
-        if(!schedule) {
-            toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
-            return;
-        }   
+        const isNightcallOpen = isOpen(schedule.data.attributes.nightcall_schedule)
+
+        // if(!isNightcallOpen) {
+        //     toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
+        //     return;
+        // }
 
         const isCourierAvailable = await checkCourierAvailability();
 
@@ -253,20 +259,51 @@ const OrderModal = () => {
 
             if (isGuestAccount) {
                 try {
-                    const response = await fetch(`${BASE_API_URL}api/addAdress`, {
+                    const requestData = {
+                        phone: phone,
+                        street: street,
+                        entrance: entrance || "-",
+                        flat_number: flat || "-",
+                        house_number: home,
+                        name: name,
+                    };
+
+                    const requestOptions = {
                         method: "POST",
-                        headers: getAuthHeaders(authToken),
-                        body: JSON.stringify({
-                            phone,
-                            street,
-                            entrance: entrance || "-",
-                            flat_number: flat || "-",
-                            house_number: home,
-                            name,
-                        }),
+                        headers: {
+                            "Authorization": `Bearer ${authToken}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestData),
+                        redirect: "follow" as RequestRedirect,
+                    };
+
+                    fetch(`${BASE_API_URL}api/addAdress`, requestOptions)
+                    .then(async (response) => {
+                        const data = await response.json();
+                        
+                        if (!response.ok) {
+                            console.error('Response not OK:', {
+                                status: response.status,
+                                statusText: response.statusText,
+                                data: data
+                            });
+                            throw new Error(data.error?.message || 'Произошла ошибка при добавлении адреса');
+                        }
+                        
+                        return data;
+                    })
+                    .then((result) => {
+                        console.log('Success response:', result);
+                        toast.success("Данные успешно добавлены");
+                    })
+                    .catch((error) => {
+                        console.error('Detailed error:', {
+                            message: error.message,
+                            stack: error.stack
+                        });
+                        toast.error(error.message);
                     });
-                    const result = await response.json();
-                    toast.success("Данные успешно добавлены");
                 } catch (error) {
                     console.error("Failed to save address:", error);
                     toast.error("Ошибка при сохранении адреса");
