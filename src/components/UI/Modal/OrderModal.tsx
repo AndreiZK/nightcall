@@ -20,6 +20,7 @@ import { setCookie } from "@/utils/cookieUtils";
 import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
 import { checkSchedule } from "@/utils/checkSchedule";
 import { isOpen } from "@/utils/isOpen";
+import { getAdress } from "@/utils/getAdress";
 
 const StyledContainer = styled.div`
     padding-block: ${rm(55)};
@@ -154,9 +155,6 @@ const OrderModal = () => {
 
     const router = useRouter();
 
-    const getProductsForCart = async () => {
-        const products = await getProductsByIds(order);
-    };
 
     const getPrice = async () => {
         const finalOrder: any = [];
@@ -181,7 +179,6 @@ const OrderModal = () => {
 
     useEffect(() => {
         if (activeModal === 'order') {
-            getProductsForCart();
             getPrice();
         }
     }, [activeModal]);
@@ -204,11 +201,6 @@ const OrderModal = () => {
         return null;
     };
 
-    const getAuthHeaders = (token: string) => {
-        const headers = new Headers();
-        headers.append("Authorization", `Bearer ${token}`);
-        return headers;
-    };
 
 
     const handlePay = async () => {
@@ -216,10 +208,10 @@ const OrderModal = () => {
 
         const isNightcallOpen = isOpen(schedule.data.attributes.nightcall_schedule)
 
-        // if(!isNightcallOpen) {
-        //     toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
-        //     return;
-        // }
+        if(!isNightcallOpen) {
+            toast.error('Судя по всему мы закрыты😢. Мы работаем с пятницы по воскресенье с 22.00-4.00');
+            return;
+        }
 
         const isCourierAvailable = await checkCourierAvailability();
 
@@ -230,7 +222,20 @@ const OrderModal = () => {
 
         try {
             if (checkAuth()) {
-                // Пользователь авторизован
+                const adress = await getAdress(jwt);
+
+                if(!adress.phone) {
+                    toast.error('Проверьте ваш профиль на наличие номера телефона')
+                    return;
+                }
+                if(!adress.street) {
+                    toast.error('Проверьте ваш профиль на наличие адреса')
+                    return;
+                }
+                if(!adress.house_number) {
+                    toast.error('Проверьте ваш профиль на наличие номера дома')
+                    return;
+                }
             } else {
                 const validationErrors = {
                     street: !street.trim() && "Укажите улицу",

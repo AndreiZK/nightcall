@@ -20,6 +20,7 @@ import OrderView from "../UI/Modal/components/OrderView";
 import { checkCourierAvailability } from "@/utils/checkIsCourierAvailable";
 import { checkSchedule } from "@/utils/checkSchedule";
 import { isOpen } from "@/utils/isOpen";
+import { getAdress } from "@/utils/getAdress";
 
 const StyledContainer = styled.div`
     display: flex;
@@ -148,7 +149,7 @@ const OrderViewPayment = () => {
     const [isDiscountAcitvated, setIsDiscountAcitvated] = useState<boolean>(false);
 
     const jwt = useStore((state: any) => state.jwtToken);
-
+    const checkAuth = useStore((state: any) => state.checkAuth);
     const order = useStore((state: any) => state.order);
     const amounts = useStore((state: any) => state.amounts);
 
@@ -219,7 +220,21 @@ const OrderViewPayment = () => {
         }
 
         try {
-            if(jwt?.length > 10){
+            if(checkAuth()){
+                const adress = await getAdress(jwt);
+
+                if(!adress.phone) {
+                    toast.error('Проверьте ваш профиль на наличие номера телефона')
+                    return;
+                }
+                if(!adress.street) {
+                    toast.error('Проверьте ваш профиль на наличие адреса')
+                    return;
+                }
+                if(!adress.house_number) {
+                    toast.error('Проверьте ваш профиль на наличие номера дома')
+                    return;
+                }
             } else {
                 const validationErrors = {
                     street: !street.trim() && "Укажите улицу",
