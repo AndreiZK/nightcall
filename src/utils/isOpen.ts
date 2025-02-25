@@ -12,7 +12,7 @@ export function isOpen(schedule: any) {
   
 
     if(todaySchedule === null) {
-        return true;
+        return false;
     }
 
     for (let i = 0; i < todaySchedule.length - 1; i++) {
