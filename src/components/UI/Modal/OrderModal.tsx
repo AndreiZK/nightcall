@@ -140,6 +140,7 @@ const OrderModal = () => {
     const [price, setPrice] = useState<number>(0);
     const [discountPrice, setDiscountPrice] = useState<any>(undefined);
 
+    const [isProfileValid, setIsProfileValid] = useState<boolean>(false);
     const checkAuth = useStore((state: any) => state.checkAuth);
 
     const [isDiscountAcitvated, setIsDiscountAcitvated] = useState<boolean>(false);
@@ -396,6 +397,23 @@ const OrderModal = () => {
         }
     };
 
+
+    const checkIsProfileValid = async (jwt: string) => {
+        const adress = await getAdress(jwt);
+
+        if (!adress.phone || !adress.street || !adress.house_number) {
+            setIsProfileValid(false);
+        } else {
+            setIsProfileValid(true);
+        }
+    }
+
+    useEffect(() => {
+        if(!checkAuth()) {
+            checkIsProfileValid(jwt);
+        }
+    }, [jwt]);
+
     return (
         <BaseModal isOpen={isOrderModalOpen} onClose={handleClose}>
             <StyledTitle>Оформление заказа</StyledTitle>
@@ -415,7 +433,7 @@ const OrderModal = () => {
                         />
                         <Button onClick={handleDiscount}>Подтвердить</Button>
                     </div>
-                    {!jwt?.length && (
+                    {!isProfileValid && (
                         <div className="textfields">
                             <Textfield
                                 value={street}

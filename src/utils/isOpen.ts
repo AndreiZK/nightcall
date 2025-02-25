@@ -10,6 +10,11 @@ export function isOpen(schedule: any) {
   
     const currentTimeInMinutes = currentHours * 60 + currentMinutes;
   
+
+    if(todaySchedule === null) {
+        return true;
+    }
+
     for (let i = 0; i < todaySchedule.length - 1; i++) {
         const openTime = todaySchedule[i];
         const closeTime = todaySchedule[i + 1];
